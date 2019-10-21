@@ -1,0 +1,41 @@
+server:
+  port: 8899
+spring:
+  application:
+    name: gateway
+  profiles:
+    active: p1
+    include: ip
+---
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: pa
+          uri: http://127.0.0.1:8080/
+          predicates:
+            - Path=/jq/**
+          filters:
+            - StripPrefix=1
+        - id: pb
+          uri: ${ip-baidu}
+          predicates:
+            - Path=/baidu/**
+        - id: posttest
+          uri: http://127.0.0.1:9002/
+          predicates:
+            - Path=/pt/**
+          filters:
+            - StripPrefix=1
+        - id: posttest2
+          uri: lb://SERVICE-TEST1
+          predicates:
+            - Path=/ps/**
+          filters:
+            - StripPrefix=1
+  profiles: p1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9000/eureka/

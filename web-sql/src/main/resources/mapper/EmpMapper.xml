@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.websql.dao.EmpMapper">
+
+    <!--一对一查询，方法1，通过内联接-->
+    <select id="getEmpById1" resultMap="empMap1_1" parameterType="int">
+        select emp.id,emp.user_id,emp.realname,emp.email,`user`.`username`,`user`.`password` from emp join `user` on emp.user_id=`user`.id where emp.id=#{id}
+    </select>
+    <!--员工关联查询结果映射-->
+    <resultMap id="empMap1" type="com.example.websql.bean.Emp">
+        <result property="id" column="id"/>
+        <result property="user_id" column="user_id"/>
+        <result property="realname" column="realname"/>
+        <result property="email" column="email"/>
+        <association property="user" javaType="com.example.websql.bean.User">
+            <result property="id" column="user_id"/>
+            <result property="username" column="username"/>
+            <result property="password" column="password"/>
+        </association>
+    </resultMap>
+    <!-- 另一种写法，可以复用resultMap   -->
+    <resultMap id="empMap1_1" type="com.example.websql.bean.Emp">
+        <result property="id" column="id"/>
+        <result property="user_id" column="user_id"/>
+        <result property="realname" column="realname"/>
+        <result property="email" column="email"/>
+        <association property="user" resultMap="userMap"/>
+    </resultMap>
+    <resultMap id="userMap" type="com.example.websql.bean.User">
+        <result property="id" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+    </resultMap>
+
+    <!--一对一查询，方法2，通过多次查询（嵌套查询）  使用延时加载-->
+    <select id="getEmpById2" resultMap="empMap2">
+        select emp.id,emp.user_id,emp.realname,emp.email from emp where emp.id=#{id}
+    </select>
+    <resultMap id="empMap2" type="com.example.websql.bean.Emp">
+        <result property="id" column="id"/>
+        <result property="user_id" column="user_id"/>
+        <result property="realname" column="realname"/>
+        <result property="email" column="email"/>
+        <association property="user" column="user_id" select="getUserById"/>
+    </resultMap>
+    <select id="getUserById" resultType="com.example.websql.bean.User">
+        select `user`.id,`user`.username,`user`.password from `user` where id=#{id}
+    </select>
+
+</mapper>

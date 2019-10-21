@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.service_haidian.dao.JjjlMapper">
+
+    <resultMap id="jjjlMap" type="jqJjjl">
+        <result column="JJXH" property="jjxh" />
+        <result column="FDWiD" property="fdwid" />
+        <result column="XH" property="xh" />
+        <result column="BJRXB" property="bjrxb" />
+        <result column="SFTSJQ" property="sftsjq" />
+        <result column="SFDTBJ" property="sfdtbj" />
+        <result column="JQJB" property="jqjb" />
+        <result column="BJLB" property="bjlb" />
+        <result column="JQLB" property="jqlb" />
+        <result column="BJRLB" property="bjrlb" />
+        <result column="BJFS" property="bjfs" />
+        <result column="BJSJ" property="bjsj" />
+        <result column="BJDH" property="bjdh" />
+        <result column="ZJDZ" property="zjdz" />
+        <result column="JZXM" property="jzxm" />
+        <result column="BJRXM" property="bjrxm" />
+        <result column="BJRLXDH" property="bjrlxdh" />
+        <result column="BJRZZ" property="bjrzz" />
+        <result column="BJRDW" property="bjrdw" />
+        <result column="BT" property="bt" />
+        <result column="JQZY" property="jqzy" />
+        <result column="ZT" property="zt" />
+        <result column="SJC" property="sjc" />
+        <result column="DEL" property="del" />
+        <result column="TSBJLX" property="tsbjlx" />
+        <result column="SJJHDWBM" property="sjjhdwbm" />
+    </resultMap>
+
+    <select id="queryJjjlByDh" resultMap="jjjlMap">
+        select * from JQ_JJJL where BJDH=#{dh}
+    </select>
+
+
+
+</mapper>

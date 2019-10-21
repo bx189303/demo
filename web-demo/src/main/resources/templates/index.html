@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+<!--<script src="../static/js/jquery-3.4.1.min.js"></script>-->
+<head>
+    <meta charset="UTF-8">
+    <title>测试页面</title>
+</head>
+<body>
+    <h1 th:text="'姓名:'+${word1}+',年龄:'+${age}">Hello World</h1>
+    <h1 th:text="'你好'+${person.name}+'!'">Hello World</h1>
+    <h1 th:text="|你好${person.name}|"></h1>
+    <h1 th:text="'三目运算符:数字是'+${age}+'，为'+(${age}%2==0?'偶数':'奇数')"></h1>
+</body>
+</html>
+
+<script>
+    $(function(){
+        console.log("加载完成")
+    })
+
+</script>

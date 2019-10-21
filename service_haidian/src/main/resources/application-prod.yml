@@ -1,0 +1,13 @@
+server:
+  port: 13269
+
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@10.2.67.136:1521:DB110JQ
+    username: jq110
+    password: 7541
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.service_haidian.bean

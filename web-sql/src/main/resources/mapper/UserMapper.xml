@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.websql.dao.UserMapper">
+
+    <!--一对多查询，方法1，通过内联接-->
+    <select id="getUserById1" resultMap="userMap1_1">
+        select emp.id,emp.user_id,emp.realname,emp.email,u.username,u.password from emp join `user` u on emp.user_id = u.id where u.id=#{id}
+    </select>
+    <resultMap id="userMap1" type="com.example.websql.bean.User">
+        <result property="id" column="user_id"/>
+        <result property="username" column="user_id"/>
+        <result property="password" column="user_id"/>
+        <collection property="emps" ofType="com.example.websql.bean.Emp">
+            <result property="id" column="id"/>
+            <result property="user_id" column="user_id"/>
+            <result property="realname" column="realname"/>
+            <result property="email" column="email"/>
+        </collection>
+    </resultMap>
+    <!--  另一种写法，可以复用resultMap  -->
+    <resultMap id="userMap1_1" type="com.example.websql.bean.User">
+        <result property="id" column="user_id"/>
+        <result property="username" column="user_id"/>
+        <result property="password" column="user_id"/>
+        <collection property="emps" resultMap="empMap"/>
+    </resultMap>
+    <resultMap id="empMap" type="com.example.websql.bean.Emp">
+        <result property="id" column="id"/>
+        <result property="user_id" column="user_id"/>
+        <result property="realname" column="realname"/>
+        <result property="email" column="email"/>
+    </resultMap>
+
+    <!--一对多查询，方法2，通过嵌套查询多次   使用延时加载-->
+    <select id="getUserById2" resultMap="userMap2">
+        select id,username,password from `user` u where id=#{id}
+    </select>
+    <resultMap id="userMap2" type="com.example.websql.bean.User">
+        <result property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <collection property="emps" ofType="com.example.websql.bean.Emp" column="id" select="getEmpById"/>
+    </resultMap>
+    <select id="getEmpById" resultType="com.example.websql.bean.Emp">
+        select id, user_id, realname, email from emp where user_id=#{id}
+    </select>
+
+</mapper>

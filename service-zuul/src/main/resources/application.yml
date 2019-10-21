@@ -1,0 +1,42 @@
+server:
+  port: 8999
+spring:
+  application:
+    name: service-zuul
+  profiles:
+    include: ip
+
+
+
+#  devtools:
+#    restart:
+#      enabled: true  #设置开启热部署
+#      additional-paths: src/main/java #重启目录
+#      exclude: WEB-INF/**
+#  freemarker:
+#    cache: false    #页面不加载缓存，修改即时生效
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9000/eureka/
+zuul:
+  routes:
+    api-1:
+      path: /api-ribbon/**
+      service-id: service-ribbon
+    api-2:
+      path: /api-feign/**
+      service-id: service-feign
+    api-3:
+      path: /baidu/**
+      url: ${ip-baidu}
+    api-4:
+      path: /baike/**
+      url: ${ip-baike}
+    api-5:
+      path: /api-test/**
+      service-id: service-test1
+    api-6:
+      path: /pt/**
+      url: http://127.0.0.1:9002/

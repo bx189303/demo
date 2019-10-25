@@ -17,9 +17,11 @@
         <module name="rabbitmq" />
         <module name="service-ribbon" />
         <module name="web-demo" />
+        <module name="elasticsearch" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="elasticsearch" target="1.8" />
       <module name="eureka" target="1.8" />
       <module name="eureka-client" target="1.8" />
       <module name="gateway" target="1.8" />
@@ -35,6 +37,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="elasticsearch" options="-parameters" />
       <module name="eureka" options="-parameters" />
       <module name="eureka-client" options="-parameters" />
       <module name="gateway" options="-parameters" />

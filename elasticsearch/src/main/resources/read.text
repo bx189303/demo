@@ -1,0 +1,43 @@
+对比关系：
+索引库（indices）--------------------------------Databases 数据库
+    类型（type）-----------------------------Table 数据表
+     文档（Document）----------------Row 行
+	   字段（Field）-------------------Columns 列
+详细说明：
+概念	说明
+索引库（indices)	indices是index的复数，代表许多的索引，
+类型（type）	类型是模拟mysql中的table概念，一个索引库下可以有不同类型的索引，比如商品索引，订单索引，其数据格式不同。不过这会导致索引库混乱，因此未来版本中会移除这个概念
+文档（document）	存入索引库原始的数据。比如每一条商品信息，就是一个文档
+字段（field）	文档中的属性
+映射配置（mappings）	字段的数据类型、属性、是否索引、是否存储等特性
+与Lucene中的概念类似。
+
+另外，在Elasticsearch有一些集群相关的概念：
+索引集（Indices，index的复数）：逻辑上的完整索引
+分片（shard）：数据拆分后的各个部分
+副本（replica）：每个分片的复制
+
+自定义方法
+Spring Data 的另一个强大功能，是根据方法名称自动实现功能。
+比如：你的方法名叫做：findByTitle，那么它就知道你是根据title查询，然后自动帮你完成，无需写实现类。
+当然，方法名称要符合一定的约定：
+Keyword	Sample
+And	findByNameAndPrice
+Or	findByNameOrPrice
+Is	findByName
+Not	findByNameNot
+Between	findByPriceBetween
+LessThanEqual	findByPriceLessThan
+GreaterThanEqual	findByPriceGreaterThan
+Before	findByPriceBefore
+After	findByPriceAfter
+Like	findByNameLike
+StartingWith	findByNameStartingWith
+EndingWith	findByNameEndingWith
+Contains/Containing	findByNameContaining
+In	findByNameIn(Collection<String>names)
+NotIn	findByNameNotIn(Collection<String>names)
+Near	findByStoreNear
+True	findByAvailableTrue
+False	findByAvailableFalse
+OrderBy	findByAvailableTrueOrderByNameDesc

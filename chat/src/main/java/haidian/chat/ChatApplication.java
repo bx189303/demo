@@ -1,6 +1,6 @@
 package haidian.chat;
 
-import haidian.chat.controller.RedisThread;
+import haidian.chat.service.RedisThread;
 import haidian.chat.controller.WebSocketController;
 import haidian.chat.redis.RedisUtil;
 import org.springframework.boot.SpringApplication;

@@ -1,4 +1,4 @@
-package haidian.chat.controller;
+package haidian.chat.service;
 
 import com.alibaba.fastjson.JSONObject;
 import haidian.chat.redis.RedisUtil;
@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-@Component
+//@Component
 public class RedisThread implements Runnable {
 
     private static RedisUtil redisUtil;

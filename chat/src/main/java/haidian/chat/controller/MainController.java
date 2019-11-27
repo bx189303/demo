@@ -2,6 +2,7 @@ package haidian.chat.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import haidian.chat.pojo.Person;
 import haidian.chat.redis.RedisUtil;
 import haidian.chat.util.DateUtil;
 import haidian.chat.util.Response;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-public class AjaxController {
+public class MainController {
 
     @Autowired
     RedisUtil r;
@@ -43,13 +44,21 @@ public class AjaxController {
     }
 
     public Result sendMsg(JSONObject msg){
-        //添加字段
+        //添加字段 uuid ,readCount ,isValid,receiveTime
         msg.put("isValid",1);
         msg.put("receiveTime", DateUtil.getDateToStrings(new Date()));
         JSONObject data=msg.getJSONObject("data");
         String uuid=""+ UUID.randomUUID();
         data.put("uuid",uuid);
         data.put("readCount",0);
+        //添加人员信息
+        String src=data.getString("src");
+        String dst=data.getString("dst");
+        Person srcInfo= (Person) r.get(src);
+        Person dstInfo=(Person) r.get(dst);
+        data.put("src",srcInfo);
+        data.put("dst",dstInfo);
+
         System.out.println("添加字段后msg："+msg);
 
         //发送kafka  r_msg

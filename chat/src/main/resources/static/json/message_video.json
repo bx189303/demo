@@ -1,0 +1,20 @@
+{
+  "type": "msg",
+  "sendTime": "消息发送时间",
+  "data": {
+    "type": "group/single",
+    "src": "A",
+    "dst": "G2",
+    "content": {
+      "type": "file",
+      "content": {
+        "type": "video",
+        "size": 512 ,
+        "duration": 10000,
+        "uuid": "3_9782",
+        "time": "文件上传成功时间",
+        "content": "/user/local/3_9782"
+      }
+    }
+  }
+}

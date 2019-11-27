@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>微信</title>
+    <link rel="stylesheet" type="text/css" href="../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../css/chat.css">
+</head>
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script src="../layer/layer.js"></script>
+<style>
+
+
+</style>
+<body style="overflow-y: hidden">
+    <!-- 头部 -->
+    <div style="width:100%;height: 5%;background-color: #EDEDED">
+        <div style="width:8%;height:100%;float:left;margin-right: 3%;">
+            <img id="topOutIcon" class="btnIcon" src="../img/back.png" height="100%" width="100%">
+        </div>
+        <div style="vertical-align:middle;height: 100%;width:64%;float: left">
+            <h2 id="titleName" style="display:block;position: relative;top:50%;transform:translateY(-50%);left:52%;width: 20%;">选择成员</h2>
+        </div>
+        <div style="width:8%;height:100%;float:right;margin-right: 3%;">
+            <input id="addGroupBtn" class="btnIcon" type="button" value="确定" style="width: 100%;height: 70%;margin-top: 15%;background-color: #8d8d8d;color: #fff;">
+        </div>
+    </div>
+    <!-- 好友 friendDiv-->
+    <div id="friendDiv" class="listDiv" style="overflow-y:scroll;overflow-x: hidden;width:100%;height: 87%;">
+        <div class="container" style="width:100%;height: 6%;background-color: #EDEDED">
+            <form action="" class="parent" style="width:100%;height: 100%;">
+                <input type="text" class="search" placeholder="" >
+                <input type="button" name="" id="friendSearchBtn" class="searchBtn">
+            </form>
+        </div>
+
+        <div id="friendListDiv" style="margin-top: 1%;">
+            <ul class="chatUl">
+                <li class="singleFriend">
+                    <div class="liContentDiv scrollDiv">
+                        <div class="addGroupLiCheckBox">
+                            <div id="0001" class="checkBoxDiv"></div>
+                        </div>
+                        <div class="liContentImgDiv">
+                            <img src="../img/head.png">
+                        </div>
+                        <div class="addGroupLiContentRightDiv">
+                            <div class="liFriendUser">用户A</div>
+                        </div>
+                    </div>
+                    <div class="liSpace"/>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+</body>
+<script>
+    $(function(){
+
+    });
+    //左上角撤销按钮-关闭窗口
+    $("#topOutIcon").on("click",function(){
+        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+        parent.layer.close(index); //再执行关闭
+    })
+    //选择用户
+    $(".chatUl li").on("click",function(){
+        $(this.getElementsByClassName("checkBoxDiv")).toggleClass("checked");
+    })
+    //确定提交
+    $("#addGroupBtn").on("click",function(){
+        var id="";
+        $(".checked").each(function(i,n){
+            console.log($(".checked")[i].id)
+        })
+        console.log()
+    })
+
+
+
+
+</script>
+</html>

@@ -1,0 +1,17 @@
+{
+  "type": "msg",
+  "sendTime": "消息发送时间",
+  "receiveTime": "后台接收到的时间",
+  "isValid": 1,
+  "data": {
+    "uuid": "消息id",
+    "readCount": 0,
+    "type": "group/single",
+    "src": "A",
+    "dst": "G2",
+    "content": {
+      "type": "text",
+      "content": "文字内容"
+    }
+  }
+}

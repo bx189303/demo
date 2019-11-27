@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script type="text/javascript">
+    function func() {
+        var file1 = document.getElementById("image1").files[0];
+        var formData = new FormData();
+        formData.append('files', file1, file1.name);
+        var xhr = new XMLHttpRequest();
+        xmlhttp.onreadystatechange=fuc1();
+        xhr.open('POST', url, true);
+        xhr.send(formData);
+    }
+    function fuc1(){
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+            }
+    }
+</script>
+<body>
+<input type="file" class="file" id="image1" accept="image/gif,image/jpeg,image/jpg,image/png"/>
+<input type="file" class="file" id="image2" accept="image/gif,image/jpeg,image/jpg,image/png"/>
+<button id="test" onclick="func()">demo</button>
+</body>
+</html>

@@ -36,44 +36,23 @@ public class WebSocketController {
 
     private static StringRedisTemplate stringRedisTemplate;
 
-    public void sendMsg(String message){
+    public void sendMsg(String message) throws IOException {
         System.out.println("监听dispatch : "+message);
-
+        JSONObject msg=JSON.parseObject(message);
+        JSONObject data=msg.getJSONObject("data");
+//        String dst=data.getString("dst");//旧
+        String dst=data.getJSONObject("dst").getString("sId");
+        WebSocketController dstCli= websocketList.get(dst);
+        dstCli.sendMessage(message);
     }
 
-    /**
-     * 连接建立成功调用的方法*/
     @OnOpen
     public void onOpen(Session session,@PathParam("userId") String userId) throws IOException {
-        this.session=session;
-        websocketList.put(userId,this);
-        addOnlineCount();
-        System.out.println("有新窗口开始监听:"+userId+",当前在线人数为" + getOnlineCount());
-        this.userId=userId;
-        //从redis读取最近的历史记录
-        long t1= System.currentTimeMillis();
-        Set<String> keys = redisUtil.keys("*"+userId+"*");
-        if (!keys.isEmpty()) {
-            for (String key : keys) {
-                List<JSONObject> chatList = (List<JSONObject>) redisUtil.get(key);
-                sendMessage(JSON.toJSONString(chatList));
-                //遍历查未读
-                for (int i = 0; i < chatList.size(); i++) {
-                    JSONObject chat=chatList.get(i);
-                    int read = chat.getIntValue("read");
-                    if(read==1){
-                        //通知发送人已读
-                        //更改为已读
-                        chat.put("read",0);
-                        chatList.set(i,chat);
-                    }
-                }
-                redisUtil.set(key,chatList);
-                System.out.println(JSON.toJSONString(chatList));
-            }
-        }
-        System.out.println("读取redis用时："+ new Double(System.currentTimeMillis()-t1)/1000);
+        this.session = session;
+        websocketList.put(userId, this);
     }
+
+
 
     /**
      * 连接关闭调用的方法
@@ -87,53 +66,6 @@ public class WebSocketController {
         }
     }
 
-    /**
-     * 收到客户端消息后调用的方法
-     *
-     * @param message 客户端发送过来的消息*/
-    @OnMessage
-    public void onMessage(String message, Session session) {
-        System.out.println(("收到来自窗口"+userId+"的信息:"+message));
-        if(StringUtils.isNotBlank(message)){
-            JSONArray list=JSONArray.parseArray(message);
-            for (int i = 0; i < list.size(); i++) {
-                try {
-                    //解析发送的报文
-                    JSONObject object = list.getJSONObject(i);
-                    String fromUserId=object.getString("fromUserId");
-                    String toUserId=object.getString("toUserId");
-                    String contentText=object.getString("contentText");
-                    //在记录基础上添加字段
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    object.put("sendTime",sdf.format(new Date()));
-                    object.put("uuid",UUID.randomUUID()+"");
-//                    object.put("fromUserId",this.userId);
-                    //传送给对应用户的websocket
-                    if(StringUtils.isNotBlank(toUserId)&&StringUtils.isNotBlank(contentText)){
-                        WebSocketController toSocket=websocketList.get(toUserId);
-                        //需要进行转换，userId
-                        if(toSocket!=null){
-                            toSocket.sendMessage(JSON.toJSONString((object)));
-                            object.put("read",0);
-                            //此处可以放置相关业务代码，例如存储到数据库
-                            //存到redis
-                            RedisThread.addChatList(object);
-                        }
-                        if(toSocket==null){
-                            sendMessage("对面离线");
-                            WebSocketController fromSocket=websocketList.get(fromUserId);
-
-                            object.put("read",1);
-                            RedisThread.addChatList(object);
-                        }
-                        System.out.println(JSON.toJSONString(object));
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     @OnError
     public void onError(Session session, Throwable error) {

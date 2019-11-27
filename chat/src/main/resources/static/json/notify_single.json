@@ -1,0 +1,10 @@
+{
+  "type": "notify",
+  "sendTime": "消息发送时间",
+  "data": {
+    "type": "single",
+    "uuid": "消息id",
+    "src": "B",
+    "dst": "A"
+  }
+}

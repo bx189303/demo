@@ -1,0 +1,13 @@
+{
+  "type": "msg",
+  "sendTime": "消息发送时间",
+  "data": {
+    "type": "group/single",
+    "src": "A",
+    "dst": "G2",
+    "content": {
+      "type": "text",
+      "content": "文字内容"
+    }
+  }
+}

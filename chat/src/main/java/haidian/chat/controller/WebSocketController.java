@@ -43,7 +43,9 @@ public class WebSocketController {
 //        String dst=data.getString("dst");//旧
         String dst=data.getJSONObject("dst").getString("sId");
         WebSocketController dstCli= websocketList.get(dst);
-        dstCli.sendMessage(message);
+        if(dstCli!=null){
+            dstCli.sendMessage(message);
+        }
     }
 
     @OnOpen

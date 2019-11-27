@@ -26,8 +26,9 @@ public class MybatisTest {
 
     @Test
     public void gtest(){
-        System.out.println(JSON.toJSONString(groupMapper.selectByPrimaryKey("0001")));
-        System.out.println(JSON.toJSONString(groupMapper.getByUserId("0001")));
+//        System.out.println(JSON.toJSONString(groupMapper.selectByPrimaryKey("0001")));
+//        System.out.println(JSON.toJSONString(groupMapper.getByUserId("0001")));
+        System.out.println(JSON.toJSONString(groupMapper.getUserByGroupId("0001g")));
     }
 
 }

@@ -16,6 +16,8 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <!--maven打包跳过测试-->
+        <skipTests>true</skipTests>
     </properties>
 
     <dependencies>
@@ -107,6 +109,8 @@
                 <executions>
                     <execution>
                         <id>Generate MyBatis Artifacts</id>
+                        <!--加入下行打包时不会执行 generatorConfig.xml -->
+                        <phase>deploy</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>

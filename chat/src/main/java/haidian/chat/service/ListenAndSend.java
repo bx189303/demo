@@ -2,12 +2,14 @@ package haidian.chat.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import haidian.chat.dao.GroupMapper;
 import haidian.chat.redis.RedisUtil;
 import haidian.chat.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,59 +22,74 @@ public class ListenAndSend {
     @Autowired
     private StringRedisTemplate template;
 
+    @Resource
+    GroupMapper groupMapper;
+
+    public void listenAndSend(String msg){
+        System.out.println("监听RECEIVE ： "+msg);
+        String type=JSON.parseObject(msg).getString("type");
+        if("msg".equalsIgnoreCase(type)){
+            sendMsg(msg);
+        }else if("notify".equalsIgnoreCase(type)){
+
+        }
+    }
+
     public void sendMsg(String message){
-        System.out.println("监听receive ： "+message);
 //        if(true)return;
-        JSONObject msg=JSON.parseObject(message);
         //处理
         try {
+            JSONObject msg=JSON.parseObject(message);
             JSONObject data=msg.getJSONObject("data");
             String type=data.getString("type");
 //            String src=data.getString("src");//旧
 //            String dst=data.getString("dst");//旧
-            String src=data.getJSONObject("src").getString("sId");
-            String dst=data.getJSONObject("dst").getString("sId");
+            String srcId=data.getJSONObject("src").getString("sId");
+            String dstId="";
             //存redis
             String key="";
             if("single".equalsIgnoreCase(type)){
-                key=src.compareTo(dst)>0?src+"."+dst:dst+"."+src;
+                dstId=data.getJSONObject("dst").getString("sId");
+                key=srcId.compareTo(dstId)>0?srcId+"."+dstId:dstId+"."+srcId;
             }else if("group".equalsIgnoreCase(type)){
-                key=dst;
+                dstId=data.getJSONObject("dst").getString("id");
+                key=dstId;
             }
             r.lSet(key,msg);
             //发送
             if("single".equalsIgnoreCase(type)){
-                if (r.get(src)!=null){//如果用户在线则发送topic
+                if (r.get(srcId)!=null){//如果用户在线则发送topic
                     //发送kafka
-//                    System.out.println(msg);
+//                    System.out.println("发送DISPATCH ： "+msg);
                     template.convertAndSend("DISPATCH",JSON.toJSONString(msg));
                 };
             }else if("group".equalsIgnoreCase(type)){
-                //模拟查库读取群组成员
-                List<String> users=new ArrayList<>();
-                users.add("A");
-                users.add("B");
-                users.add("C");
+                //查群内成员
+                List<String> users=groupMapper.getUserByGroupId(dstId);
+                //修改msg
+                JSONObject toMsg=msg;
+                JSONObject toMsgData=toMsg.getJSONObject("data");
+                //添加group属性为dst
+                toMsgData.put("group",data.getJSONObject("dst"));
+                toMsgData.put("type","single");
                 for (String user : users) {
-                    if (!src.equalsIgnoreCase(user)){
-                        JSONObject toMsg=msg;
-                        JSONObject toMsgData=toMsg.getJSONObject("data");
-                        toMsgData.put("group",dst);
-                        toMsgData.put("dst",user);
-                        toMsgData.put("type","single");
-                        //发送kafka
-                        System.out.println("群转人："+toMsg);
+                    if (srcId.equalsIgnoreCase(user)){
+                        continue;//遍历群成员，如果是自己则不转发
                     }
+                    //修改dst为群内成员
+                    toMsgData.put("dst",r.get(user));
+                    //发送kafka
+//                    System.out.println("群转人发送DISPATCH ："+toMsg);
+                    template.convertAndSend("DISPATCH",JSON.toJSONString(toMsg));
                 }
             }
-
             //发送响应成功
-            Response response=Response.ok("response",msg);
+            Response response=Response.ok("response",message);
             System.out.println("成功响应 : "+ JSON.toJSONString(response));
         }catch (Exception e){
             e.printStackTrace();
             //发送响应失败
-            Response response=Response.build("response",500,e.getMessage(),msg);
+            Response response=Response.build("response",500,e.getMessage(),message);
             System.out.println("失败响应 : "+JSON.toJSONString(response));
         }
 

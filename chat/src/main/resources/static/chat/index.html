@@ -49,15 +49,15 @@
                         </div>
                         <div class="liSpace"/>
                     </li>
-                    <li name="0002"  type="single" onclick="jumpChat(this)">
+                    <li name="0001g"  type="group" onclick="jumpChat(this)">
                         <div class="liContentDiv scrollDiv">
                             <div class="liContentImgDiv">
                                 <img src="../img/head.png">
                                 <div class="notice">13</div>
                             </div>
                             <div class="liContentRightDiv">
-                                <div class="liContentUser liName">用户B</div>
-                                <div class="liContentRecord">现在几点了</div>
+                                <div class="liContentUser liName">群组一</div>
+                                <div class="liContentRecord">群组消息</div>
                             </div>
                         </div>
                         <div class="liSpace"/>
@@ -106,7 +106,7 @@
                     </li>
                 </ul>
                 <ul id="groupUl" class="chatUl friendUl" style="display: none">
-                    <li name="0001" type="group" onclick="jumpChat(this)">
+                    <li name="0001g" type="group" onclick="jumpChat(this)">
                         <div class="liContentDiv scrollDiv">
                             <div class="liContentImgDiv">
                                 <img src="../img/grouphead.png">
@@ -117,7 +117,7 @@
                         </div>
                         <div class="liSpace"/>
                     </li>
-                    <li name="0002" type="group" onclick="jumpChat(this)">
+                    <li name="0002g" type="group" onclick="jumpChat(this)">
                         <div class="liContentDiv scrollDiv">
                             <div class="liContentImgDiv">
                                 <img src="../img/grouphead.png">
@@ -195,7 +195,7 @@
         <div id="chatMainDiv" style="width:100%;height: 95%;">
             <!-- 聊天记录 -->
             <div id="chatWindow" class="scrollDiv" style="overflow-y:scroll;width:100%;height: 80%;background-color: #F6F6F6">
-                <div class="leftTalk">
+                <div name="" class="leftTalk">
                     <div class="leftTalkImgDiv talkImgDiv">
                         <img src="../img/head.png">
                     </div>
@@ -204,7 +204,7 @@
                         <div class="talkBubble">今天星期几</div>
                     </div>
                 </div>
-                <div class="RightTalk">
+                <div name="" class="RightTalk">
                     <div class="rightTalkImgDiv talkImgDiv">
                         <img src="../img/head.png">
                     </div>
@@ -230,13 +230,14 @@
     var src="";
     var dst="";
     var type="";
+    var groups=[];
 
     $(function(){
-        userId=GetUrlParam("id");
+        src=userId=GetUrlParam("id");
         openSocket();
-        // loadFriends();
-        // loadFriends();
-
+        loadGroups();
+        loadFriends();
+        // loadIndex();
     });
 
 
@@ -312,25 +313,6 @@
         $("#groupUl").show();
     })
 
-    //跳转聊天页面
-    // $(".chatUl li").on("click",function(){
-    //     var id=this.getAttribute("id");
-    //     var toType=this.getAttribute("type");
-    //     src=userId;
-    //     dst=id;
-    //     type=toType;
-    //     console.log(src+"  "+dst+"  "+type);
-    //     // alert("跳转聊天");
-    //     $("#indexDiv").hide();//首页隐藏
-    //     $("#chatDiv").show();//对话窗口显示
-    //     scrollChatWindow();//滚动条到最下
-    //     var name=$(this.getElementsByClassName("liName")[0]).text();//获取对话人姓名
-    //     $("#titleName").text(name);//改对话窗口标题
-    //
-    //     //消除未读提醒
-    //     $(this.getElementsByClassName("notice")).text(0);
-    //     $(this.getElementsByClassName("notice")).hide();
-    // })
 
     //底部按钮
     $("#friendIcon").on("click",function(){
@@ -396,7 +378,7 @@
 
     //显示发送消息
     function showTalk(data,uuid){
-        var html='<div id="'+uuid+'" class="RightTalk">\n' +
+        var html='<div name="'+uuid+'" class="RightTalk">\n' +
             '                    <div class="rightTalkImgDiv talkImgDiv">\n' +
             '                        <img src="../img/head.png">\n' +
             '                    </div>\n' +
@@ -412,10 +394,7 @@
         scrollChatWindow();
     }
 
-    //对话窗口滚动条默认最下方
-    function scrollChatWindow(){
-        $('#chatWindow').scrollTop( $('#chatWindow')[0].scrollHeight);
-    }
+
 
     //左上角撤销按钮-关闭窗口
     $("#topOutIcon").on("click",function(){

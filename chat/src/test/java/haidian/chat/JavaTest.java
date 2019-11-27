@@ -2,15 +2,48 @@ package haidian.chat;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import haidian.chat.util.DateUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class JavaTest {
     public static void main(String[] args) {
-        Long t= System.currentTimeMillis();
-        Date d=new Date(t);
+        List<Date> l=new ArrayList<>();
+        l.add(DateUtil.getDateTime("2010-11-27 16:21:32"));
+        l.add(DateUtil.getDateTime("2012-11-27 16:21:32"));
+        l.add(DateUtil.getDateTime("2012-12-17 16:21:32"));
+        l.add(DateUtil.getDateTime("2012-12-27 16:21:32"));
+        l.add(DateUtil.getDateTime("2012-12-27 18:21:32"));
+        l.add(DateUtil.getDateTime("2012-12-27 18:25:32"));
+        l.add(DateUtil.getDateTime("2012-12-27 18:25:52"));
+        System.out.println(JSON.toJSONString(l));
+        Collections.sort(l, new Comparator<Date>() {
+            @Override
+            public int compare(Date o1, Date o2) {
+                if (o1.getTime() > o2.getTime()) {
+                    return -1;
+                } else if (o1.getTime() < o2.getTime()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+        System.out.println(JSON.toJSONString(l));
 
+
+    }
+
+    private static void jsonListTest() {
+        List<JSONObject> l=new ArrayList<>();
+        JSONObject j=new JSONObject();
+        j.put("id",1);
+        l.add(j);
+        System.out.println(JSON.toJSONString(l));
+        j.put("id",2);
+        l.add(j);
+        System.out.println(JSON.toJSONString(l));
     }
 
     private static void jsontest2() {

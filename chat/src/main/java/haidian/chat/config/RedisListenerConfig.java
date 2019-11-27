@@ -44,7 +44,7 @@ public class RedisListenerConfig {
      */
     @Bean
     MessageListenerAdapter listenerAdapter(ListenAndSend redisReceiver) {
-        return new MessageListenerAdapter(redisReceiver, "sendMsg");
+        return new MessageListenerAdapter(redisReceiver, "listenAndSend");
     }
 
     @Bean

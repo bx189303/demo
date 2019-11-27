@@ -2,6 +2,8 @@ package haidian.chat.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import haidian.chat.dao.GroupMapper;
+import haidian.chat.pojo.Group;
 import haidian.chat.pojo.Person;
 import haidian.chat.redis.RedisUtil;
 import haidian.chat.util.DateUtil;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +29,9 @@ public class MainController {
 
     @Autowired
     private StringRedisTemplate template;
+
+    @Resource
+    private GroupMapper groupMapper;
 
     @RequestMapping("/send")
     public Result service(@RequestBody JSONObject json){
@@ -53,12 +59,17 @@ public class MainController {
         data.put("readCount",0);
         //添加人员信息
         String src=data.getString("src");
-        String dst=data.getString("dst");
         Person srcInfo= (Person) r.get(src);
-        Person dstInfo=(Person) r.get(dst);
         data.put("src",srcInfo);
-        data.put("dst",dstInfo);
-
+        String type=data.getString("type");
+        String dst=data.getString("dst");
+        if ("single".equalsIgnoreCase(type)) {
+            Person dstInfo=(Person) r.get(dst);
+            data.put("dst",dstInfo);
+        }else if ("group".equalsIgnoreCase(type)) {
+            Group dstInfo=groupMapper.selectByPrimaryKey(dst);
+            data.put("dst",dstInfo);
+        }
         System.out.println("添加字段后msg："+msg);
 
         //发送kafka  r_msg

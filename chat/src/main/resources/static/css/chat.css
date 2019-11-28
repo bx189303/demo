@@ -2,6 +2,15 @@
     margin: 0;
     padding: 0;
 }
+.windowTitle{
+    display: block;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    /* left: 52%; */
+    /* width: 20%; */
+    text-align: center;
+}
 .container {
     height: 70px;
     width: 800px;
@@ -46,8 +55,8 @@
     display: none;
 }
 .notice {
-    width: 15px;
-    height: 15px;
+    width: 28%;
+    height: 26%;
     line-height: 16px;
     font-size: 10px;
     color: #fff;
@@ -55,8 +64,11 @@
     background-color: #f00;
     border-radius: 50%;
     position: relative;
-    right: -50px;
-    top: -65px;
+    right: -85%;
+    top: -108%;
+}
+.hide{
+    display: none;
 }
 li:hover{
     background-color: #EDEDED;/*    PS：这里可以改变背景颜色*/

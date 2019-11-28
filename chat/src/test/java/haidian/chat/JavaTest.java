@@ -1,6 +1,7 @@
 package haidian.chat;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import haidian.chat.util.DateUtil;
 
@@ -9,6 +10,18 @@ import java.util.*;
 
 public class JavaTest {
     public static void main(String[] args) {
+        jsonarraytest();
+    }
+
+    private static void jsonarraytest() {
+        JSONObject j=new JSONObject();
+        j.put("l","[]");
+        JSONArray l = j.getJSONArray("l");
+        l.add("001");
+        System.out.println(l.get(0));
+    }
+
+    private static void comparetest() {
         List<Date> l=new ArrayList<>();
         l.add(DateUtil.getDateTime("2010-11-27 16:21:32"));
         l.add(DateUtil.getDateTime("2012-11-27 16:21:32"));
@@ -31,8 +44,6 @@ public class JavaTest {
             }
         });
         System.out.println(JSON.toJSONString(l));
-
-
     }
 
     private static void jsonListTest() {

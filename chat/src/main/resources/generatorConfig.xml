@@ -40,7 +40,7 @@
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
 
-        <table tableName="group" domainObjectName="Group"
+        <table tableName="t_group_user" domainObjectName="GroupUser"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

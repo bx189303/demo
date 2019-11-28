@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="haidian.chat.dao.GroupMapper" >
+  <resultMap id="BaseResultMap" type="haidian.chat.pojo.Group" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="ownerId" property="ownerid" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, ownerId, name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_group
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="getByUserId" resultMap="BaseResultMap">
+    select
+    g.id id, g.ownerId ownerId, g.name name
+    from t_group g,t_group_user t
+    where g.id=t.groupId and t.userId=#{userId}
+  </select>
+  <select id="getGroupIdByUserId" resultType="java.lang.String">
+    select
+    groupId
+    from t_group_user
+    where userId=#{userId}
+  </select>
+  <select id="getUserByGroupId" resultType="java.lang.String">
+    select
+    userId
+    from t_group_user
+    where groupId=#{groupId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_group
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="haidian.chat.pojo.Group" useGeneratedKeys="true" keyProperty="id" >
+    insert into t_group (ownerId, name)
+    values (#{ownerid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="haidian.chat.pojo.Group" useGeneratedKeys="true" keyProperty="id" >
+    insert into t_group
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ownerid != null" >
+        ownerId,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="ownerid != null" >
+        #{ownerid,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="haidian.chat.pojo.Group" >
+    update t_group
+    <set >
+      <if test="ownerid != null" >
+        ownerId = #{ownerid,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="haidian.chat.pojo.Group" >
+    update t_group
+    set ownerId = #{ownerid,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

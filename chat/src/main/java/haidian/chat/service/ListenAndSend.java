@@ -31,7 +31,49 @@ public class ListenAndSend {
         if("msg".equalsIgnoreCase(type)){
             sendMsg(msg);
         }else if("notify".equalsIgnoreCase(type)){
+            sendNotify(msg);
+        }
+    }
 
+    public void sendNotify(String message) {
+        try {
+            JSONObject msg=JSON.parseObject(message);
+            JSONObject data=msg.getJSONObject("data");
+            String uuid=data.getString("uuid");
+            String type=data.getString("type");
+            String srcId=data.getString("src");//旧
+            String dstId=data.getString("dst");//旧
+            //更新redis
+            String key="";
+            if("single".equalsIgnoreCase(type)){
+                key=srcId.compareTo(dstId)>0?srcId+"."+dstId:dstId+"."+srcId;
+            }else if("group".equalsIgnoreCase(type)){
+                String groupId=data.getString("groupId");
+                key=groupId;
+            }
+            List<Object> records = r.lGet(key, 0, r.lGetListSize(key));
+            for (int i = records.size()-1; i >=0 ; i--) {
+                JSONObject record = (JSONObject) records.get(i);
+                JSONObject recordData = record.getJSONObject("data");
+                String recordUuid = recordData.getString("uuid");
+                if(recordUuid.equalsIgnoreCase(uuid)){//根据uuid找到记录
+                    String readIds = recordData.getString("readId");
+                    if(readIds.indexOf(srcId)!=-1){//如果已读id中有，则跳出
+                        break;
+                    }else if(readIds.equals("")){//如果已读id为空则添加
+                        recordData.put("readId",srcId);
+                    }else {//如果有其它id，则继续添加
+                        recordData.put("readId",readIds+","+srcId);
+                    }
+                    //替换记录后跳出
+                    r.lUpdateIndex(key,i,record);
+                    break;
+                }
+            }
+            //发送DISPATCH，通知已读
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -71,7 +113,7 @@ public class ListenAndSend {
                 JSONObject toMsgData=toMsg.getJSONObject("data");
                 //添加group属性为dst
                 toMsgData.put("group",data.getJSONObject("dst"));
-                toMsgData.put("type","single");
+//                toMsgData.put("type","single");
                 for (String user : users) {
                     if (srcId.equalsIgnoreCase(user)){
                         continue;//遍历群成员，如果是自己则不转发

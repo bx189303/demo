@@ -6,10 +6,9 @@
     <link rel="stylesheet" type="text/css" href="../css/base.css">
     <link rel="stylesheet" type="text/css" href="../css/chat.css">
 </head>
-<script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
-<script type="text/javascript" src="../layer/layer.js"></script>
-<script type="text/javascript" src="../js/util.js"></script>
-<script type="text/javascript" src="../chat/chat.js"></script>
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script src="../layer/layer.js"></script>
+<script src="../js/util.js"></script>
 <style>
 
 
@@ -19,7 +18,7 @@
         <!-- 头部 -->
         <div style="width:100%;height: 5%;background-color: #EDEDED">
             <div style="vertical-align:middle;height: 100%;width:88%;float: left">
-                <h2 id="title" class="windowTitle">消息</h2>
+                <h2 id="title" style="display:block;position: relative;top:50%;transform:translateY(-50%);left:52%;width: 20%;">消息</h2>
             </div>
             <div style="width:8%;height:100%;float:right;margin-right: 3%;">
                 <img id="topAdd" class="btnIcon" src="../img/jia.png" height="100%" width="100%">
@@ -36,32 +35,32 @@
             </div>
             <div id="msgListDiv">
                 <ul id="chatUl" class="chatUl">
-<!--                    <li name="0001" type="single" onclick="jumpChat(this)">-->
-<!--                        <div class="liContentDiv scrollDiv">-->
-<!--                            <div class="liContentImgDiv">-->
-<!--                                <img src="../img/head.png">-->
-<!--                                <div class="notice">13</div>-->
-<!--                            </div>-->
-<!--                            <div class="liContentRightDiv">-->
-<!--                                <div class="liContentUser liName">用户A</div>-->
-<!--                                <div class="liContentRecord">现在几点了</div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="liSpace"/>-->
-<!--                    </li>-->
-<!--                    <li name="0001g"  type="group" onclick="jumpChat(this)">-->
-<!--                        <div class="liContentDiv scrollDiv">-->
-<!--                            <div class="liContentImgDiv">-->
-<!--                                <img src="../img/head.png">-->
-<!--                                <div class="notice">13</div>-->
-<!--                            </div>-->
-<!--                            <div class="liContentRightDiv">-->
-<!--                                <div class="liContentUser liName">群组一</div>-->
-<!--                                <div class="liContentRecord">群组消息</div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="liSpace"/>-->
-<!--                    </li>-->
+                    <li id="0001" type="single">
+                        <div class="liContentDiv scrollDiv">
+                            <div class="liContentImgDiv">
+                                <img src="../img/head.png">
+                                <div class="notice">13</div>
+                            </div>
+                            <div class="liContentRightDiv">
+                                <div class="liContentUser">用户A</div>
+                                <div class="liContentRecord">现在几点了</div>
+                            </div>
+                        </div>
+                        <div class="liSpace"/>
+                    </li>
+                    <li id="0002"  type="single">
+                        <div class="liContentDiv scrollDiv">
+                            <div class="liContentImgDiv">
+                                <img src="../img/head.png">
+                                <div class="notice">13</div>
+                            </div>
+                            <div class="liContentRightDiv">
+                                <div class="liContentUser">用户B</div>
+                                <div class="liContentRecord">现在几点了</div>
+                            </div>
+                        </div>
+                        <div class="liSpace"/>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -82,48 +81,48 @@
 
             <div id="friendListDiv" style="margin-top: 1%;">
                 <ul id="friendUl" class="chatUl friendUl">
-                    <li name="0001" type="single" onclick="jumpChat(this)">
+                    <li>
                         <div class="liContentDiv scrollDiv">
                             <div class="liContentImgDiv">
                                 <img src="../img/head.png">
                             </div>
                             <div class="liContentRightDiv">
-                                <div class="liFriendUser liName">用户A</div>
+                                <div class="liFriendUser">用户A</div>
                             </div>
                         </div>
                         <div class="liSpace"/>
                     </li>
-                    <li name="0002" type="single" onclick="jumpChat(this)">
+                    <li>
                         <div class="liContentDiv scrollDiv">
                             <div class="liContentImgDiv">
                                 <img src="../img/head.png">
                             </div>
                             <div class="liContentRightDiv">
-                                <div class="liFriendUser liName">用户B</div>
+                                <div class="liFriendUser">用户B</div>
                             </div>
                         </div>
                         <div class="liSpace"/>
                     </li>
                 </ul>
                 <ul id="groupUl" class="chatUl friendUl" style="display: none">
-                    <li name="0001g" type="group" onclick="jumpChat(this)">
+                    <li>
                         <div class="liContentDiv scrollDiv">
                             <div class="liContentImgDiv">
                                 <img src="../img/grouphead.png">
                             </div>
                             <div class="liContentRightDiv">
-                                <div class="liFriendUser liName">群组G</div>
+                                <div class="liFriendUser">群组G</div>
                             </div>
                         </div>
                         <div class="liSpace"/>
                     </li>
-                    <li name="0002g" type="group" onclick="jumpChat(this)">
+                    <li>
                         <div class="liContentDiv scrollDiv">
                             <div class="liContentImgDiv">
                                 <img src="../img/grouphead.png">
                             </div>
                             <div class="liContentRightDiv">
-                                <div class="liFriendUser liName">群组Q</div>
+                                <div class="liFriendUser">群组Q</div>
                             </div>
                         </div>
                         <div class="liSpace"/>
@@ -147,11 +146,11 @@
         <div style="width:100%;height: 5%;background-color: #EDEDED">
             <div style="width:8%;height:100%;float:left;margin-right: 3%;">
                 <img id="topOutIcon" class="btnIcon" src="../img/back.png" height="100%" width="100%">
-                <img id="topBackIcon" class="btnIcon" src="../img/back.png" height="100%" width="100%" style="display: none">
+                <img id="topBackIcon" class="btnIcon" src="../img/back.png" height="100%" width="100%">
             </div>
             <div style="vertical-align:middle;height: 100%;width:64%;float: left">
-                <h2 id="titleName" class="windowTitle">对方姓名</h2>
-                <h2 id="titleChatDetail"  class="windowTitle hide">对话详情</h2>
+                <h2 id="titleName" style="display:block;position: relative;top:50%;transform:translateY(-50%);left:52%;width: 20%;">用户A</h2>
+                <h2 id="titleChatDetail" style="display:block;position: relative;top:50%;transform:translateY(-50%);left:52%;width: 20%;display: none">对话详情</h2>
             </div>
             <div style="width:8%;height:100%;float:right;margin-right: 3%;">
                 <img id="topPointIcon" class="btnIcon" src="../img/point.png" height="100%" width="100%">
@@ -195,7 +194,7 @@
         <div id="chatMainDiv" style="width:100%;height: 95%;">
             <!-- 聊天记录 -->
             <div id="chatWindow" class="scrollDiv" style="overflow-y:scroll;width:100%;height: 80%;background-color: #F6F6F6">
-                <div name="" class="leftTalk">
+                <div class="leftTalk">
                     <div class="leftTalkImgDiv talkImgDiv">
                         <img src="../img/head.png">
                     </div>
@@ -204,16 +203,75 @@
                         <div class="talkBubble">今天星期几</div>
                     </div>
                 </div>
-                <div name="" class="RightTalk">
+                <div class="leftTalk">
+                    <div class="leftTalkImgDiv talkImgDiv">
+                        <img src="../img/head.png">
+                    </div>
+                    <div class="leftTalkContent">
+                        <div class="talkUser">用户A</div>
+                        <div class="talkBubble">今天星期几</div>
+                    </div>
+                </div>
+                <div class="leftTalk">
+                    <div class="leftTalkImgDiv talkImgDiv">
+                        <img src="../img/head.png">
+                    </div>
+                    <div class="leftTalkContent">
+                        <div class="talkUser">用户A</div>
+                        <div class="talkBubble">今天星期几</div>
+                    </div>
+                </div><div class="leftTalk">
+                <div class="leftTalkImgDiv talkImgDiv">
+                    <img src="../img/head.png">
+                </div>
+                <div class="leftTalkContent">
+                    <div class="talkUser">用户A</div>
+                    <div class="talkBubble">今天星期几</div>
+                </div>
+            </div>
+                <div class="leftTalk">
+                    <div class="leftTalkImgDiv talkImgDiv">
+                        <img src="../img/head.png">
+                    </div>
+                    <div class="leftTalkContent">
+                        <div class="talkUser">用户A</div>
+                        <div class="talkBubble">今天星期几</div>
+                    </div>
+                </div>
+                <div class="leftTalk">
+                    <div class="leftTalkImgDiv talkImgDiv">
+                        <img src="../img/head.png">
+                    </div>
+                    <div class="leftTalkContent">
+                        <div class="talkUser">用户A</div>
+                        <div class="talkBubble">今天星期几</div>
+                    </div>
+                </div>
+                <div class="leftTalk">
+                    <div class="leftTalkImgDiv talkImgDiv">
+                        <img src="../img/head.png">
+                    </div>
+                    <div class="leftTalkContent">
+                        <div class="talkUser">用户A</div>
+                        <div class="talkBubble">今天星期几</div>
+                    </div>
+                </div>
+                <div class="leftTalk">
+                    <div class="leftTalkImgDiv talkImgDiv">
+                        <img src="../img/head.png">
+                    </div>
+                    <div class="leftTalkContent">
+                        <div class="talkUser">用户A</div>
+                        <div class="talkBubble">今天星期几</div>
+                    </div>
+                </div>
+                <div class="RightTalk">
                     <div class="rightTalkImgDiv talkImgDiv">
                         <img src="../img/head.png">
                     </div>
                     <div class="rightTalkContent">
                         <div class="talkUser">我</div>
-                        <div class="rightTalkNotify">
-                            <div class="rightTalkBubble">不知道</div>
-                            <div class="read">未读</div>
-                        </div>
+                        <div class="rightTalkBubble">不知道</div>
                     </div>
                 </div>
             </div>
@@ -227,19 +285,38 @@
 </body>
 <script>
     var userId="";
-    var src="";
-    var dst="";
-    var type="";
-    var groups=[];
 
     $(function(){
-        src=userId=GetUrlParam("id");
+        userId=GetUrlParam("id");
         openSocket();
-        loadGroups();
-        loadFriends();
-        loadIndex();
     });
 
+    function openSocket() {
+        if(typeof(WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        }else{
+            // console.log("您的浏览器支持WebSocket");
+            var socketUrl="http://localhost:8080/ws/"+userId;
+            socketUrl=socketUrl.replace("https","ws").replace("http","ws");
+            socket = new WebSocket(socketUrl);
+            //打开事件
+            socket.onopen = function() {
+                console.log(userId+" : 首页websocket已打开");
+            };
+            //获得消息事件
+            socket.onmessage = function(msg) {
+                console.log("index页面 ： "+msg.data);
+            };
+            //关闭事件
+            socket.onclose = function() {
+                console.log("websocket已关闭");
+            };
+            //发生了错误事件
+            socket.onerror = function() {
+                console.log("websocket发生了错误");
+            }
+        }
+    }
 
 
     /*好友列表搜索框*/
@@ -313,6 +390,27 @@
         $("#groupUl").show();
     })
 
+    //跳转聊天页面
+    $(".chatUl li").on("click",function(){
+        var id=this.getAttribute("id");
+        var type=this.getAttribute("type");
+        console.log(id+"  "+type);
+        // alert("跳转聊天");
+        $("#indexDiv").hide();
+        $("#chatDiv").show();
+        // var index = layer.open({
+        //     title: false,
+        //     type: 2,
+        //     anim: 3,//动画0-6
+        //     content: 'http://localhost:8080/chat/chat.html?src='+userId+'&dst='+id+'&type='+type,
+        //     area: ['100%', '100%'],
+        //     // maxmin: true,
+        //     closeBtn:0
+        // });
+        // layer.full(index);
+        //消除未读提醒
+        $(this.getElementsByClassName("notice")).hide();
+    })
 
     //底部按钮
     $("#friendIcon").on("click",function(){
@@ -332,99 +430,6 @@
         $("#friendDiv").hide();
         $("#chatListDiv").show();
         $("#title").text("消息");
-    })
-
-    //----------------------------------------聊天界面js--------------------------------------------------
-    //发送消息
-    $("#talksub").on("click",function(){
-        //获取内容
-        var content=$("#talkInput").val();
-        //发送
-        var param={
-            "type":"msg",
-            "sendTime":getMyDate(Date.now()),
-            "data":{
-                "type": type,
-                "src": src,
-                "dst": dst,
-                "content": {
-                    "type": "text",
-                    "content": content
-                }
-            }
-        };
-        var data=JSON.stringify(param);
-        var url="/send";
-        $.ajax({
-            type : "POST",
-            contentType: "application/json;charset=UTF-8",
-            url : url,
-            data : data,
-            //请求成功
-            success : function(result) {
-                var uuid=result.data.uuid;
-                //显示
-                showTalk(content,uuid);
-            },
-            //请求失败，包含具体的错误信息
-            error : function(e){
-                console.log(e.status);
-                console.log(e.responseText);
-            }
-        })
-        //清空输入框
-        $("#talkInput").val("");
-    })
-
-    //显示发送消息
-    function showTalk(data,uuid){
-        var html='<div name="'+uuid+'" class="RightTalk">\n' +
-            '                    <div class="rightTalkImgDiv talkImgDiv">\n' +
-            '                        <img src="../img/head.png">\n' +
-            '                    </div>\n' +
-            '                    <div class="rightTalkContent">\n' +
-            '                        <div class="talkUser">我</div>\n' +
-            '                        <div class="rightTalkNotify">\n' +
-            '                            <div class="rightTalkBubble">'+data+'</div>\n' +
-            '                            <div class="read">未读</div>\n' +
-            '                        </div>\n' +
-            '                    </div>\n' +
-            '                </div>'
-        $("#chatWindow").append(html);
-        scrollChatWindow();
-    }
-
-
-
-    //左上角撤销按钮-关闭窗口
-    $("#topOutIcon").on("click",function(){
-        $("#indexDiv").show();
-        $("#chatDiv").hide();
-        dst="";
-        type="";
-    })
-
-    //右上角按钮-查看对话详情
-    $("#topPointIcon").on("click",function(){
-        //切换显示
-        $("#topPointIcon").hide();
-        $("#titleName").hide();
-        $("#titleChatDetail").show();
-        $("#chatMainDiv").hide();
-        $("#topBackIcon").show();
-        $("#topOutIcon").hide();
-        $("#chatDetailDiv").show();
-
-    })
-    $("#topBackIcon").on("click",function(){
-        //切换显示
-        $("#topPointIcon").show();
-        $("#titleName").show();
-        $("#titleChatDetail").hide();
-        $("#chatMainDiv").show();
-        $("#topBackIcon").hide();
-        $("#topOutIcon").show();
-        $("#chatDetailDiv").hide();
     })
 
 </script>

@@ -56,7 +56,7 @@ public class MainController {
         JSONObject data=msg.getJSONObject("data");
         String uuid=""+ UUID.randomUUID();
         data.put("uuid",uuid);
-        data.put("readCount",0);
+        data.put("readId","");
         //添加人员信息
         String src=data.getString("src");
         Person srcInfo= (Person) r.get(src);
@@ -82,63 +82,13 @@ public class MainController {
         return Result.ok(uuidJson);
     }
 
-    public void redisOnKafka(JSONObject msg){
-        //处理
-        try {
-            JSONObject data=msg.getJSONObject("data");
-            String type=data.getString("type");
-            String src=data.getString("src");
-            String dst=data.getString("dst");
-            //存redis
-            String key="";
-            if("single".equalsIgnoreCase(type)){
-                key=src.compareTo(dst)>0?src+"."+dst:dst+"."+src;
-            }else if("group".equalsIgnoreCase(type)){
-                key=dst;
-            }
-            r.lSet(key,msg);
-            //发送
-            if("single".equalsIgnoreCase(type)){
-                if (r.get(src)!=null){
-                    //发送kafka
-                    System.out.println(msg);
-                };
-            }else if("group".equalsIgnoreCase(type)){
-                //模拟查库读取群组成员
-                List<String> users=new ArrayList<>();
-                users.add("A");
-                users.add("B");
-                users.add("C");
-                for (String user : users) {
-                    if (!src.equalsIgnoreCase(user)){
-                        JSONObject toMsg=msg;
-                        JSONObject toMsgData=toMsg.getJSONObject("data");
-                        toMsgData.put("group",dst);
-                        toMsgData.put("dst",user);
-                        toMsgData.put("type","single");
-                        //发送kafka
-                        System.out.println("群转人："+toMsg);
-                    }
-                }
-            }
-
-            //发送响应成功
-            Response response=Response.ok("response",msg);
-            System.out.println("成功响应"+JSON.toJSONString(response));
-        }catch (Exception e){
-            e.printStackTrace();
-            //发送响应失败
-            Response response=Response.build("response",500,e.getMessage(),msg);
-            System.out.println("失败响应"+JSON.toJSONString(response));
-        }
-
-    }
-
     public Result sendNotify(JSONObject notify){
         //添加字段
         notify.put("readCount",0);
         notify.put("isValid",1);
         //发送kafka   r_notify
+        //发送redis RECEIVE
+        template.convertAndSend("RECEIVE",JSON.toJSONString(notify));
 
         return Result.ok();
     }

@@ -29,6 +29,11 @@ class RedisTests {
     @Resource
     GroupMapper groupMapper;
 
+    @Test
+    public void autotest(){
+
+    }
+
 
     @Test
     public void indexTest(){
@@ -51,18 +56,21 @@ class RedisTests {
             int notice=0;
             for (int i = records.size()-1; i >=0 ; i--) {//倒序遍历组的记录
                 JSONObject record = (JSONObject) records.get(i);
-
                 if(i==records.size()-1){//记录最后一条的数据
                     json.put("lastTime",record.getString("sendTime"));
                     json.put("content",record.getJSONObject("data").getJSONObject("content"));
                 }
                 //判断几条未读，如果遍历到已读则跳出循环
-                int readCount = record.getJSONObject("data").getIntValue("readCount");
-                if(readCount==1){
+                String recordSrcId=record.getJSONObject("data").getJSONObject("src").getString("sId");
+                if(recordSrcId.equalsIgnoreCase(userId)){//如果是自己发送的消息，则结束当前循环
+                    continue;
+                };
+                String readIds = record.getJSONObject("data").getString("readId");
+                if(readIds.indexOf(userId)!=-1){//如果已读id有自己则跳出
                     break;
                 }
                 notice+=1;
-                if(i==records.size()-10){//最多显示10条未读
+                if(notice==10){//最多显示10条未读
                     break;
                 }
             }
@@ -87,7 +95,7 @@ class RedisTests {
             int notice=0;
             for (int i = records.size()-1; i >=0 ; i--) {
                 JSONObject record = (JSONObject) records.get(i);
-                if(i==records.size()-1){//记录最后一条的数据
+                if(i==records.size()-1){ //记录最后一条的数据
                     json.put("lastTime",record.getString("sendTime"));
                     json.put("content",record.getJSONObject("data").getJSONObject("content"));
                     JSONObject src = record.getJSONObject("data").getJSONObject("src");
@@ -99,12 +107,16 @@ class RedisTests {
                     }
                 }
                 //判断几条未读，如果遍历到已读则跳出循环
-                int readCount = record.getJSONObject("data").getIntValue("readCount");
-                if(readCount==1){
+                String recordSrcId=record.getJSONObject("data").getJSONObject("src").getString("sId");
+                if(recordSrcId.equalsIgnoreCase(userId)){ //如果是自己发送的消息，则结束当前循环
+                    continue;
+                };
+                String readIds = record.getJSONObject("data").getString("readId");
+                if(readIds.indexOf(userId)!=-1){ //如果已读id有自己则跳出
                     break;
                 }
                 notice+=1;
-                if(i==records.size()-10){//最多显示10条未读
+                if(notice==10){//最多显示10条未读
                     break;
                 }
             }

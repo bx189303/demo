@@ -21,10 +21,13 @@ spring:
     # 连接超时时间（毫秒）
     timeout: 10000
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://127.0.0.1:3306/chat?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+  #返回值空字段不显示
+  jackson:
+    default-property-inclusion: non_null
 
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml

@@ -11,7 +11,7 @@
         </commentGenerator>
         <!-- 自己修改JDBC的路径 -->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=GMT%2B8"
+                        connectionURL="jdbc:mysql://localhost:3306/chat?useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=GMT%2B8"
                         userId="root"
                         password="root">
         </jdbcConnection>
@@ -40,7 +40,7 @@
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
 
-        <table tableName="t_group_user" domainObjectName="GroupUser"
+        <table tableName="t_friend" domainObjectName="N"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

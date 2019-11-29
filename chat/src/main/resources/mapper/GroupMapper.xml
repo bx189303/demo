@@ -38,8 +38,8 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="haidian.chat.pojo.Group" useGeneratedKeys="true" keyProperty="id" >
-    insert into t_group (ownerId, name)
-    values (#{ownerid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR})
+    insert into t_group (id,ownerId, name)
+    values (#{id,jdbcType=VARCHAR},#{ownerid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="haidian.chat.pojo.Group" useGeneratedKeys="true" keyProperty="id" >
     insert into t_group

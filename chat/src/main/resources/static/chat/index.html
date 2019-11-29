@@ -18,10 +18,10 @@
     <div id="indexDiv" style="width:100%;height: 100%">
         <!-- 头部 -->
         <div style="width:100%;height: 5%;background-color: #EDEDED">
-            <div style="vertical-align:middle;height: 100%;width:88%;float: left">
+            <div style="vertical-align:middle;height: 100%;width:100%;float: left">
                 <h2 id="title" class="windowTitle">消息</h2>
             </div>
-            <div style="width:8%;height:100%;float:right;margin-right: 3%;">
+            <div class="righttopBtn">
                 <img id="topAdd" class="btnIcon" src="../img/jia.png" height="100%" width="100%">
             </div>
         </div>
@@ -145,50 +145,38 @@
     <div id="chatDiv" style="width:100%;height: 100%;display: none">
         <!-- 头部 -->
         <div style="width:100%;height: 5%;background-color: #EDEDED">
-            <div style="width:8%;height:100%;float:left;margin-right: 3%;">
+            <div class="lefttopBtn">
                 <img id="topOutIcon" class="btnIcon" src="../img/back.png" height="100%" width="100%">
                 <img id="topBackIcon" class="btnIcon" src="../img/back.png" height="100%" width="100%" style="display: none">
             </div>
-            <div style="vertical-align:middle;height: 100%;width:64%;float: left">
+            <div style="vertical-align:middle;height: 100%;width:80%;float: left;margin-left:10%;">
                 <h2 id="titleName" class="windowTitle">对方姓名</h2>
                 <h2 id="titleChatDetail"  class="windowTitle hide">对话详情</h2>
             </div>
-            <div style="width:8%;height:100%;float:right;margin-right: 3%;">
+            <div class="righttopBtn">
                 <img id="topPointIcon" class="btnIcon" src="../img/point.png" height="100%" width="100%">
             </div>
         </div>
 
         <!-- 聊天详情 -->
         <div id="chatDetailDiv" style="width:100%;height: 95%;display: none">
-            <div style="width:100%;overflow: hidden">
-                <div class="chatPersonDiv">
-                    <img src="../img/head.png" >
-                    用户A
-                </div>
-                <div class="chatPersonDiv">
-                    <img src="../img/head.png" >
-                    用户B
-                </div>
-                <div class="chatPersonDiv">
-                    <img src="../img/head.png" >
-                    用户C
-                </div>
-                <div class="chatPersonDiv">
-                    <img src="../img/head.png" >
-                    用户D
-                </div>
-                <div class="chatPersonDiv">
-                    <img src="../img/head.png" >
-                    用户E
-                </div>
-                <div id="chatPersonAddIcon" class="btnIcon chatPersonDiv">
-                    <img src="../img/jia.png" >
-                </div>
+            <div id="chatPersonDiv" style="width:100%;overflow: hidden">
+<!--                <div class="chatPersonDiv">-->
+<!--                    <img src="../img/head.png" >-->
+<!--                    用户A-->
+<!--                </div>-->
+<!--                <div class="chatPersonDiv">-->
+<!--                    <img src="../img/head.png" >-->
+<!--                    用户B-->
+<!--                </div>-->
+<!--                <div id="chatPersonAddIcon" class="btnIcon chatPersonDiv" onclick="addGroupHtml(this)">-->
+<!--                    <img src="../img/jia.png" >-->
+<!--                </div>-->
             </div>
-            <div id="groupDetail" style="width:100%;padding:3%;display:none">
+            <div id="groupDetail" style="width:100%;padding:3%;margin-top:3%;display:none">
                 <span>群聊名称</span>
-                <input type="text" placeholder="xx讨论群" style="margin-left: 3%;">
-                <input type="button" class="btnIcon" value="确认修改" style="float: right;margin-right: 6%;width: 16%;">
+                <input id="groupNameInput" type="text" placeholder="xx讨论群" style="margin-left: 3%;">
+                <input id="groupNameUpdateBtn" type="button" class="btnIcon" value="确认修改" style="float: right;margin-right: 6%;width: 16%;" onclick="updateGroupName()">
             </div>
         </div>
         <!--中部-->
@@ -230,7 +218,6 @@
     var src="";
     var dst="";
     var type="";
-    var groups=[];
 
     $(function(){
         src=userId=GetUrlParam("id");
@@ -240,8 +227,6 @@
         loadIndex();
     });
 
-
-
     /*好友列表搜索框*/
     $("#friendSearchBtn").on("click",function(){
         var searchName=$("#friendUlInput").val();
@@ -250,7 +235,39 @@
             return;
         }
         $("#cleanFriendSearchBtn").show();
-        $(".friendUl li").each(function(i,n){
+        //好友搜索
+        $.ajax({
+            type : "POST",
+            contentType: "application/json;charset=UTF-8",
+            url : "/searchPerson/"+searchName,
+            //请求成功
+            success : function(result) {
+                // console.log("getUserByGroup : "+result.data);
+                var res=result.data;
+                var html='';
+                $(res).each(function(i,n){
+                    html+='<li name="'+n.sId+'" class="searchFriendLi" type="single" onclick="jumpChat(this)">\n' +
+                        '                        <div class="liContentDiv scrollDiv">\n' +
+                        '                            <div class="liContentImgDiv">\n' +
+                        '                                <img src="../img/head.png">\n' +
+                        '                            </div>\n' +
+                        '                            <div class="liContentRightDiv">\n' +
+                        '                                <div class="liFriendUser liName">'+n.sUnitname+' '+n.sName+'</div>\n' +
+                        '                            </div>\n' +
+                        '                        </div>\n' +
+                        '                        <div class="liSpace"/>\n' +
+                        '                    </li>';
+                })
+                $("#friendUl").html(html);
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        })
+        //群搜索
+        $("#groupUl li").each(function(i,n){
             $(this).show();
             var name=$(this.getElementsByClassName("liFriendUser")[0]).text();
             if(name.indexOf(searchName)==-1){
@@ -260,7 +277,8 @@
     })
     $("#cleanFriendSearchBtn").on("click",function(){
         $("#friendUlInput").val("");
-        $(".friendUl li").show();
+        $("#groupUl li").show();
+        loadFriends();
         $(this).hide();
     })
     /*消息列表搜索框*/
@@ -291,7 +309,8 @@
             title: false,
             type: 2,
             anim: 0,//动画0-6
-            content: 'http://localhost:8080/chat/addGroup.html',
+            // content: 'http://localhost:8080/chat/addGroup.html?userId='+src,
+            content: 'http://localhost:8080/chat/addGroup.html?src='+src+'&&dst='+dst+'&&type='+type,
             area: ['100%', '100%'],
             // maxmin: true,
             closeBtn:0
@@ -414,9 +433,18 @@
         $("#topBackIcon").show();
         $("#topOutIcon").hide();
         $("#chatDetailDiv").show();
+        if(type=="group"){
+            $("#groupDetail").show();
+            $("#groupNameInput").attr("placeholder",$("#titleName").text());
+        }else if(type=="single"){
+            $("#groupDetail").hide();
+        }
 
     })
     $("#topBackIcon").on("click",function(){
+        chatDetailback();
+    })
+    function chatDetailback(){
         //切换显示
         $("#topPointIcon").show();
         $("#titleName").show();
@@ -425,7 +453,52 @@
         $("#topBackIcon").hide();
         $("#topOutIcon").show();
         $("#chatDetailDiv").hide();
-    })
+    }
+
+    function updateGroupName(){
+        var groupName=$("#groupNameInput").val();
+        var param={
+            "groupId":dst,
+            "groupName":groupName
+        }
+        $.ajax({
+            type : "POST",
+            contentType: "application/json;charset=UTF-8",
+            url : "/updateGroup",
+            data : JSON.stringify(param),
+            //请求成功
+            success : function(result) {
+                console.log("更新群名 : "+result.msg);
+                $("#titleName").text(groupName);
+                chatDetailback();
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        })
+    }
+
+    function addGroupHtml(obj){
+        var userIds="";
+        $(obj).siblings().each(function(i,n){
+            userIds+=$(n).attr("name")+",";
+        })
+        userIds=userIds.substr(0,userIds.length-1);
+        // console.log(userIds)
+        var index = layer.open({
+            title: false,
+            type: 2,
+            anim: 0,//动画0-6
+            // content: 'http://localhost:8080/chat/addGroup.html?userId='+userIds+'&&type='+type,
+            content: 'http://localhost:8080/chat/addGroup.html?src='+src+'&&dst='+dst+'&&type='+type+'&&userId='+userIds,
+            area: ['100%', '100%'],
+            // maxmin: true,
+            closeBtn:0
+        });
+        layer.full(index);
+    }
 
 </script>
 </html>

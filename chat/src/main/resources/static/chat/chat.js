@@ -151,7 +151,7 @@ function loadFriends(){
     $.ajax({
         type : "POST",
         contentType: "application/json;charset=UTF-8",
-        url : "/getFriends",
+        url : "/getFriend/"+src,
         //请求成功
         success : function(result) {
             var friends=result.data;
@@ -160,7 +160,7 @@ function loadFriends(){
                 if(n.sId==src){
                     return true;//遍历到自己则不显示
                 }
-                html+='<li name="'+n.sId+'" type="single" onclick="jumpChat(this)">\n' +
+                html+='<li name="'+n.sId+'" class="" type="single" onclick="jumpChat(this)">\n' +
                     '                        <div class="liContentDiv scrollDiv">\n' +
                     '                            <div class="liContentImgDiv">\n' +
                     '                                <img src="../img/head.png">\n' +
@@ -217,23 +217,29 @@ function loadGroups(){
 
 //跳转方法
 function jumpChat(obj){
+    //获取参数
     var id=obj.getAttribute("name");
     var toType=obj.getAttribute("type");
     src=userId;
     dst=id;
     type=toType;
-    console.log(src+"  "+dst+"  "+type);
-    // alert("跳转聊天");
+    console.log("跳转窗口 ： "+src+"  "+dst+"  "+type);
+    //如果是从搜索好友列表跳转来，则添加好友
+    var objClass=$(obj).attr("class");
+    if(typeof(objClass)!="undefined"&&objClass.indexOf("searchFriendLi")!=-1){
+        var twoUserId=src+","+dst;
+        addFriend(twoUserId);
+    }
+    //加载对话窗口信息
     var name=$(obj.getElementsByClassName("liName")[0]).text();//获取对话人姓名
     $("#titleName").text(name);//改对话窗口标题
     scrollChatWindow();//滚动条到最下
+    //窗口切换
     $("#indexDiv").hide();//首页隐藏
     $("#chatDiv").show();//对话窗口显示
-
     //消除首页未读提醒
     $(obj.getElementsByClassName("notice")).text(0);
     $(obj.getElementsByClassName("notice")).addClass("hide");
-
     //加载对话记录
     var data={
         "src":src,
@@ -259,7 +265,7 @@ function jumpChat(obj){
                 }else if(recordType=="group"){
                     recordDst=n.data.dst.id;
                 }
-                console.log(recordSrc+" "+recordDst+" "+recordType);
+                // console.log("加载record ： "+recordSrc+" "+recordDst+" "+recordType);
                 if(recordSrc==src){//如果记录来源为自己，则显示在右边
                     html+='<div name="'+n.data.uuid+'" class="RightTalk">\n' +
                         '                    <div class="rightTalkImgDiv talkImgDiv">\n' +
@@ -294,6 +300,43 @@ function jumpChat(obj){
             console.log(e.responseText);
         }
     })
+    //加载聊天详情页
+    var chatPersonHtml="";
+    if(type=="single"){
+        var personName=name.split(" ");
+        personName=personName[personName.length-1];
+        chatPersonHtml='<div name="'+dst+'" class="chatPersonDiv">\n' +
+            '<img src="../img/head.png" >'+personName+'</div>';
+        chatPersonHtml+='<div id="chatPersonAddIcon" class="btnIcon chatPersonDiv" onclick="addGroupHtml(this)">\n' +
+            '                    <img src="../img/jia.png" >\n' +
+            '                </div>';
+        $("#chatPersonDiv").html(chatPersonHtml);
+    }else if(type=="group"){
+        $.ajax({
+            type : "POST",
+            contentType: "application/json;charset=UTF-8",
+            url : "/getPersonByGroupId/"+dst,
+            //请求成功
+            success : function(result) {
+                // console.log("getUserByGroup : "+result.data);
+                var users=result.data;
+                var html='';
+                $(users).each(function(i,n){
+                    html+='<div name="'+n.sId+'" class="chatPersonDiv">\n' +
+                        '<img src="../img/head.png" >'+n.sName+'</div>';
+                })
+                html+='<div id="chatPersonAddIcon" class="btnIcon chatPersonDiv" onclick="addGroupHtml(this)">\n' +
+                    '                    <img src="../img/jia.png" >\n' +
+                    '                </div>';
+                $("#chatPersonDiv").html(html);
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        })
+    }
 }
 
 //加载首页列表
@@ -332,7 +375,6 @@ function loadIndex(){
                 if(notice=="0"){
                     noticeHide="hide";
                 }
-
                 html+='<li name="'+id+'" type="'+indexListType+'" onclick="jumpChat(this)">\n' +
                     '                        <div class="liContentDiv scrollDiv">\n' +
                     '                            <div class="liContentImgDiv">\n' +
@@ -348,6 +390,23 @@ function loadIndex(){
                     '                    </li>';
             })
             $("#chatUl").html(html);
+        },
+        //请求失败，包含具体的错误信息
+        error : function(e){
+            console.log(e.status);
+            console.log(e.responseText);
+        }
+    })
+}
+
+function addFriend(twoUserId){
+    $.ajax({
+        type : "POST",
+        contentType: "application/json;charset=UTF-8",
+        url : "/addFriend/"+twoUserId,
+        //请求成功
+        success : function(result) {
+            console.log("添加好友 : "+result.msg);
         },
         //请求失败，包含具体的错误信息
         error : function(e){

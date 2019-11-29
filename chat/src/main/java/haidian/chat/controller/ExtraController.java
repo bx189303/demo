@@ -1,9 +1,11 @@
 package haidian.chat.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import haidian.chat.dao.FriendMapper;
 import haidian.chat.dao.GroupMapper;
 import haidian.chat.dao.GroupUserMapper;
+import haidian.chat.dao.PersonMapper;
+import haidian.chat.pojo.Friend;
 import haidian.chat.pojo.Group;
 import haidian.chat.pojo.GroupUser;
 import haidian.chat.pojo.Person;
@@ -27,10 +29,16 @@ import java.util.concurrent.Executors;
 public class ExtraController {
 
     @Resource
+    PersonMapper personMapper;
+
+    @Resource
     GroupMapper groupMapper;
 
     @Resource
     GroupUserMapper groupUserMapper;
+
+    @Resource
+    FriendMapper friendMapper;
 
     @Autowired
     RedisUtil r;
@@ -38,21 +46,108 @@ public class ExtraController {
     @Autowired
     ListenAndSend listenAndSend;
 
-    @RequestMapping("/addGroup")
-    public Result addGroup(@RequestBody JSONObject json) {
+    @RequestMapping("/getFriend/{userId}")
+    public Result getFriend(@PathVariable String userId) {
         Result result = null;
         try {
-            String groupId = json.getString("groupId");
-            String addUserIds = json.getString("addUserIds");
-            String[] userIds = addUserIds.split(",");
+            List<Person> persons = new ArrayList<>();
+            List<String> friendIds=friendMapper.getFriendIdByUserId(userId);
+            for (String friendId : friendIds) {
+                Person user= (Person) r.get(friendId);
+                persons.add(user);
+            }
+            result = Result.ok(persons);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = Result.build(500, e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping("/addFriend/{userIds}")
+    public Result addFriend(@PathVariable String userIds) {
+        Result result = null;
+        try {
+            String[] userIdArray = userIds.split(",");
+            if(userIdArray.length!=2){
+                return Result.build(500, "参数格式错误");
+            }
+            String userId1=userIdArray[0].compareTo(userIdArray[1])<0?userIdArray[0]:userIdArray[1];
+            String userId2=userIdArray[0].compareTo(userIdArray[1])>0?userIdArray[0]:userIdArray[1];
+            List<Friend> fList = friendMapper.getByTwoUserId(userId1, userId2);
+            if(fList.size()!=0){
+                return Result.build(500, "两人已是好友");
+            }
+            Friend f=new Friend();
+            f.setUserid1(userId1);
+            f.setUserid2(userId2);
+            friendMapper.insert(f);
+            result = Result.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = Result.build(500, e.getMessage());
+        }
+        return result;
+    }
+
+
+    @RequestMapping("/searchPerson/{input}")
+    public Result searchPerson(@PathVariable String input) {
+        Result result = null;
+        try {
+            List<Person> users=new ArrayList<>();
+            String name="%"+input+"%";
+            List<String> userIds = personMapper.searchByNameOrUnitname(name);
+            for (String userId : userIds) {
+                Person user= (Person) r.get(userId);
+                users.add(user);
+            }
+            result = Result.ok(users);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = Result.build(500, e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping("/getPersonByGroupId/{groupId}")
+    public Result getPersonByGroupId(@PathVariable String groupId) {
+        Result result = null;
+        try {
+            List<Person> users=new ArrayList<>();
+            List<String> userIds = groupMapper.getUserByGroupId(groupId);
+            for (String userId : userIds) {
+                Person user= (Person) r.get(userId);
+                users.add(user);
+            }
+            result = Result.ok(users);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = Result.build(500, e.getMessage());
+        }
+        return result;
+    }
+
+
+    @RequestMapping("/addGroup/{ids}")
+    public Result addGroup(@PathVariable String ids) {
+        Result result = null;
+        try {
+            String[] idArray= ids.split(",");
+            //第一个元素为群id
+            String groupId = idArray[0];
             GroupUser gu = new GroupUser();
             gu.setGroupid(groupId);
-            for (String userId : userIds) {
-                gu.setUserid(userId);
+            for (int i = 0; i <idArray.length ; i++) {//从第二个元素开始为需要添加的人员
+                if(i==0){
+                    continue;
+                }
+                gu.setUserid(idArray[i]);
                 groupUserMapper.insertSelective(gu);
             }
             result = Result.ok();
         } catch (Exception e) {
+            e.printStackTrace();
             result = Result.build(500, e.getMessage());
         }
         return result;
@@ -70,30 +165,33 @@ public class ExtraController {
             groupMapper.updateByPrimaryKeySelective(g);
             result = Result.ok();
         } catch (Exception e) {
+            e.printStackTrace();
             result = Result.build(500, e.getMessage());
         }
         return result;
     }
 
-    @RequestMapping("/createGroup")
-    public Result createGroup(@RequestBody JSONObject json) {
+    @RequestMapping("/createGroup/{userIds}")
+    public Result createGroup(@PathVariable String userIds) {
         Result result = null;
         try {
+            String[] userIdArray = userIds.split(",");
+            if(userIdArray.length<3){
+                return Result.build(500,"创建新群最少3人");
+            }
             //建群
-            String groupOwnerId = json.getString("groupOwnerId");
+            String groupOwnerId = userIdArray[0];
             String uuid = UUID.randomUUID() + "";
             Group newGroup = new Group();
             newGroup.setId(uuid);
             newGroup.setOwnerid(groupOwnerId);
-            JSONObject user = (JSONObject) r.get(groupOwnerId);
-            newGroup.setName(user.getString("sName") + "的群");
-            groupMapper.insertSelective(newGroup);
+            Person user = (Person) r.get(groupOwnerId);
+            newGroup.setName(user.getsName() + "的群");
+            groupMapper.insert(newGroup);
             //加人
-            String initGroupMembers = json.getString("initGroupMembers");
-            String[] userIds = initGroupMembers.split(",");
             GroupUser gu = new GroupUser();
             gu.setGroupid(uuid);
-            for (String userId : userIds) {
+            for (String userId : userIdArray) {
                 gu.setUserid(userId);
                 groupUserMapper.insertSelective(gu);
             }
@@ -101,6 +199,7 @@ public class ExtraController {
             uuidJson.put("uuid", uuid);
             result = Result.ok(uuidJson);
         } catch (Exception e) {
+            e.printStackTrace();
             result = Result.build(500, e.getMessage());
         }
         return result;
@@ -209,6 +308,7 @@ public class ExtraController {
             });
             result = Result.ok(recordList);
         } catch (Exception e) {
+            e.printStackTrace();
             result = Result.build(500, e.getMessage());
         }
         return result;
@@ -221,11 +321,15 @@ public class ExtraController {
             List<Group> groups = groupMapper.getByUserId(userId);
             result = Result.ok(groups);
         } catch (Exception e) {
+            e.printStackTrace();
             result = Result.build(500, e.getMessage());
         }
         return result;
     }
 
+    /** 旧
+     *  获取所有人
+     */
     @RequestMapping("/getFriends")
     public Result getFriends() {
         Result result = null;
@@ -233,6 +337,7 @@ public class ExtraController {
             List<Person> persons = (List<Person>) r.get("persons");
             result = Result.ok(persons);
         } catch (Exception e) {
+            e.printStackTrace();
             result = Result.build(500, e.getMessage());
         }
         return result;
@@ -259,6 +364,7 @@ public class ExtraController {
 
             result=Result.ok(msgs);
         }catch (Exception e){
+            e.printStackTrace();
             result=Result.build(500,e.getMessage());
         }
         return result;

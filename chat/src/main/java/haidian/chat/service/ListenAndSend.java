@@ -92,7 +92,7 @@ public class ListenAndSend {
             String key="";
             if("single".equalsIgnoreCase(type)){
                 dstId=data.getJSONObject("dst").getString("sId");
-                key=srcId.compareTo(dstId)>0?srcId+"."+dstId:dstId+"."+srcId;
+                key=srcId.compareTo(dstId)<0?srcId+"."+dstId:dstId+"."+srcId;
             }else if("group".equalsIgnoreCase(type)){
                 dstId=data.getJSONObject("dst").getString("id");
                 key=dstId;

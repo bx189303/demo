@@ -8,6 +8,8 @@ import java.util.List;
 @Mapper
 public interface PersonMapper {
 
+    List<String> searchByNameOrUnitname(String name);
+
     List<Person> getAll();
 
     int deleteByPrimaryKey(String sId);

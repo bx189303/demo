@@ -6,8 +6,10 @@
     <link rel="stylesheet" type="text/css" href="../css/base.css">
     <link rel="stylesheet" type="text/css" href="../css/chat.css">
 </head>
-<script src="../js/jquery-3.4.1.min.js"></script>
-<script src="../layer/layer.js"></script>
+<script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="../layer/layer.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="../chat/chat.js"></script>
 <style>
 
 
@@ -29,17 +31,18 @@
     <div id="friendDiv" class="listDiv" style="overflow-y:scroll;overflow-x: hidden;width:100%;height: 87%;">
         <div class="container" style="width:100%;height: 6%;background-color: #EDEDED">
             <form action="" class="parent" style="width:100%;height: 100%;">
-                <input type="text" class="search" placeholder="" >
-                <input type="button" name="" id="friendSearchBtn" class="searchBtn">
+                <input id="AddGroupSearchInput" type="text" class="search" placeholder="" >
+                <input type="button" name="" id="cleanFriendSearchBtn" class="searchCleanBtn">
+                <input type="button" name="" class="searchBtn" onclick="friendSearch()">
             </form>
         </div>
 
         <div id="friendListDiv" style="margin-top: 1%;">
-            <ul class="chatUl">
+            <ul id="friendUl" class="chatUl">
                 <li class="singleFriend">
                     <div class="liContentDiv scrollDiv">
                         <div class="addGroupLiCheckBox">
-                            <div id="0001" class="checkBoxDiv"></div>
+                            <div name="0001" class="checkBoxDiv"></div>
                         </div>
                         <div class="liContentImgDiv">
                             <img src="../img/head.png">
@@ -50,34 +53,227 @@
                     </div>
                     <div class="liSpace"/>
                 </li>
-
             </ul>
         </div>
     </div>
 
 </body>
 <script>
-    $(function(){
+    var userId="";
+    var src="";
+    var srcType="";
+    var srcDst="";
 
+    $(function(){
+        srcType=GetUrlParam("type");
+        userId=GetUrlParam("userId");
+        src=GetUrlParam("src");
+        srcDst=GetUrlParam("dst");
+        console.log("src:"+src+"|dst:"+srcDst+"|type:"+srcType+"|id:"+userId);
+        loadCheckBox();
     });
     //左上角撤销按钮-关闭窗口
     $("#topOutIcon").on("click",function(){
+        closeWindow();
+    })
+    function closeWindow(){
         var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
         parent.layer.close(index); //再执行关闭
-    })
-    //选择用户
-    $(".chatUl li").on("click",function(){
-        $(this.getElementsByClassName("checkBoxDiv")).toggleClass("checked");
-    })
-    //确定提交
-    $("#addGroupBtn").on("click",function(){
-        var id="";
-        $(".checked").each(function(i,n){
-            console.log($(".checked")[i].id)
+    }
+
+    //搜索框
+    function friendSearch(){
+        var searchName=$("#AddGroupSearchInput").val();
+        if(searchName==""||searchName==null||searchName=="undefined"){
+            console.log("输入框为空");
+            return;
+        }
+        $("#cleanFriendSearchBtn").show();
+        //好友搜索
+        $.ajax({
+            type : "POST",
+            contentType: "application/json;charset=UTF-8",
+            url : "/searchPerson/"+searchName,
+            //请求成功
+            success : function(result) {
+                // console.log("getUserByGroup : "+result.data);
+                var res=result.data;
+                var html='';
+                $(res).each(function(i,n){
+                    var friendId=n.sId;
+                    var onclick="check(this)";
+                    var hasChecked="";
+                    if(srcType=="group"&&userId.indexOf(friendId)!=-1){ //从群窗口跳转来
+                        onclick="";
+                        hasChecked="hasChecked";
+                    }
+                    if(srcType=="single"&&userId.indexOf(friendId)!=-1){ //从个人窗口来
+                        onclick="";
+                        hasChecked="checked";
+                    }
+                    if(n.sId==src){
+                        return true;//遍历到自己则不显示
+                    }
+                    html+='<li class="singleFriend" onclick="'+onclick+'">\n' +
+                        '                    <div class="liContentDiv scrollDiv">\n' +
+                        '                        <div class="addGroupLiCheckBox">\n' +
+                        '                            <div name="'+friendId+'" class="checkBoxDiv '+hasChecked+'"></div>\n' +
+                        '                        </div>\n' +
+                        '                        <div class="liContentImgDiv">\n' +
+                        '                            <img src="../img/head.png">\n' +
+                        '                        </div>\n' +
+                        '                        <div class="addGroupLiContentRightDiv">\n' +
+                        '                            <div class="liFriendUser">'+n.sUnitname+" "+n.sName+'</div>\n' +
+                        '                        </div>\n' +
+                        '                    </div>\n' +
+                        '                    <div class="liSpace"/>\n' +
+                        '                </li>';
+                })
+                $("#friendUl").html(html);
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
         })
-        console.log()
+    }
+    $("#cleanFriendSearchBtn").on("click",function(){
+        $("#chatLiInput").val("");
+        loadCheckBox();
+        $(this).hide();
     })
 
+    //确定提交
+    $("#addGroupBtn").on("click",function(){
+        var checkedIds="";
+        $(".checked").each(function(i,n){
+            checkedIds+=$(n).attr("name")+",";
+        })
+        if(checkedIds==""){
+            layer.msg("请选择添加用户");
+            return;
+        }
+        checkedIds=checkedIds.substr(0,checkedIds.length-1);
+        console.log("选中id： "+checkedIds);
+        if(srcType=="group"){
+            addGroup(checkedIds);
+        }else {
+            if(checkedIds.split(",").length<2){
+                console.log("创建群不能少于3人");
+                layer.msg("创建群不能少于3人");
+                return;
+            }
+            createGroup(checkedIds);
+        }
+    })
+
+    function loadCheckBox(){
+        $.ajax({
+            type : "POST",
+            contentType: "application/json;charset=UTF-8",
+            url : "/getFriend/"+src,
+            //请求成功
+            success : function(result) {
+                var friends=result.data;
+                var html='';
+                $(friends).each(function(i,n){
+                    var friendId=n.sId;
+                    var onclick="check(this)";
+                    var hasChecked="";
+                    if(srcType=="group"&&userId.indexOf(friendId)!=-1){ //从群窗口跳转来
+                        onclick="";
+                        hasChecked="hasChecked";
+                    }
+                    if(srcType=="single"&&userId.indexOf(friendId)!=-1){ //从个人窗口来
+                        onclick="";
+                        hasChecked="checked";
+                    }
+                    if(n.sId==src){
+                        return true;//遍历到自己则不显示
+                    }
+                    html+='<li class="singleFriend" onclick="'+onclick+'">\n' +
+                        '                    <div class="liContentDiv scrollDiv">\n' +
+                        '                        <div class="addGroupLiCheckBox">\n' +
+                        '                            <div name="'+friendId+'" class="checkBoxDiv '+hasChecked+'"></div>\n' +
+                        '                        </div>\n' +
+                        '                        <div class="liContentImgDiv">\n' +
+                        '                            <img src="../img/head.png">\n' +
+                        '                        </div>\n' +
+                        '                        <div class="addGroupLiContentRightDiv">\n' +
+                        '                            <div class="liFriendUser">'+n.sUnitname+" "+n.sName+'</div>\n' +
+                        '                        </div>\n' +
+                        '                    </div>\n' +
+                        '                    <div class="liSpace"/>\n' +
+                        '                </li>';
+                })
+                $("#friendUl").html(html);
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        })
+    }
+
+    //选中效果方法
+    function check(obj){
+        $(obj.getElementsByClassName("checkBoxDiv")).toggleClass("checked");
+    }
+
+    function createGroup(userIds){
+        // console.log(userIds+",创建群")
+        var ids=src+","+userIds;
+        $.ajax({
+            type : "POST",
+            contentType: "application/json;charset=UTF-8",
+            url : "/createGroup/"+ids,
+            //请求成功
+            success : function(result) {
+                var groupId=result.data.uuid;
+                console.log("创建群 : "+result.data.uuid);
+                window.parent.loadGroups();
+                layer.msg("创建群成功!");
+                setTimeout(function(){
+                    window.parent.$("#groupUl li[name='"+groupId+"']").click();//跳转新建的群
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index); //再执行关闭
+                },500);
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        })
+    }
+    function addGroup(userIds){
+        // console.log(userIds+",群内加人")
+        var ids=srcDst+","+userIds;
+        $.ajax({
+            type : "POST",
+            contentType: "application/json;charset=UTF-8",
+            url : "/addGroup/"+ids,
+            //请求成功
+            success : function(result) {
+                console.log("群内加人 : "+result.msg);
+                // closeWindow();
+                window.parent.loadGroups();
+                layer.msg("添加人员成功!");
+                setTimeout(function(){
+                    window.parent.$("#topBackIcon").click();//返回聊天窗口
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index); //再执行关闭
+                },500);
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        })
+    }
 
 
 

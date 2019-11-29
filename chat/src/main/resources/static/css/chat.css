@@ -11,6 +11,18 @@
     /* width: 20%; */
     text-align: center;
 }
+.lefttopBtn{
+    width: 8%;
+    height: 5%;
+    position: absolute;
+    left: 2%;
+}
+.righttopBtn{
+    width: 8%;
+    height: 5%;
+    position: absolute;
+    right: 2%;
+}
 .container {
     height: 70px;
     width: 800px;
@@ -260,4 +272,7 @@ li:hover{
 }
 .checked{
     background-color: green;
+}
+.hasChecked{
+    background-color: #474f47;
 }

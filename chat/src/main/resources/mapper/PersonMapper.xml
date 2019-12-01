@@ -67,7 +67,7 @@
       S_ID
       FROM T_PERSON
       WHERE S_NAME LIKE #{name}
-      union all
+      union
       select
       S_ID
       FROM T_PERSON

@@ -4,18 +4,37 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
 <script type="text/javascript">
     function func() {
+        // window.open("http://localhost:11111/test.mp4");
+
+        var $eleForm = $("<form method='get'></form>");
+
+        $eleForm.attr("action","http://localhost:11111/test.mp4");
+
+        $(document.body).append($eleForm);
+
+        //提交表单，实现下载  
+        $eleForm.submit();  
+
+        var url="/upload";
         var file1 = document.getElementById("image1").files[0];
         var formData = new FormData();
         formData.append('files', file1, file1.name);
         var xhr = new XMLHttpRequest();
-        xmlhttp.onreadystatechange=fuc1();
+        xhr.onreadystatechange=function(){
+            if (xhr.readyState==4 && xhr.status==200)
+            {
+                // document.getElementById("myDiv").innerHTML=xhr.responseText;
+                console.log(xhr.responseText)
+            }
+        };
         xhr.open('POST', url, true);
         xhr.send(formData);
     }
     function fuc1(){
-            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            if (xhr.readyState==4 && xhr.status==200)
             {
                 document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
             }
@@ -25,5 +44,7 @@
 <input type="file" class="file" id="image1" accept="image/gif,image/jpeg,image/jpg,image/png"/>
 <input type="file" class="file" id="image2" accept="image/gif,image/jpeg,image/jpg,image/png"/>
 <button id="test" onclick="func()">demo</button>
+<img src="http://localhost:11111/1.jpg" style="height:100px;width:50px">
+<a href="http://localhost:11111/test.mp4" download="测试.mp4">点击下载</a>
 </body>
 </html>

@@ -352,7 +352,7 @@ public class ExtraController {
             String type=json.getString("type");
             String key="";
             if("single".equalsIgnoreCase(type)){
-                key=src.compareTo(dst)>0?src+"."+dst:dst+"."+src;
+                key=src.compareTo(dst)<0?src+"."+dst:dst+"."+src;
             }else if("group".equalsIgnoreCase(type)){
                 key=dst;
             }

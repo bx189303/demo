@@ -31,64 +31,79 @@ function openSocket() {
                     dataSrc=dataGroup;
                 }
                 //消息列表更新
-                var indexNoExistence=true;//默认首页不存在对话框
-                $("#msgListDiv li").each(function(i,n){
-                    // console.log($(this).attr("name"));
-                    var liId=$(this).attr("name");
-                    var liType=$(this).attr("type");
-                    if(liId==dataSrc&&liType==dataType){
-                        var content=msg.data.content.content;
-                        //列表显示最后一条消息
-                        $(this.getElementsByClassName("liContentRecord")[0]).text(content);
-                        //如果不在聊天窗口，则notice显示并+1
-                        if(dataSrc!=dst||dataType!=type){
-                            var n=$(this.getElementsByClassName("notice")[0]).text();
-                            $(this.getElementsByClassName("notice")[0]).text(parseInt(n)+1);
-                            $(this.getElementsByClassName("notice")[0]).removeClass("hide");
-                        }
-                        //放在第一个
-                        $(this).insertBefore($("#msgListDiv li")[0]);
-                        //indexNoExistence
-                        indexNoExistence=false;
-                        //更新后跳出循环
-                        return true;
-                    }
-                })
-                //遍历后如果首页不存在则新建对话框
-                if(indexNoExistence){
-                    var talkId=""
-                    var headImgName="";
-                    var talkName="";
-                    var talkContent="";
-                    var talkPersonUnit="";
-                    if(dataType=="single"){
-                        talkId=msg.data.src.sId;
-                        headImgName="head";
-                        talkName=msg.data.src.sName;
-                        talkPersonUnit=msg.data.src.sUnitname+" ";
-                    }else if(dataType=="group"){
-                        talkId=msg.data.group.id;
-                        talkName=msg.data.group.name;
-                        headImgName="grouphead";
-                    }
-                    if(msg.data.content.type=="text"){
-                        talkContent=msg.data.content.content;
-                    }
-                    var liHtml='<li name="'+talkId+'" type="'+dataType+'" onclick="jumpChat(this)">\n' +
-                        '                        <div class="liContentDiv scrollDiv">\n' +
-                        '                            <div class="liContentImgDiv">\n' +
-                        '                                <img src="../img/'+headImgName+'.png">\n' +
-                        '                                <div class="notice">'+1+'</div>\n' +
-                        '                            </div>\n' +
-                        '                            <div class="liContentRightDiv">\n' +
-                        '                                <div class="liContentUser liName">'+talkPersonUnit+talkName+'</div>\n' +
-                        '                                <div class="liContentRecord">'+talkContent+'</div>\n' +
-                        '                            </div>\n' +
-                        '                        </div>\n' +
-                        '                        <div class="liSpace"/>\n' +
-                        '                    </li>';
-                    $(liHtml).insertBefore($("#msgListDiv li")[0]);
+                var talkName="";
+                var talkContent="";
+                if(dataType=="single"){
+                    talkName=msg.data.src.sUnitname+" "+msg.data.src.sName;
+                }else if(dataType=="group"){
+                    talkName=msg.data.group.name;
                 }
+                if(msg.data.content.type=="text"){
+                    talkContent=msg.data.content.content;
+                }else if(msg.data.content.type=="file"){
+                    talkContent="文件";
+                }
+                indexMsgListUpdate(dataSrc,talkName,dataType,talkContent,"receive");
+
+
+                // var indexNoExistence=true;//默认首页不存在对话框
+                // $("#msgListDiv li").each(function(i,n){
+                //     // console.log($(this).attr("name"));
+                //     var liId=$(this).attr("name");
+                //     var liType=$(this).attr("type");
+                //     if(liId==dataSrc&&liType==dataType){
+                //         var content=msg.data.content.content;
+                //         //列表显示最后一条消息
+                //         $(this.getElementsByClassName("liContentRecord")[0]).text(content);
+                //         //如果不在聊天窗口，则notice显示并+1
+                //         if(dataSrc!=dst||dataType!=type){
+                //             var n=$(this.getElementsByClassName("notice")[0]).text();
+                //             $(this.getElementsByClassName("notice")[0]).text(parseInt(n)+1);
+                //             $(this.getElementsByClassName("notice")[0]).removeClass("hide");
+                //         }
+                //         //放在第一个
+                //         $(this).insertBefore($("#msgListDiv li")[0]);
+                //         //变量改为首页存在
+                //         indexNoExistence=false;
+                //         //更新后跳出循环
+                //         return true;
+                //     }
+                // })
+                // //遍历后如果首页不存在则新建对话框
+                // if(indexNoExistence){
+                //     var talkId=""
+                //     var headImgName="";
+                //     var talkName="";
+                //     var talkContent="";
+                //     var talkPersonUnit="";
+                //     if(dataType=="single"){
+                //         talkId=msg.data.src.sId;
+                //         headImgName="head";
+                //         talkName=msg.data.src.sName;
+                //         talkPersonUnit=msg.data.src.sUnitname+" ";
+                //     }else if(dataType=="group"){
+                //         talkId=msg.data.group.id;
+                //         talkName=msg.data.group.name;
+                //         headImgName="grouphead";
+                //     }
+                //     if(msg.data.content.type=="text"){
+                //         talkContent=msg.data.content.content;
+                //     }
+                //     var liHtml='<li name="'+talkId+'" type="'+dataType+'" onclick="jumpChat(this)">\n' +
+                //         '                        <div class="liContentDiv scrollDiv">\n' +
+                //         '                            <div class="liContentImgDiv">\n' +
+                //         '                                <img src="../img/'+headImgName+'.png">\n' +
+                //         '                                <div class="notice">'+1+'</div>\n' +
+                //         '                            </div>\n' +
+                //         '                            <div class="liContentRightDiv">\n' +
+                //         '                                <div class="liContentUser liName">'+talkPersonUnit+talkName+'</div>\n' +
+                //         '                                <div class="liContentRecord">'+talkContent+'</div>\n' +
+                //         '                            </div>\n' +
+                //         '                        </div>\n' +
+                //         '                        <div class="liSpace"/>\n' +
+                //         '                    </li>';
+                //     $(liHtml).insertBefore($("#msgListDiv li")[0]);
+                // }
 
                 //聊天窗口显示消息
                 if((dst==dataSrc&&dataType=="single")||(dst==dataGroup&&dataType=="group")){//如果当前窗口打开则显示消息并发送已读
@@ -144,6 +159,62 @@ function openSocket() {
 
         };
 
+    }
+}
+
+function indexMsgListUpdate(chatSrcId,chatSrcName,chatSrcType,chatContent,updateType){
+    //消息列表更新
+    var indexNoExistence=true;//变量,默认首页不存在对话框
+    //遍历后如果首页存在则更新对话框
+    $("#msgListDiv li").each(function(i,n){
+        var liId=$(this).attr("name");
+        var liType=$(this).attr("type");
+        if(liId==chatSrcId&&liType==chatSrcType){
+            //列表显示最后一条消息
+            $(this.getElementsByClassName("liContentRecord")[0]).text(chatContent);
+            //如果不在聊天窗口，则notice显示并+1
+            if(updateType=="receive"){
+                if(chatSrcId!=dst||chatSrcType!=type){
+                    var n=$(this.getElementsByClassName("notice")[0]).text();
+                    $(this.getElementsByClassName("notice")[0]).text(parseInt(n)+1);
+                    $(this.getElementsByClassName("notice")[0]).removeClass("hide");
+                }
+            }
+            //放在第一个
+            $(this).insertBefore($("#msgListDiv li")[0]);
+            //变量改为首页存在
+            indexNoExistence=false;
+            //更新后跳出循环
+            return true;
+        }
+    })
+    //遍历后如果首页不存在则新建对话框
+    if(indexNoExistence){
+        var headImgName="";
+        if(chatSrcType=="single"){
+            headImgName="head";
+        }else if(chatSrcType=="group"){
+            headImgName="grouphead";
+        }
+        var noticeHtml='';
+        if(updateType=="receive"){
+            noticeHtml='<div class="notice">1</div>';
+        }else if(updateType="send"){
+            noticeHtml='<div class="notice hide">0</div>';
+        }
+        var liHtml='<li name="'+chatSrcId+'" type="'+chatSrcType+'" onclick="jumpChat(this)">\n' +
+            '                        <div class="liContentDiv scrollDiv">\n' +
+            '                            <div class="liContentImgDiv">\n' +
+            '                                <img src="../img/'+headImgName+'.png">\n' +noticeHtml+
+            '                            </div>\n' +
+            '                            <div class="liContentRightDiv">\n' +
+            '                                <div class="liContentUser liName">'+chatSrcName+'</div>\n' +
+            '                                <div class="liContentRecord">'+chatContent+'</div>\n' +
+            '                            </div>\n' +
+            '                        </div>\n' +
+            '                        <div class="liSpace"/>\n' +
+            '                    </li>';
+        $(liHtml).insertBefore($("#msgListDiv li")[0]);
     }
 }
 
@@ -301,42 +372,42 @@ function jumpChat(obj){
         }
     })
     //加载聊天详情页
-    var chatPersonHtml="";
-    if(type=="single"){
-        var personName=name.split(" ");
-        personName=personName[personName.length-1];
-        chatPersonHtml='<div name="'+dst+'" class="chatPersonDiv">\n' +
-            '<img src="../img/head.png" >'+personName+'</div>';
-        chatPersonHtml+='<div id="chatPersonAddIcon" class="btnIcon chatPersonDiv" onclick="addGroupHtml(this)">\n' +
-            '                    <img src="../img/jia.png" >\n' +
-            '                </div>';
-        $("#chatPersonDiv").html(chatPersonHtml);
-    }else if(type=="group"){
-        $.ajax({
-            type : "POST",
-            contentType: "application/json;charset=UTF-8",
-            url : "/getPersonByGroupId/"+dst,
-            //请求成功
-            success : function(result) {
-                // console.log("getUserByGroup : "+result.data);
-                var users=result.data;
-                var html='';
-                $(users).each(function(i,n){
-                    html+='<div name="'+n.sId+'" class="chatPersonDiv">\n' +
-                        '<img src="../img/head.png" >'+n.sName+'</div>';
-                })
-                html+='<div id="chatPersonAddIcon" class="btnIcon chatPersonDiv" onclick="addGroupHtml(this)">\n' +
-                    '                    <img src="../img/jia.png" >\n' +
-                    '                </div>';
-                $("#chatPersonDiv").html(html);
-            },
-            //请求失败，包含具体的错误信息
-            error : function(e){
-                console.log(e.status);
-                console.log(e.responseText);
-            }
-        })
-    }
+    // var chatPersonHtml="";
+    // if(type=="single"){
+    //     var personName=name.split(" ");
+    //     personName=personName[personName.length-1];
+    //     chatPersonHtml='<div name="'+dst+'" class="chatPersonDiv">\n' +
+    //         '<img src="../img/head.png" >'+personName+'</div>';
+    //     chatPersonHtml+='<div id="chatPersonAddIcon" class="btnIcon chatPersonDiv" onclick="addGroupHtml(this)">\n' +
+    //         '                    <img src="../img/jia.png" >\n' +
+    //         '                </div>';
+    //     $("#chatPersonDiv").html(chatPersonHtml);
+    // }else if(type=="group"){
+    //     $.ajax({
+    //         type : "POST",
+    //         contentType: "application/json;charset=UTF-8",
+    //         url : "/getPersonByGroupId/"+dst,
+    //         //请求成功
+    //         success : function(result) {
+    //             // console.log("getUserByGroup : "+result.data);
+    //             var users=result.data;
+    //             var html='';
+    //             $(users).each(function(i,n){
+    //                 html+='<div name="'+n.sId+'" class="chatPersonDiv">\n' +
+    //                     '<img src="../img/head.png" >'+n.sName+'</div>';
+    //             })
+    //             html+='<div id="chatPersonAddIcon" class="btnIcon chatPersonDiv" onclick="addGroupHtml(this)">\n' +
+    //                 '                    <img src="../img/jia.png" >\n' +
+    //                 '                </div>';
+    //             $("#chatPersonDiv").html(html);
+    //         },
+    //         //请求失败，包含具体的错误信息
+    //         error : function(e){
+    //             console.log(e.status);
+    //             console.log(e.responseText);
+    //         }
+    //     })
+    // }
 }
 
 //加载首页列表

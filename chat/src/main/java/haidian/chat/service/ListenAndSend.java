@@ -46,7 +46,7 @@ public class ListenAndSend {
             //更新redis
             String key="";
             if("single".equalsIgnoreCase(type)){
-                key=srcId.compareTo(dstId)>0?srcId+"."+dstId:dstId+"."+srcId;
+                key=srcId.compareTo(dstId)<0?srcId+"."+dstId:dstId+"."+srcId;
             }else if("group".equalsIgnoreCase(type)){
                 String groupId=data.getString("groupId");
                 key=groupId;

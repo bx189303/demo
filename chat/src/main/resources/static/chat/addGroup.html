@@ -36,6 +36,14 @@
                 <input type="button" name="" class="searchBtn" onclick="friendSearch()">
             </form>
         </div>
+        <!--  选中的人  -->
+        <div id="checkedPerson" style="margin:0 3%;width:100%;overflow:hidden;border-bottom:1px solid #e0dbdb;">
+<!--            <div name="0001" class="checkBoxPersonDiv">-->
+<!--                <img src="../img/head.png" >-->
+<!--                用户A-->
+<!--                <div class="checkBoxPersonDivRemove" onclick="removecheckedPerson(this)">x</div>-->
+<!--            </div>-->
+        </div>
 
         <div id="friendListDiv" style="margin-top: 1%;">
             <ul id="friendUl" class="chatUl">
@@ -85,7 +93,7 @@
     function friendSearch(){
         var searchName=$("#AddGroupSearchInput").val();
         if(searchName==""||searchName==null||searchName=="undefined"){
-            console.log("输入框为空");
+            layer.msg("请输入姓名或单位");
             return;
         }
         $("#cleanFriendSearchBtn").show();
@@ -97,24 +105,17 @@
             //请求成功
             success : function(result) {
                 // console.log("getUserByGroup : "+result.data);
+                $(".friendLi").hide();
                 var res=result.data;
                 var html='';
                 $(res).each(function(i,n){
                     var friendId=n.sId;
                     var onclick="check(this)";
                     var hasChecked="";
-                    if(srcType=="group"&&userId.indexOf(friendId)!=-1){ //从群窗口跳转来
-                        onclick="";
-                        hasChecked="hasChecked";
-                    }
-                    if(srcType=="single"&&userId.indexOf(friendId)!=-1){ //从个人窗口来
-                        onclick="";
-                        hasChecked="checked";
-                    }
                     if(n.sId==src){
                         return true;//遍历到自己则不显示
                     }
-                    html+='<li class="singleFriend" onclick="'+onclick+'">\n' +
+                    html+='<li class="singleFriend searchLi" onclick="'+onclick+'">\n' +
                         '                    <div class="liContentDiv scrollDiv">\n' +
                         '                        <div class="addGroupLiCheckBox">\n' +
                         '                            <div name="'+friendId+'" class="checkBoxDiv '+hasChecked+'"></div>\n' +
@@ -129,7 +130,7 @@
                         '                    <div class="liSpace"/>\n' +
                         '                </li>';
                 })
-                $("#friendUl").html(html);
+                $("#friendUl").append(html);
             },
             //请求失败，包含具体的错误信息
             error : function(e){
@@ -139,15 +140,22 @@
         })
     }
     $("#cleanFriendSearchBtn").on("click",function(){
-        $("#chatLiInput").val("");
-        loadCheckBox();
+        $("#AddGroupSearchInput").val("");
+        // loadCheckBox();
+        $(".friendLi").show();
+        $(".searchLi").remove();
         $(this).hide();
     })
 
     //确定提交
     $("#addGroupBtn").on("click",function(){
         var checkedIds="";
-        $(".checked").each(function(i,n){
+        // $(".checked").each(function(i,n){
+        //     checkedIds+=$(n).attr("name")+",";
+        //     console.log("选中id： "+checkedIds);
+        //     checkedIds="";
+        // })
+        $(".addPerson").each(function(i,n){
             checkedIds+=$(n).attr("name")+",";
         })
         if(checkedIds==""){
@@ -155,12 +163,11 @@
             return;
         }
         checkedIds=checkedIds.substr(0,checkedIds.length-1);
-        console.log("选中id： "+checkedIds);
+        console.log("添加id： "+checkedIds);
         if(srcType=="group"){
             addGroup(checkedIds);
         }else {
             if(checkedIds.split(",").length<2){
-                console.log("创建群不能少于3人");
                 layer.msg("创建群不能少于3人");
                 return;
             }
@@ -177,22 +184,27 @@
             success : function(result) {
                 var friends=result.data;
                 var html='';
+                var checkedPersonHtml='';
                 $(friends).each(function(i,n){
                     var friendId=n.sId;
                     var onclick="check(this)";
                     var hasChecked="";
-                    if(srcType=="group"&&userId.indexOf(friendId)!=-1){ //从群窗口跳转来
+                    if(srcType=="group"&&userId.indexOf(friendId)!=-1){ //从群窗口跳转来,并且id内有这个人
                         onclick="";
                         hasChecked="hasChecked";
+                        checkedPersonHtml+='<div name="'+friendId+'" class="checkBoxPersonDiv">\n' +
+                            '                <img src="../img/head.png" >'+n.sName+'</div>';
                     }
-                    if(srcType=="single"&&userId.indexOf(friendId)!=-1){ //从个人窗口来
+                    if(srcType=="single"&&userId.indexOf(friendId)!=-1){ //从个人窗口来,并且id内有这个人
                         onclick="";
                         hasChecked="checked";
+                        checkedPersonHtml+='<div name="'+friendId+'" class="checkBoxPersonDiv addPerson">\n' +
+                            '                <img src="../img/head.png" >'+n.sName+'</div>';
                     }
                     if(n.sId==src){
                         return true;//遍历到自己则不显示
                     }
-                    html+='<li class="singleFriend" onclick="'+onclick+'">\n' +
+                    html+='<li class="singleFriend friendLi" onclick="'+onclick+'">\n' +
                         '                    <div class="liContentDiv scrollDiv">\n' +
                         '                        <div class="addGroupLiCheckBox">\n' +
                         '                            <div name="'+friendId+'" class="checkBoxDiv '+hasChecked+'"></div>\n' +
@@ -208,6 +220,7 @@
                         '                </li>';
                 })
                 $("#friendUl").html(html);
+                $("#checkedPerson").html(checkedPersonHtml);
             },
             //请求失败，包含具体的错误信息
             error : function(e){
@@ -219,9 +232,28 @@
 
     //选中效果方法
     function check(obj){
+        var objClass=$(obj.getElementsByClassName("checkBoxDiv")[0]).attr("class");
+        var userId=$(obj.getElementsByClassName("checkBoxDiv")[0]).attr("name");
+        if(objClass.indexOf("checked")!=-1){ //如果已经选中则从添加人栏去除
+            $(".checkBoxPersonDiv[name='"+userId+"']").remove()
+        }else if($(".checkBoxPersonDiv[name='"+userId+"']").length==0){  //如果添加人栏没有则添加
+            var userName=$(obj.getElementsByClassName("liFriendUser")[0]).text();
+            userName=userName.split(" ")[1];
+            // console.log(userId+" "+userName)
+            var html='<div name="'+userId+'" class="checkBoxPersonDiv addPerson">\n' +
+                '                <img src="../img/head.png" >'+userName+'<div class="checkBoxPersonDivRemove" onclick="removecheckedPerson(this)">x</div></div>';
+            $("#checkedPerson").append($(html));
+        }
         $(obj.getElementsByClassName("checkBoxDiv")).toggleClass("checked");
     }
+    function removecheckedPerson(obj){
+        var userId=$(obj).parent().attr("name");
+        console.log(userId)
+        $(".checkBoxDiv[name='"+userId+"']").removeClass("checked");
+        $(obj).parent().remove();
+    }
 
+    //创建群
     function createGroup(userIds){
         // console.log(userIds+",创建群")
         var ids=src+","+userIds;
@@ -248,6 +280,7 @@
             }
         })
     }
+    //群内加人
     function addGroup(userIds){
         // console.log(userIds+",群内加人")
         var ids=srcDst+","+userIds;

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer" />
     <title>微信</title>
     <link rel="stylesheet" type="text/css" href="../css/base.css">
     <link rel="stylesheet" type="text/css" href="../css/chat.css">
@@ -182,7 +183,7 @@
         <!--中部-->
         <div id="chatMainDiv" style="width:100%;height: 95%;">
             <!-- 聊天记录 -->
-            <div id="chatWindow" class="scrollDiv" style="overflow-y:scroll;width:100%;height: 80%;background-color: #F6F6F6">
+            <div id="chatWindow" class="scrollDiv" style="overflow-y:scroll;width:100%;height: 75%;background-color: #F6F6F6">
 <!--                <div name="" class="leftTalk">-->
 <!--                    <div class="leftTalkImgDiv talkImgDiv">-->
 <!--                        <img src="../img/head.png">-->
@@ -206,9 +207,22 @@
 <!--                </div>-->
             </div>
             <!-- 底部 -->
-            <div style="width:100%;height: 20%;">
-                <textarea id="talkInput" class="scrollDiv" style="width: 93%;height: 55%;margin: 3%;"></textarea>
-                <input type="button" id="talksub" value="发送" style="width: 15%;height: 20%;float: right;margin-right: 3%;">
+            <div style="width:100%;height: 25%;">
+                <div id="toolBar" style="width:100%;height:15% ">
+                    <div id="fileBtn" class="btnIcon" onclick="insertFile()"></div>
+                </div>
+                <div id="inputMainDiv" class="scrollDiv" style="width:100%;height:60%;overflow-y: scroll">
+                    <div id="fileInput" style="width:94%;margin:0 3%;overflow: hidden">
+<!--                        <div class="fileInputDiv">-->
+<!--                            <input type="file" class="fileInput hide" onchange="showFileImg(this)">-->
+<!--                            <img src="/img/file.png">-->
+<!--                            文件名-->
+<!--                        </div>-->
+                    </div>
+                    <textarea id="talkInput" class="scrollDiv" style="width: 93%;height: 85%;margin:1% 3%;"></textarea>
+                </div>
+                <input type="button" id="talksub" value="发送" style="cursor:pointer;width: 15%;height: 20%;float: right;margin-right: 3%;">
+                <input type="button" id="cleanTalkInput" value="清空" onclick="cleanInput()" style="cursor:pointer;width: 15%;height: 20%;float: right;margin-right: 3%;">
             </div>
         </div>
     </div>
@@ -218,6 +232,7 @@
     var src="";
     var dst="";
     var type="";
+    var imgUrlPre="http://localhost:11111/";
 
     $(function(){
         src=userId=GetUrlParam("id");
@@ -226,6 +241,40 @@
         loadFriends();
         loadIndex();
     });
+
+    //发送文件
+    function insertFile(){
+        var file='<input type="file" class="fileInput hide" onchange="showFileImg(this)">';
+        $(file).click();
+    }
+    function showFileImg(obj){
+        var file = $(obj).val();
+        var fileName= getFileName(file);
+        var showName= getFileName(file);
+        var imgSrc="/img/file.png";
+        var imgClass="fileImg";
+        // console.log("文件名是："+fileName);
+        var suffixIndex=fileName.lastIndexOf(".");
+        var suffix=fileName.substring(suffixIndex+1).toUpperCase();
+        if(suffix=="BMP"||suffix=="JPG"||suffix=="JPEG"||suffix=="PNG"||suffix=="GIF"){ //如果是图片
+            imgSrc=window.URL.createObjectURL(obj.files.item(0));
+            showName="";
+            imgClass="imgFileImg";
+        }
+        var fileDiv='<div name="'+fileName+'" class="fileInputDiv"><img class="'+imgClass+'" src="'+imgSrc+'"><span class="fileNameSpan">'+showName+'</span></div>';
+        $("#fileInput").append(fileDiv);
+        $("#fileInput").append(obj);
+    }
+    function getFileName(file){//通过第二种方式获取文件名
+        var arr = file.split('\\');//通过\分隔字符串，成字符串数组
+        return arr[arr.length-1];//取最后一个，就是文件名
+    }
+
+    //清空输入框
+    function cleanInput(){
+        $("#talkInput").html("");
+        $("#fileInput").html("");
+    }
 
     /*好友列表搜索框*/
     $("#friendSearchBtn").on("click",function(){
@@ -356,8 +405,83 @@
 //----------------------------------------聊天界面js--------------------------------------------------
     //发送消息
     $("#talksub").on("click",function(){
-        //获取内容
+        //获取文件
+        if($(".fileInput").length>0){
+            $(".fileInput").each(function(i,n){
+                var fileName=getFileName($(n).val());
+                var fileType="file";
+                var suffixIndex=fileName.lastIndexOf(".");
+                var suffix=fileName.substring(suffixIndex+1).toUpperCase();
+                if(suffix=="BMP"||suffix=="JPG"||suffix=="JPEG"||suffix=="PNG"||suffix=="GIF"){ //如果是图片
+                    fileType="img";
+                }
+                console.log("上传文件");
+                var url="/upload";
+                var file1 = n.files[0];
+                var formData = new FormData();
+                formData.append('files', file1);
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', url, true);
+                xhr.send(formData);
+                xhr.onreadystatechange=function(){
+                    if (xhr.readyState==4 && xhr.status==200){
+                        console.log(xhr.responseText);
+                        var param={
+                            "type":"msg",
+                            "sendTime":getMyDate(Date.now()),
+                            "data":{
+                                "type": type,
+                                "src": src,
+                                "dst": dst,
+                                "content": {
+                                    "type": "file",
+                                    "content": {
+                                        "type":fileType,
+                                        "content":fileName
+                                    }
+                                }
+                            }
+                        };
+                        var data=JSON.stringify(param);
+                        var url="/send";
+                        $.ajax({
+                            type : "POST",
+                            contentType: "application/json;charset=UTF-8",
+                            url : url,
+                            data : data,
+                            //请求成功
+                            success : function(result) {
+                                var uuid=result.data.uuid;
+                                //显示消息
+                                var content="";
+                                if(fileType=="img"){
+                                    var imgsrc=imgUrlPre+fileName;
+                                    content='<div name="'+fileName+'" class="imgShowDiv" onclick="download(this)"><img src="'+imgsrc+'"></div>';
+                                }else if(fileType=="file"){
+                                    content='<div name="'+fileName+'" class="fileShowDiv" onclick="download(this)"><img src="/img/file.png"><span class="fileShowSpan">'+fileName+'</span></div>';
+                                }
+                                showTalk(content,uuid);
+                                //首页消息列表更新
+                                var name=$("#titleName").text();
+                                indexMsgListUpdate(dst,name,type,"[文件]","send");
+                                //清空文件输入框
+                                $("#fileInput").html("");;
+                            },
+                            //请求失败，包含具体的错误信息
+                            error : function(e){
+                                console.log(e.status);
+                                console.log(e.responseText);
+                            }
+                        })
+                    }
+                };
+            })
+        }
+        //获取文本内容
         var content=$("#talkInput").val();
+        if(content==""){
+            return;
+        }
         //发送
         var param={
             "type":"msg",
@@ -387,6 +511,8 @@
                 //首页消息列表更新
                 var name=$("#titleName").text();
                 indexMsgListUpdate(dst,name,type,content,"send");
+                //清空输入框
+                cleanInput();
             },
             //请求失败，包含具体的错误信息
             error : function(e){
@@ -394,12 +520,11 @@
                 console.log(e.responseText);
             }
         })
-        //清空输入框
-        $("#talkInput").val("");
     })
 
     //显示发送消息
     function showTalk(data,uuid){
+        console.log(data)
         //对话窗口显示消息
         var html='<div name="'+uuid+'" class="RightTalk">\n' +
             '                    <div class="rightTalkImgDiv talkImgDiv">\n' +

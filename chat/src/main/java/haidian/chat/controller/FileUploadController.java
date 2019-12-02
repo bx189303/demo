@@ -1,6 +1,13 @@
 package haidian.chat.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import haidian.chat.util.Result;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,25 +16,41 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class FileUploadController {
 
+    @Value("${filePath}")
+    String filePath;
+
     @RequestMapping(value = "/upload", consumes = "multipart/form-data", method = RequestMethod.POST)
-    public String upload(HttpServletRequest request) {
+    public Result upload(HttpServletRequest request) {
         try {
+            String type="file";
             List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("files");
             if (files == null || files.size() == 0) {
-                return "上传文件为空！";
+                return Result.build(500,"上传文件为空！");
             }
+            String uuid= UUID.randomUUID()+"";
             for (MultipartFile file : files) {
                 //保存文件到指定目录下
-                File dest = new File("file/" + file.getOriginalFilename());
+//                File dest = new File("file/" + file.getOriginalFilename());
+                String fileName=file.getOriginalFilename();
+                //if(suffix=="BMP"||suffix=="JPG"||suffix=="JPEG"||suffix=="PNG"||suffix=="GIF"){
+                String fileSuffix=fileName.substring(fileName.lastIndexOf(".")+1).toUpperCase();
+                if("BMP".equals(fileSuffix)||"JPG".equals(fileSuffix)||"JPEG".equals(fileSuffix)||"PNG".equals(fileSuffix)||"GIF".equals(fileSuffix)){
+                    type="img";
+                }
+                File dest = new File(filePath + fileName);
                 if (!dest.getParentFile().exists()) {
                     dest.getParentFile().mkdir();//如果路径不存在，需要提前创建，否则异常
                 }
@@ -36,12 +59,48 @@ public class FileUploadController {
                 IOUtils.copy(file.getInputStream(), fos);
                 fos.close();
                 System.out.println(file.getOriginalFilename() + " ---->>>> " + dest.getAbsolutePath());
-                System.out.println(request.getParameter("name"));
+//                System.out.println(request.getParameter("name"));
             }
-            return "file upload success";
+            JSONObject json=new JSONObject();
+            json.put("uuid",uuid);
+            json.put("type",type);
+            return Result.build(200,"file upload success",json) ;
         } catch (Exception ex) {
             ex.printStackTrace();
-            return "file upload fail:" + ex.getMessage();
+            return Result.build(500,ex.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "download/{fileName}", produces = "application/json;charset=UTF-8")
+    public void downloadFile( HttpServletResponse response, @PathVariable String fileName){
+        InputStream fin = null;
+        ServletOutputStream out = null;
+        try {
+            String encodeName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
+            fin = new FileInputStream(new File(filePath+fileName));
+            BufferedInputStream bis = new BufferedInputStream(fin);
+            out = response.getOutputStream();
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("application/force-download");
+            response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");//设置允许跨域的key
+            response.setHeader("Content-Disposition", "attachment;fileName=" + encodeName);
+            byte[] buffer = new byte[1024];
+            int i = bis.read(buffer);
+            while (i != -1) {
+                out.write(buffer, 0, i);
+                i = bis.read(buffer);
+            }
+            out.flush();
+            response.flushBuffer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(fin != null) fin.close();
+                if(out != null) out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

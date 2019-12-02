@@ -182,6 +182,9 @@ li:hover{
     background: #fff;
     border-radius: 10px;
     padding: 5px 10px;
+    word-wrap: break-word;
+    word-break: break-all;
+    text-align: left;
 }
 .RightTalk{
     text-align: right;
@@ -303,4 +306,64 @@ li:hover{
     right: -85%;
     top: -120%;
     cursor: pointer;
+}
+.fileInputDiv{
+    width: 15%;
+    height: 70px;
+    font-size: 7px;
+    text-align: center;
+    float: left;
+    margin: 0 1%;
+}
+.imgFileImg{
+    max-height: 100%;
+    max-width: 100%;
+}
+.fileImg{
+    height: 70%;
+    width:100%;
+}
+#fileBtn{
+    height: 100%;
+    width: 10%;
+    background: url(../img/fileBtn.png) no-repeat;
+    background-position: center;
+}
+.fileShowDiv{
+    width: 100%;
+    height: 50px;
+    font-size: 7px;
+    text-align: center;
+    float: left;
+    margin: 0 1%;
+    cursor: pointer;
+}
+.fileShowDiv img{
+    float: left;
+    width: 35px;
+    height: 40px;
+    display: block;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.fileShowSpan{
+    display: block;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: left;
+}
+.fileNameSpan{
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+}
+.imgShowDiv{
+    cursor: pointer;
+}
+.imgShowDiv img{
+    max-height: 100%;
+    max-width: 100%;
 }

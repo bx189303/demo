@@ -28,6 +28,8 @@ spring:
   #返回值空字段不显示
   jackson:
     default-property-inclusion: non_null
+  profiles:
+    include: config
 
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
@@ -37,4 +39,3 @@ mybatis:
 #logging:
 #  level:
 #    haidian.chat.dao:debug
-

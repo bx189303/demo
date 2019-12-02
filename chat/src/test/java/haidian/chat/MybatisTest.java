@@ -8,8 +8,12 @@ import haidian.chat.pojo.GroupUser;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ResourceUtils;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 @SpringBootTest(classes = {ChatApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class MybatisTest {
@@ -22,6 +26,18 @@ public class MybatisTest {
 
     @Resource
     GroupUserMapper groupUserMapper;
+
+    @Test
+    public void pathtest() throws FileNotFoundException {
+        String path= ClassUtils.getDefaultClassLoader().getResource("").getPath();
+        System.out.println(path);
+        System.out.println(System.getProperty("user.dir"));
+        System.out.println(ResourceUtils.getURL("classpath:").getPath());
+        File fileDif=new File("src/main/resources/static/uploadFile/");
+        System.out.println(fileDif.getAbsolutePath());
+        String jar_parent = new File(ResourceUtils.getURL("classpath:").getPath()).getParentFile().getParentFile().getParent();
+        System.out.println(jar_parent);
+    }
 
     @Test
     public void grouptest(){

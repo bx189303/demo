@@ -9,6 +9,7 @@
       "type": "file",
       "content": {
         "type": "video",
+        "name": "文件名",
         "size": 512 ,
         "duration": 10000,
         "uuid": "3_9782",

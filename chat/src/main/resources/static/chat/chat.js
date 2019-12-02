@@ -41,7 +41,7 @@ function openSocket() {
                 if(msg.data.content.type=="text"){
                     talkContent=msg.data.content.content;
                 }else if(msg.data.content.type=="file"){
-                    talkContent="文件";
+                    talkContent="[文件]";
                 }
                 indexMsgListUpdate(dataSrc,talkName,dataType,talkContent,"receive");
 
@@ -336,6 +336,19 @@ function jumpChat(obj){
                 }else if(recordType=="group"){
                     recordDst=n.data.dst.id;
                 }
+                var content="";
+                if(n.data.content.type=="text"){
+                    content=n.data.content.content;
+                }else if(n.data.content.type=="file"){
+                    var fileName=n.data.content.content.content;
+                    if(n.data.content.content.type=="img"){
+                        var imgsrc=imgUrlPre+fileName;
+                        content='<div name="'+fileName+'" class="imgShowDiv" onclick="download(this)"><img src="'+imgsrc+'"></div>';
+                    }else if(n.data.content.content.type=="file"){
+                        content='<div name="'+fileName+'" class="fileShowDiv" onclick="download(this)"><img src="/img/file.png"><span class="fileShowSpan">'+fileName+'</span></div>';
+                    }
+
+                }
                 // console.log("加载record ： "+recordSrc+" "+recordDst+" "+recordType);
                 if(recordSrc==src){//如果记录来源为自己，则显示在右边
                     html+='<div name="'+n.data.uuid+'" class="RightTalk">\n' +
@@ -345,7 +358,7 @@ function jumpChat(obj){
                         '                    <div class="rightTalkContent">\n' +
                         '                        <div class="talkUser">我</div>\n' +
                         '                        <div class="rightTalkNotify">\n' +
-                        '                            <div class="rightTalkBubble">'+n.data.content.content+'</div>\n' +
+                        '                            <div class="rightTalkBubble">'+content+'</div>\n' +
                         '                            <div class="read">未读</div>\n' +
                         '                        </div>\n' +
                         '                    </div>\n' +
@@ -357,7 +370,7 @@ function jumpChat(obj){
                         '                    </div>\n' +
                         '                    <div class="leftTalkContent">\n' +
                         '                        <div class="talkUser">'+n.data.src.sName+'</div>\n' +
-                        '                        <div class="talkBubble">'+n.data.content.content+'</div>\n' +
+                        '                        <div class="talkBubble">'+content+'</div>\n' +
                         '                    </div>\n' +
                         '                </div>';
                 }
@@ -371,43 +384,6 @@ function jumpChat(obj){
             console.log(e.responseText);
         }
     })
-    //加载聊天详情页
-    // var chatPersonHtml="";
-    // if(type=="single"){
-    //     var personName=name.split(" ");
-    //     personName=personName[personName.length-1];
-    //     chatPersonHtml='<div name="'+dst+'" class="chatPersonDiv">\n' +
-    //         '<img src="../img/head.png" >'+personName+'</div>';
-    //     chatPersonHtml+='<div id="chatPersonAddIcon" class="btnIcon chatPersonDiv" onclick="addGroupHtml(this)">\n' +
-    //         '                    <img src="../img/jia.png" >\n' +
-    //         '                </div>';
-    //     $("#chatPersonDiv").html(chatPersonHtml);
-    // }else if(type=="group"){
-    //     $.ajax({
-    //         type : "POST",
-    //         contentType: "application/json;charset=UTF-8",
-    //         url : "/getPersonByGroupId/"+dst,
-    //         //请求成功
-    //         success : function(result) {
-    //             // console.log("getUserByGroup : "+result.data);
-    //             var users=result.data;
-    //             var html='';
-    //             $(users).each(function(i,n){
-    //                 html+='<div name="'+n.sId+'" class="chatPersonDiv">\n' +
-    //                     '<img src="../img/head.png" >'+n.sName+'</div>';
-    //             })
-    //             html+='<div id="chatPersonAddIcon" class="btnIcon chatPersonDiv" onclick="addGroupHtml(this)">\n' +
-    //                 '                    <img src="../img/jia.png" >\n' +
-    //                 '                </div>';
-    //             $("#chatPersonDiv").html(html);
-    //         },
-    //         //请求失败，包含具体的错误信息
-    //         error : function(e){
-    //             console.log(e.status);
-    //             console.log(e.responseText);
-    //         }
-    //     })
-    // }
 }
 
 //加载首页列表
@@ -441,6 +417,8 @@ function loadIndex(){
                 }
                 if(n.content.type=="text"){
                     talkContent=n.content.content;
+                }else if(n.content.type=="file"){
+                    talkContent="[文件]";
                 }
                 var noticeHide="";
                 if(notice=="0"){
@@ -485,6 +463,11 @@ function addFriend(twoUserId){
             console.log(e.responseText);
         }
     })
+}
+
+function download(obj){
+    var fileName=$(obj).attr("name");
+    window.location.href="/download/"+fileName;
 }
 
 

@@ -7,21 +7,10 @@
 <script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
 <script type="text/javascript">
     function func() {
-        // window.open("http://localhost:11111/test.mp4");
-
-        var $eleForm = $("<form method='get'></form>");
-
-        $eleForm.attr("action","http://localhost:11111/test.mp4");
-
-        $(document.body).append($eleForm);
-
-        //提交表单，实现下载  
-        $eleForm.submit();  
-
         var url="/upload";
         var file1 = document.getElementById("image1").files[0];
         var formData = new FormData();
-        formData.append('files', file1, file1.name);
+        formData.append('files', file1);
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange=function(){
             if (xhr.readyState==4 && xhr.status==200)
@@ -46,5 +35,40 @@
 <button id="test" onclick="func()">demo</button>
 <img src="http://localhost:11111/1.jpg" style="height:100px;width:50px">
 <a href="http://localhost:11111/test.mp4" download="测试.mp4">点击下载</a>
+<a href="/img/chat.png" download="测试.png">点击下载</a>
+<input type="button" value="下载测试" onclick="downloadtest()">
+
 </body>
+<script>
+    function downloadtest(){
+        downloadRes("http://localhost:11111/test.mp4","测试.mp4");
+    }
+
+    function save(name, data) {
+        var urlObject = window.URL || window.webkitURL || window;
+        var export_blob = new Blob([data]);
+        var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a')
+        save_link.href = urlObject.createObjectURL(export_blob);
+        save_link.download = name;
+    }
+
+    const downloadRes = async (url, name) => {
+        console.log("开始下载")
+        let response = await fetch(url)
+        // 内容转变成blob地址
+        let blob = await response.blob()
+        // 创建隐藏的可下载链接
+        let objectUrl = window.URL.createObjectURL(blob)
+        let a = document.createElement('a')
+        //地址
+        a.href = objectUrl
+        //修改文件名
+        a.download = name
+        // 触发点击
+        document.body.appendChild(a)
+        a.click()
+        //移除
+        setTimeout(() => document.body.removeChild(a), 1000)
+    }
+</script>
 </html>

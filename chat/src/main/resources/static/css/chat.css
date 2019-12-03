@@ -174,7 +174,8 @@ li:hover{
     width: 70%;
 }
 .talkUser{
-    padding: 5px 10px;
+    padding: 5px;
+    font-size: 13px;
 }
 .talkBubble{
     max-width: 80%;
@@ -221,7 +222,7 @@ li:hover{
     font-size: 13px;
     padding: 5px;
     color: #8d8d8d;
-    display: none;
+    /*display: none;*/
 }
 
 /*好友*/
@@ -366,4 +367,10 @@ li:hover{
 .imgShowDiv img{
     max-height: 100%;
     max-width: 100%;
+}
+
+#outGroup:hover{
+    background-color: #EDEDED;/*    PS：这里可以改变背景颜色*/
+    /* color: #FFF;                                       PS：这里可以修改字的颜色*/
+    cursor: pointer;
 }

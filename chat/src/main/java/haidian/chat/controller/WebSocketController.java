@@ -37,12 +37,17 @@ public class WebSocketController {
     private static StringRedisTemplate stringRedisTemplate;
 
     public void sendMsg(String message) throws IOException {
-        System.out.println("监听dispatch : "+message);
         JSONObject msg=JSON.parseObject(message);
+        String msgType=msg.getString("type");
         JSONObject data=msg.getJSONObject("data");
-//        String dst=data.getString("dst");//旧
-        String dst=data.getJSONObject("dst").getString("sId");
-        WebSocketController dstCli= websocketList.get(dst);
+        System.out.println("监听DISPATCH-"+msgType+" : "+message);
+        String dstId="";
+        if(msgType.equals("msg")){
+            dstId=data.getJSONObject("dst").getString("sId");
+        }else if(msgType.equals("notify")){
+            dstId=data.getString("dst");
+        }
+        WebSocketController dstCli= websocketList.get(dstId);
         if(dstCli!=null){
             dstCli.sendMessage(message);
         }

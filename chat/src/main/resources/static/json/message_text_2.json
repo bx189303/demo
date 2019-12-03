@@ -5,7 +5,7 @@
   "isValid": 1,
   "data": {
     "uuid": "消息id",
-    "readCount": 0,
+    "readId": "0001,0002",
     "type": "group/single",
     "src": "A",
     "dst": "G2",

@@ -5,9 +5,11 @@
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="ownerId" property="ownerid" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="isValid" property="isValid"  />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, ownerId, name
+    id, ownerId, name,isValid,createTime
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -19,27 +21,27 @@
     select
     g.id id, g.ownerId ownerId, g.name name
     from t_group g,t_group_user t
-    where g.id=t.groupId and t.userId=#{userId}
+    where g.id=t.groupId and g.isValid=1 and t.isValid=1 and t.userId=#{userId}
   </select>
   <select id="getGroupIdByUserId" resultType="java.lang.String">
     select
-    groupId
-    from t_group_user
-    where userId=#{userId}
+    t.groupId
+    from t_group_user t,t_group g
+    where t.groupId=g.id and g.isValid=1 and t.isValid=1 and userId=#{userId}
   </select>
   <select id="getUserByGroupId" resultType="java.lang.String">
     select
     userId
-    from t_group_user
-    where groupId=#{groupId}
+    from t_group_user t,t_group g
+    where t.groupId=g.id and g.isValid=1 and t.isValid=1 and groupId=#{groupId}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from t_group
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="haidian.chat.pojo.Group" useGeneratedKeys="true" keyProperty="id" >
-    insert into t_group (id,ownerId, name)
-    values (#{id,jdbcType=VARCHAR},#{ownerid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR})
+    insert into t_group (id,ownerId, name,isValid,createTime)
+    values (#{id,jdbcType=VARCHAR},#{ownerid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},#{isValid},#{createTime})
   </insert>
   <insert id="insertSelective" parameterType="haidian.chat.pojo.Group" useGeneratedKeys="true" keyProperty="id" >
     insert into t_group

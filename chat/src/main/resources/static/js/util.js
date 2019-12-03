@@ -26,3 +26,13 @@ function getzf(num) {
     }
     return num;
 }
+//判断文件类型
+function getFileType(fileName){
+    var fileType="file";
+    var suffixIndex=fileName.lastIndexOf(".");
+    var suffix=fileName.substring(suffixIndex+1).toUpperCase();
+    if(suffix=="BMP"||suffix=="JPG"||suffix=="JPEG"||suffix=="PNG"||suffix=="GIF"){ //如果是图片
+        fileType="img";
+    }
+    return fileType;
+}

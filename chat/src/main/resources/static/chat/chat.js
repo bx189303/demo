@@ -1,3 +1,6 @@
+var imgUrlPre="http://localhost:11111/";
+
+//websocket
 function openSocket() {
     if(typeof(WebSocket) == "undefined") {
         console.log("您的浏览器不支持WebSocket");
@@ -22,7 +25,8 @@ function openSocket() {
         socket.onmessage = function(msg) {
             console.log("index页面 ： "+msg.data);
             msg=JSON.parse(msg.data);
-            if(msg.type=="msg"){
+            msgType=msg.type;
+            if(msgType=="msg"){
                 var dataSrc=msg.data.src.sId;
                 var dataType=msg.data.type;
                 var dataGroup="";
@@ -32,95 +36,48 @@ function openSocket() {
                 }
                 //消息列表更新
                 var talkName="";
-                var talkContent="";
                 if(dataType=="single"){
                     talkName=msg.data.src.sUnitname+" "+msg.data.src.sName;
                 }else if(dataType=="group"){
                     talkName=msg.data.group.name;
                 }
+                var talkContent="";
                 if(msg.data.content.type=="text"){
                     talkContent=msg.data.content.content;
                 }else if(msg.data.content.type=="file"){
-                    talkContent="[文件]";
+                    if(msg.data.content.content.type=="file"){
+                        talkContent="[文件]";
+                    }else if(msg.data.content.content.type=="img"){
+                        talkContent="[图片]";
+                    }
                 }
                 indexMsgListUpdate(dataSrc,talkName,dataType,talkContent,"receive");
-
-
-                // var indexNoExistence=true;//默认首页不存在对话框
-                // $("#msgListDiv li").each(function(i,n){
-                //     // console.log($(this).attr("name"));
-                //     var liId=$(this).attr("name");
-                //     var liType=$(this).attr("type");
-                //     if(liId==dataSrc&&liType==dataType){
-                //         var content=msg.data.content.content;
-                //         //列表显示最后一条消息
-                //         $(this.getElementsByClassName("liContentRecord")[0]).text(content);
-                //         //如果不在聊天窗口，则notice显示并+1
-                //         if(dataSrc!=dst||dataType!=type){
-                //             var n=$(this.getElementsByClassName("notice")[0]).text();
-                //             $(this.getElementsByClassName("notice")[0]).text(parseInt(n)+1);
-                //             $(this.getElementsByClassName("notice")[0]).removeClass("hide");
-                //         }
-                //         //放在第一个
-                //         $(this).insertBefore($("#msgListDiv li")[0]);
-                //         //变量改为首页存在
-                //         indexNoExistence=false;
-                //         //更新后跳出循环
-                //         return true;
-                //     }
-                // })
-                // //遍历后如果首页不存在则新建对话框
-                // if(indexNoExistence){
-                //     var talkId=""
-                //     var headImgName="";
-                //     var talkName="";
-                //     var talkContent="";
-                //     var talkPersonUnit="";
-                //     if(dataType=="single"){
-                //         talkId=msg.data.src.sId;
-                //         headImgName="head";
-                //         talkName=msg.data.src.sName;
-                //         talkPersonUnit=msg.data.src.sUnitname+" ";
-                //     }else if(dataType=="group"){
-                //         talkId=msg.data.group.id;
-                //         talkName=msg.data.group.name;
-                //         headImgName="grouphead";
-                //     }
-                //     if(msg.data.content.type=="text"){
-                //         talkContent=msg.data.content.content;
-                //     }
-                //     var liHtml='<li name="'+talkId+'" type="'+dataType+'" onclick="jumpChat(this)">\n' +
-                //         '                        <div class="liContentDiv scrollDiv">\n' +
-                //         '                            <div class="liContentImgDiv">\n' +
-                //         '                                <img src="../img/'+headImgName+'.png">\n' +
-                //         '                                <div class="notice">'+1+'</div>\n' +
-                //         '                            </div>\n' +
-                //         '                            <div class="liContentRightDiv">\n' +
-                //         '                                <div class="liContentUser liName">'+talkPersonUnit+talkName+'</div>\n' +
-                //         '                                <div class="liContentRecord">'+talkContent+'</div>\n' +
-                //         '                            </div>\n' +
-                //         '                        </div>\n' +
-                //         '                        <div class="liSpace"/>\n' +
-                //         '                    </li>';
-                //     $(liHtml).insertBefore($("#msgListDiv li")[0]);
-                // }
-
                 //聊天窗口显示消息
                 if((dst==dataSrc&&dataType=="single")||(dst==dataGroup&&dataType=="group")){//如果当前窗口打开则显示消息并发送已读
-                    var content=msg.data.content.content;
+                    var content="";
                     var contentType=msg.data.content.type;
                     var html="";
                     if(contentType=="text"){
-                        html='<div name="'+msg.data.uuid+'" class="leftTalk">\n' +
-                            '                    <div class="leftTalkImgDiv talkImgDiv">\n' +
-                            '                        <img src="../img/head.png">\n' +
-                            '                    </div>\n' +
-                            '                    <div class="leftTalkContent">\n' +
-                            '                        <div class="talkUser">'+msg.data.src.sName+'</div>\n' +
-                            '                        <div class="talkBubble">'+content+'</div>\n' +
-                            '                    </div>\n' +
-                            '                </div>';
+                        content=msg.data.content.content;
+                    }else if(contentType=="file"){
+                        var fileName=msg.data.content.content.content;
+                        var fileType=msg.data.content.content.type;
+                        if(fileType=="img"){
+                            var imgsrc=imgUrlPre+fileName;
+                            content='<div name="'+fileName+'" class="imgShowDiv" onclick="download(this)"><img src="'+imgsrc+'"></div>';
+                        }else if(fileType=="file"){
+                            content='<div name="'+fileName+'" class="fileShowDiv" onclick="download(this)"><img src="/img/file.png"><span class="fileShowSpan">'+fileName+'</span></div>';
+                        }
                     }
+                    html='<div name="'+msg.data.uuid+'" class="leftTalk chatMsg">\n' +
+                        '                    <div class="leftTalkImgDiv talkImgDiv">\n' +
+                        '                        <img src="../img/head.png">\n' +
+                        '                    </div>\n' +
+                        '                    <div class="leftTalkContent">\n' +
+                        '                        <div class="talkUser">'+msg.data.src.sName+'</div>\n' +
+                        '                        <div class="talkBubble">'+content+'</div>\n' +
+                        '                    </div>\n' +
+                        '                </div>';
                     $("#chatWindow").append(html);
                     scrollChatWindow();//下滑滚动条
                     //发送已读
@@ -155,6 +112,24 @@ function openSocket() {
                     })
 
                 }
+            }else if(msgType=="notify"){
+                var notifyUuid=msg.data.uuid;
+                var notifySrc=msg.data.src;
+                var notifyDst=msg.data.dst;
+                var notifyType=msg.data.type;
+                var notifyGroup="";
+                if(notifyType=="group"){
+                    notifyGroup=msg.data.groupId;
+                }
+                //如果当前窗口打开则显示已读
+                if(notifyType=="single"&&dst==notifySrc){
+                    $('.chatMsg[name="'+notifyUuid+'"] .read').text("已读");
+                }else if(notifyType=="group"&&dst==notifyGroup){
+                    var readOldText=$('.chatMsg[name="'+notifyUuid+'"] .read').text();
+                    var readOldCount=readOldText.substr(0,readOldText.indexOf("人"));
+                    var readNewCount=parseInt(readOldCount)+1;
+                    $('.chatMsg[name="'+notifyUuid+'"] .read').text(readNewCount+"人已读");
+                }
             }
 
         };
@@ -162,6 +137,7 @@ function openSocket() {
     }
 }
 
+//首页列表更新
 function indexMsgListUpdate(chatSrcId,chatSrcName,chatSrcType,chatContent,updateType){
     //消息列表更新
     var indexNoExistence=true;//变量,默认首页不存在对话框
@@ -218,6 +194,7 @@ function indexMsgListUpdate(chatSrcId,chatSrcName,chatSrcType,chatContent,update
     }
 }
 
+//加载好友列表
 function loadFriends(){
     $.ajax({
         type : "POST",
@@ -252,6 +229,7 @@ function loadFriends(){
         }
     })
 }
+//加载群组列表
 function loadGroups(){
     $.ajax({
         type : "POST",
@@ -286,7 +264,7 @@ function loadGroups(){
     })
 }
 
-//跳转方法
+//跳转方法-加载对话记录
 function jumpChat(obj){
     //获取参数
     var id=obj.getAttribute("name");
@@ -301,17 +279,22 @@ function jumpChat(obj){
         var twoUserId=src+","+dst;
         addFriend(twoUserId);
     }
+    //加载对话记录
+    loadChatMsg();
     //加载对话窗口信息
     var name=$(obj.getElementsByClassName("liName")[0]).text();//获取对话人姓名
     $("#titleName").text(name);//改对话窗口标题
-    scrollChatWindow();//滚动条到最下
+    loadChatDetail();
+
     //窗口切换
     $("#indexDiv").hide();//首页隐藏
     $("#chatDiv").show();//对话窗口显示
     //消除首页未读提醒
     $(obj.getElementsByClassName("notice")).text(0);
     $(obj.getElementsByClassName("notice")).addClass("hide");
-    //加载对话记录
+
+}
+function loadChatMsg(){
     var data={
         "src":src,
         "dst":dst,
@@ -328,48 +311,62 @@ function jumpChat(obj){
             // console.log(record);
             var html='';
             $(record).each(function(i,n){
+                var recordSendTime=n.sendTime;
                 var recordType=n.data.type;
                 var recordSrc=n.data.src.sId;
+                var readId=n.data.readId;
+                var readText="";
                 var recordDst="";
                 if(recordType=="single"){
                     recordDst=n.data.dst.sId;
+                    if(readId.length==0){
+                        readText="未读";
+                    }else if(readId.length>0){
+                        readText="已读";
+                    }
                 }else if(recordType=="group"){
                     recordDst=n.data.dst.id;
+                    if(readId.length==0){
+                        readText="0人已读";
+                    }else if(readId.length>0){
+                        var readCount=readId.split(",").length;
+                        readText=readCount+"人已读";
+                    }
                 }
                 var content="";
                 if(n.data.content.type=="text"){
                     content=n.data.content.content;
                 }else if(n.data.content.type=="file"){
                     var fileName=n.data.content.content.content;
-                    if(n.data.content.content.type=="img"){
+                    var fileType=n.data.content.content.type;
+                    if(fileType=="img"){
                         var imgsrc=imgUrlPre+fileName;
                         content='<div name="'+fileName+'" class="imgShowDiv" onclick="download(this)"><img src="'+imgsrc+'"></div>';
-                    }else if(n.data.content.content.type=="file"){
+                    }else if(fileType=="file"){
                         content='<div name="'+fileName+'" class="fileShowDiv" onclick="download(this)"><img src="/img/file.png"><span class="fileShowSpan">'+fileName+'</span></div>';
                     }
-
                 }
                 // console.log("加载record ： "+recordSrc+" "+recordDst+" "+recordType);
                 if(recordSrc==src){//如果记录来源为自己，则显示在右边
-                    html+='<div name="'+n.data.uuid+'" class="RightTalk">\n' +
+                    html+='<div name="'+n.data.uuid+'" class="RightTalk chatMsg">\n' +
                         '                    <div class="rightTalkImgDiv talkImgDiv">\n' +
                         '                        <img src="../img/head.png">\n' +
                         '                    </div>\n' +
                         '                    <div class="rightTalkContent">\n' +
-                        '                        <div class="talkUser">我</div>\n' +
+                        '                        <div class="talkUser">'+recordSendTime+'&nbsp;&nbsp;&nbsp;我</div>\n' +
                         '                        <div class="rightTalkNotify">\n' +
                         '                            <div class="rightTalkBubble">'+content+'</div>\n' +
-                        '                            <div class="read">未读</div>\n' +
+                        '                            <div class="read">'+readText+'</div>\n' +
                         '                        </div>\n' +
                         '                    </div>\n' +
                         '                </div>';
                 }else {//除了自己以外，则显示在左侧
-                    html+='<div name="'+n.data.uuid+'" class="leftTalk">\n' +
+                    html+='<div name="'+n.data.uuid+'" class="leftTalk chatMsg">\n' +
                         '                    <div class="leftTalkImgDiv talkImgDiv">\n' +
                         '                        <img src="../img/head.png">\n' +
                         '                    </div>\n' +
                         '                    <div class="leftTalkContent">\n' +
-                        '                        <div class="talkUser">'+n.data.src.sName+'</div>\n' +
+                        '                        <div class="talkUser">'+n.data.src.sName+'&nbsp;&nbsp;&nbsp;'+recordSendTime+'</div>\n' +
                         '                        <div class="talkBubble">'+content+'</div>\n' +
                         '                    </div>\n' +
                         '                </div>';
@@ -418,7 +415,11 @@ function loadIndex(){
                 if(n.content.type=="text"){
                     talkContent=n.content.content;
                 }else if(n.content.type=="file"){
-                    talkContent="[文件]";
+                    if(n.content.content.type=="img"){
+                        talkContent="[图片]";
+                    }else if(n.content.content.type=="file"){
+                        talkContent="[文件]";
+                    }
                 }
                 var noticeHide="";
                 if(notice=="0"){
@@ -448,6 +449,7 @@ function loadIndex(){
     })
 }
 
+//添加好友
 function addFriend(twoUserId){
     $.ajax({
         type : "POST",
@@ -465,11 +467,11 @@ function addFriend(twoUserId){
     })
 }
 
+//下载文件
 function download(obj){
     var fileName=$(obj).attr("name");
     window.location.href="/download/"+fileName;
 }
-
 
 //对话窗口滚动条默认最下方
 function scrollChatWindow(){

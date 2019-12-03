@@ -28,15 +28,13 @@ public class NotifyThread implements Runnable {
             JSONObject msgJson= (JSONObject) msgList.get(i);
             JSONObject msgJsonData = msgJson.getJSONObject("data");
             String msgType=msgJsonData.getString("type");
-            //如果单聊且，是发起通知人 发出的消息,则跳出本次循环
-            if(msgType.equalsIgnoreCase("single")){
-                String dstId=msgJsonData.getJSONObject("dst").getString("sId");
-                if(!dstId.equalsIgnoreCase(notifySrc)){
-                    continue;
-                }
+            //获取发送消息的人，如果是发起通知的人,则跳出本次循环
+            String srcId=msgJsonData.getJSONObject("src").getString("sId");;
+            if(srcId.equalsIgnoreCase(notifySrc)){
+                continue;
             }
+            //查已读id,如果已读则认为之前全部已读，跳出循环
             String readIds = msgJsonData.getString("readId");
-            //如果已读则认为之前全部已读，跳出循环
             if(readIds.indexOf(notifySrc)!=-1){
                 break;
             }

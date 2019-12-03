@@ -26,8 +26,8 @@ public class ListenAndSend {
     GroupMapper groupMapper;
 
     public void listenAndSend(String msg){
-        System.out.println("监听RECEIVE ： "+msg);
         String type=JSON.parseObject(msg).getString("type");
+        System.out.println("监听RECEIVE-"+type+" : "+msg);
         if("msg".equalsIgnoreCase(type)){
             sendMsg(msg);
         }else if("notify".equalsIgnoreCase(type)){
@@ -71,7 +71,7 @@ public class ListenAndSend {
                 }
             }
             //发送DISPATCH，通知已读
-
+            template.convertAndSend("DISPATCH",JSON.toJSONString(msg));
         }catch (Exception e){
             e.printStackTrace();
         }

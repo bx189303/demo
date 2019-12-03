@@ -28,6 +28,20 @@ public class MybatisTest {
     GroupUserMapper groupUserMapper;
 
     @Test
+    public void guutest(){
+        groupUserMapper.outByGroupIdAndUserId("92455589-cb93-44f2-9123-c85adaf96253","0002");
+    }
+
+
+    @Test
+    public void ngtest(){
+        String id="0001";
+        System.out.println(JSON.toJSONString(groupMapper.getByUserId(id)));
+        System.out.println(JSON.toJSONString(groupMapper.getUserByGroupId("3754a381-4511-41ab-8111-fd74950e9a8b")));
+        System.out.println(JSON.toJSONString(groupMapper.getGroupIdByUserId(id)));
+    }
+
+    @Test
     public void pathtest() throws FileNotFoundException {
         String path= ClassUtils.getDefaultClassLoader().getResource("").getPath();
         System.out.println(path);

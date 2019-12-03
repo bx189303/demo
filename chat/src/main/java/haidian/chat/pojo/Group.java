@@ -1,11 +1,33 @@
 package haidian.chat.pojo;
 
+import java.util.Date;
+
 public class Group {
     private String id;
 
     private String ownerid;
 
     private String name;
+
+    private int isValid;
+
+    public int getIsValid() {
+        return isValid;
+    }
+
+    public void setIsValid(int isValid) {
+        this.isValid = isValid;
+    }
+
+    private Date createTime;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
     public String getId() {
         return id;

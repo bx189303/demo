@@ -8,8 +8,10 @@ import java.util.List;
 @Mapper
 public interface PersonMapper {
 
+    //根据单位名或姓名查人id
     List<String> searchByNameOrUnitname(String name);
 
+    //查所有人
     List<Person> getAll();
 
     int deleteByPrimaryKey(String sId);

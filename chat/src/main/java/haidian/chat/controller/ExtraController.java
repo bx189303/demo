@@ -129,17 +129,20 @@ public class ExtraController {
     }
 
 
-    @RequestMapping("/addGroup/{ids}")
-    public Result addGroup(@PathVariable String ids) {
+    @RequestMapping("/addGroup")
+    public Result addGroup(@RequestBody JSONObject json) {
         Result result = null;
         try {
+            String groupId = json.getString("groupId");
+            String ids=json.getString("userIds");
             String[] idArray= ids.split(",");
-            //第一个元素为群id
-            String groupId = idArray[0];
             GroupUser gu = new GroupUser();
+            gu.setIsValid(1);
+            gu.setCreateTime(new Date());
             gu.setGroupid(groupId);
-            for (int i = 0; i <idArray.length ; i++) {//从第二个元素开始为需要添加的人员
-                if(i==0){
+            List<String> userIdInGroup = groupMapper.getUserByGroupId(groupId);
+            for (int i = 0; i <idArray.length ; i++) {
+                if(userIdInGroup.contains(idArray[i])){ //如果群内已经有这人，则不添加
                     continue;
                 }
                 gu.setUserid(idArray[i]);
@@ -152,6 +155,22 @@ public class ExtraController {
         }
         return result;
     }
+
+    @RequestMapping("/outGroup")
+    public Result outGroup(@RequestBody JSONObject json) {
+        Result result = null;
+        try {
+            String groupId=json.getString("groupId");
+            String userId=json.getString("userId");
+            groupUserMapper.outByGroupIdAndUserId(groupId,userId);
+            result = Result.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = Result.build(500, e.getMessage());
+        }
+        return result;
+    }
+
 
     @RequestMapping("/updateGroup")
     public Result updateGroup(@RequestBody JSONObject json) {
@@ -187,9 +206,13 @@ public class ExtraController {
             newGroup.setOwnerid(groupOwnerId);
             Person user = (Person) r.get(groupOwnerId);
             newGroup.setName(user.getsName() + "的群");
+            newGroup.setCreateTime(new Date());
+            newGroup.setIsValid(1);
             groupMapper.insert(newGroup);
             //加人
             GroupUser gu = new GroupUser();
+            gu.setIsValid(1);
+            gu.setCreateTime(new Date());
             gu.setGroupid(uuid);
             for (String userId : userIdArray) {
                 gu.setUserid(userId);
@@ -205,6 +228,8 @@ public class ExtraController {
         return result;
     }
 
+
+
     @RequestMapping("/getIndex/{userId}")
     public Result getIndexList(@PathVariable String userId) {
         Result result = null;
@@ -214,7 +239,7 @@ public class ExtraController {
             List<Group> groups = groupMapper.getByUserId(userId);
             for (Group group : groups) {//遍历组
                 if (!r.hasKey(group.getId())) {//如果没有记录则跳出
-                    break;
+                    continue;
                 }
                 JSONObject json = new JSONObject();
                 json.put("type", "group");
@@ -344,7 +369,7 @@ public class ExtraController {
     }
 
     @RequestMapping("/getRecord")
-    public Result getRecord(@RequestBody JSONObject json){
+    public Result getRecordAndNotify(@RequestBody JSONObject json){
         Result result=null;
         try {
             String src=json.getString("src");

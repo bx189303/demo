@@ -6,6 +6,9 @@ import haidian.chat.dao.GroupMapper;
 import haidian.chat.redis.RedisUtil;
 import haidian.chat.util.DateUtil;
 import haidian.chat.util.Response;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -19,8 +22,16 @@ import static haidian.chat.util.httpUtil.sendPostRequest;
 @Service
 public class ListenAndSend {
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
     @Value("${notifyUrl}")
     String notifyUrl;
+
+    @Value("${notifyUrlSysId}")
+    String notifyUrlSysId;
+
+    @Value("${notifyUrlSysName}")
+    String notifyUrlSysName;
 
     @Value("${chatUrl}")
     String chatUrl;
@@ -36,7 +47,8 @@ public class ListenAndSend {
 
     public void listenAndSend(String msg){
         String type=JSON.parseObject(msg).getString("type");
-        System.out.println("监听RECEIVE-"+type+" : "+msg);
+//        System.out.println("监听RECEIVE-"+type+" : "+msg);
+        log.info("监听RECEIVE-"+type+" : "+msg);
         if("msg".equalsIgnoreCase(type)){
             sendMsg(msg);
         }else if("notify".equalsIgnoreCase(type)){
@@ -188,15 +200,17 @@ public class ListenAndSend {
     public void sendMsgOff(String src,String srcName,Object[] dst){
 //        System.out.println("发送接口-src:"+src+",srcName:"+srcName+",dst:"+dst);
         Map<String,Object> map=new HashMap<>();
-        map.put("SysId","");//指定
-        map.put("SysName","");//指定
+        map.put("SysId",notifyUrlSysId);//指定
+        map.put("SysName",notifyUrlSysName);//指定
         map.put("PushId",src);
         map.put("PushName",srcName);
         map.put("Time", DateUtil.getDateTimeToString(new Date()));
         map.put("Accepts",dst);
         map.put("Target",chatUrl+"?id=");
         map.put("Title","");
-        System.out.println("发送门户接口参数："+ JSON.toJSONString(map));
-//        sendPostRequest(notifyUrl,map);
+//        System.out.println("发送门户接口参数："+ JSON.toJSONString(map));
+        if(!StringUtils.isBlank(notifyUrl)){
+            sendPostRequest(notifyUrl,map);
+        }
     }
 }

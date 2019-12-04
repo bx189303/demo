@@ -16,6 +16,7 @@ import haidian.chat.service.NotifyThread;
 import haidian.chat.util.DateUtil;
 import haidian.chat.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,12 @@ import java.util.concurrent.Executors;
 
 @RestController
 public class ExtraController {
+
+    @Value("${nginxUrl}")
+    String nginxUrl;
+
+    @Value("${websocketUrl}")
+    String websocketUrl;
 
     @Resource
     PersonMapper personMapper;
@@ -46,6 +53,23 @@ public class ExtraController {
 
     @Autowired
     ListenAndSend listenAndSend;
+
+    //html加载后先获取系统参数
+    @RequestMapping("/getHtmlparam")
+    public Result getHtmlParam(){
+        Result result = null;
+        try {
+            JSONObject json=new JSONObject();
+            json.put("nginxUrl",nginxUrl);
+            json.put("websocketUrl",websocketUrl);
+            result = Result.ok(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = Result.build(500, e.getMessage());
+        }
+        return result;
+    }
+
 
     @RequestMapping("/getFriend/{userId}")
     public Result getFriend(@PathVariable String userId) {

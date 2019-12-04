@@ -10,7 +10,35 @@ import java.util.*;
 
 public class JavaTest {
     public static void main(String[] args) {
-        jsonarraytest();
+        List<String> l=new ArrayList<>();
+        for (int i = 0; i <1000 ; i++) {
+            l.add("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        }
+        List<String> ll=new ArrayList<>();
+        for (int i = 0; i <1000 ; i++) {
+            ll.addAll(l);
+        }
+        long t1= System.currentTimeMillis();
+        for (int i = 0; i <1000 ; i++) {
+            l.get(i);
+        }
+        long t2= System.currentTimeMillis();
+        for (int i = 0; i < 1000; i++) {
+            ll.get(i);
+        }
+        long t3=System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            ll.get(i);
+        }
+        long t4=System.currentTimeMillis();
+        for (String s : l) {
+
+        }
+        long t5=System.currentTimeMillis();
+        System.out.println("1000长度增强for循环全部遍历："+new Double(t5-t4)/1000+"s");
+        System.out.println("1000长度普通循环全部遍历："+new Double(t2-t1)/1000+"s");
+        System.out.println("1000000长度普通循环遍历1000次："+new Double(t3-t2)/1000+"s");
+        System.out.println("1000000长度普通循环全部遍历："+new Double(t4-t3)/1000+"s");
     }
 
     private static void jsonarraytest() {

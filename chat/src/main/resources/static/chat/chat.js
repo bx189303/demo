@@ -1,4 +1,4 @@
-var imgUrlPre="http://localhost:11111/";
+// var imgUrlPre="http://localhost:11111/";
 
 //websocket
 function openSocket() {
@@ -6,8 +6,9 @@ function openSocket() {
         console.log("您的浏览器不支持WebSocket");
     }else{
         // console.log("您的浏览器支持WebSocket");
-        var socketUrl="http://localhost:8080/ws/"+userId;
-        socketUrl=socketUrl.replace("https","ws").replace("http","ws");
+        // var socketUrl="http://localhost:8080/ws/"+userId;
+        // socketUrl=socketUrl.replace("https","ws").replace("http","ws");
+        var socketUrl=websocketUrl+userId;
         socket = new WebSocket(socketUrl);
         //打开事件
         socket.onopen = function() {

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import haidian.chat.redis.RedisUtil;
+import haidian.chat.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -23,8 +24,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class WebSocketController {
 
-    //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
-    private static int onlineCount=0;
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
     //新：使用map对象，便于根据userId来获取对应的WebSocket
@@ -36,6 +35,9 @@ public class WebSocketController {
 
     private static StringRedisTemplate stringRedisTemplate;
 
+    /**
+     * 监听DISPATCH
+     */
     public void sendMsg(String message) throws IOException {
         JSONObject msg=JSON.parseObject(message);
         String msgType=msg.getString("type");
@@ -57,6 +59,18 @@ public class WebSocketController {
     public void onOpen(Session session,@PathParam("userId") String userId) throws IOException {
         this.session = session;
         websocketList.put(userId, this);
+        this.userId=userId;
+        //发送上线事件给RECEIVE
+        JSONObject onoff=new JSONObject();
+        onoff.put("type","onoff");
+        onoff.put("sendTime", DateUtil.getDateToStrings(new Date()));
+        onoff.put("isValid",1);
+        onoff.put("receiveTime", DateUtil.getDateToStrings(new Date()));
+        JSONObject data=new JSONObject();
+        data.put("type","on");
+        data.put("userId",userId);
+        onoff.put("data",data);
+        stringRedisTemplate.convertAndSend("RECEIVE",JSON.toJSONString(onoff));
     }
 
 
@@ -66,11 +80,19 @@ public class WebSocketController {
      */
     @OnClose
     public void onClose() {
-        if(websocketList.get(this.userId)!=null){
-            websocketList.remove(this.userId);
-            subOnlineCount();           //在线数减1
-            System.out.println("有一连接关闭！当前在线人数为" + getOnlineCount());
-        }
+//        System.out.println(userId+"下线");
+        //发送下线事件给RECEIVE
+        JSONObject onoff=new JSONObject();
+        onoff.put("type","onoff");
+        onoff.put("sendTime", DateUtil.getDateToStrings(new Date()));
+        onoff.put("isValid",1);
+        onoff.put("receiveTime", DateUtil.getDateToStrings(new Date()));
+        JSONObject data=new JSONObject();
+        data.put("type","off");
+        data.put("userId",userId);
+        onoff.put("data",data);
+        stringRedisTemplate.convertAndSend("RECEIVE",JSON.toJSONString(onoff));
+
     }
 
 
@@ -85,19 +107,6 @@ public class WebSocketController {
      */
     public void sendMessage(String message) throws IOException {
         this.session.getBasicRemote().sendText(message);
-    }
-
-
-    public static synchronized int getOnlineCount() {
-        return onlineCount;
-    }
-
-    public static synchronized void addOnlineCount() {
-        WebSocketController.onlineCount++;
-    }
-
-    public static synchronized void subOnlineCount() {
-        WebSocketController.onlineCount--;
     }
 
     // 静态方法、在SpringBoot启动时被调用，注入bean

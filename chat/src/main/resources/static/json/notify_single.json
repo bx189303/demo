@@ -4,7 +4,7 @@
   "data": {
     "type": "single",
     "uuid": "消息id",
-    "src": "B",
-    "dst": "A"
+    "src": "0002",
+    "dst": "0001"
   }
 }

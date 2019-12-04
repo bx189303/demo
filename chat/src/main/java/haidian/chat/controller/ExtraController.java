@@ -1,5 +1,6 @@
 package haidian.chat.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import haidian.chat.dao.FriendMapper;
 import haidian.chat.dao.GroupMapper;
@@ -181,6 +182,7 @@ public class ExtraController {
             Group g = new Group();
             g.setId(groupId);
             g.setName(groupName);
+//            System.out.println(JSON.toJSONString(g));
             groupMapper.updateByPrimaryKeySelective(g);
             result = Result.ok();
         } catch (Exception e) {

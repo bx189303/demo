@@ -71,6 +71,12 @@
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
       </if>
+      <if test="isValid != null" >
+        isValid = #{isValid,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>

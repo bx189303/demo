@@ -60,13 +60,14 @@ function openSocket() {
                     if(contentType=="text"){
                         content=msg.data.content.content;
                     }else if(contentType=="file"){
-                        var fileName=msg.data.content.content.content;
+                        var fileUrl=msg.data.content.content.content;
+                        var fileName=msg.data.content.content.name;
                         var fileType=msg.data.content.content.type;
                         if(fileType=="img"){
-                            var imgsrc=imgUrlPre+fileName;
-                            content='<div name="'+fileName+'" class="imgShowDiv" onclick="download(this)"><img src="'+imgsrc+'"></div>';
+                            var imgsrc=imgUrlPre+fileUrl;
+                            content='<div name="'+fileUrl+'" filename="'+fileName+'" class="imgShowDiv" onclick="download(this)"><img src="'+imgsrc+'"></div>';
                         }else if(fileType=="file"){
-                            content='<div name="'+fileName+'" class="fileShowDiv" onclick="download(this)"><img src="/img/file.png"><span class="fileShowSpan">'+fileName+'</span></div>';
+                            content='<div name="'+fileUrl+'" filename="'+fileName+'" class="fileShowDiv" onclick="download(this)"><img src="/img/file.png"><span class="fileShowSpan">'+fileName+'</span></div>';
                         }
                     }
                     html='<div name="'+msg.data.uuid+'" class="leftTalk chatMsg">\n' +
@@ -337,13 +338,14 @@ function loadChatMsg(){
                 if(n.data.content.type=="text"){
                     content=n.data.content.content;
                 }else if(n.data.content.type=="file"){
-                    var fileName=n.data.content.content.content;
+                    var fileUrl=n.data.content.content.content;
+                    var fileName=n.data.content.content.name;
                     var fileType=n.data.content.content.type;
                     if(fileType=="img"){
-                        var imgsrc=imgUrlPre+fileName;
-                        content='<div name="'+fileName+'" class="imgShowDiv" onclick="download(this)"><img src="'+imgsrc+'"></div>';
+                        var imgsrc=imgUrlPre+fileUrl;
+                        content='<div name="'+fileUrl+'" filename="'+fileName+'" class="imgShowDiv" onclick="download(this)"><img src="'+imgsrc+'"></div>';
                     }else if(fileType=="file"){
-                        content='<div name="'+fileName+'" class="fileShowDiv" onclick="download(this)"><img src="/img/file.png"><span class="fileShowSpan">'+fileName+'</span></div>';
+                        content='<div name="'+fileUrl+'" filename="'+fileName+'" class="fileShowDiv" onclick="download(this)"><img src="/img/file.png"><span class="fileShowSpan">'+fileName+'</span></div>';
                     }
                 }
                 // console.log("加载record ： "+recordSrc+" "+recordDst+" "+recordType);
@@ -469,8 +471,10 @@ function addFriend(twoUserId){
 
 //下载文件
 function download(obj){
-    var fileName=$(obj).attr("name");
-    window.location.href="/download/"+fileName;
+    var fileUrl=$(obj).attr("name");
+    var fileName=$(obj).attr("filename");
+    console.log(fileUrl+","+fileName);
+    window.location.href="/download/"+fileUrl+"/"+fileName;
 }
 
 //对话窗口滚动条默认最下方

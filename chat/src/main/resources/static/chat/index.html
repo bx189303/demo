@@ -256,7 +256,9 @@
     //发送文件
     function insertFile(){
         var file='<input type="file" class="fileInput hide" onchange="showFileImg(this)">';
-        $(file).click();
+        setTimeout(function(){
+            $(file).click();
+        },200)
     }
     //显示文件预览
     function showFileImg(obj){
@@ -423,79 +425,11 @@
 //----------------------------------------聊天界面js--------------------------------------------------
     //发送消息
     function sendContent(){
-        //获取文件
-        if($(".fileInput").length>0){
-            $(".fileInput").each(function(i,n){
-                var fileName=getFileName($(n).val());
-                var fileType=getFileType(fileName);
-                // var suffixIndex=fileName.lastIndexOf(".");
-                // var suffix=fileName.substring(suffixIndex+1).toUpperCase();
-                // if(suffix=="BMP"||suffix=="JPG"||suffix=="JPEG"||suffix=="PNG"||suffix=="GIF"){ //如果是图片
-                //     fileType="img";
-                // }
-                console.log("上传文件");
-                var url="/upload";
-                var file1 = n.files[0];
-                var formData = new FormData();
-                formData.append('files', file1);
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', url, true);
-                xhr.send(formData);
-                xhr.onreadystatechange=function(){
-                    if (xhr.readyState==4 && xhr.status==200){
-                        console.log(xhr.responseText);
-                        var sendFileTime=getMyDate(Date.now());
-                        var param={
-                            "type":"msg",
-                            "sendTime":sendFileTime,
-                            "data":{
-                                "type": type,
-                                "src": src,
-                                "dst": dst,
-                                "content": {
-                                    "type": "file",
-                                    "content": {
-                                        "type":fileType,
-                                        "content":fileName
-                                    }
-                                }
-                            }
-                        };
-                        var data=JSON.stringify(param);
-                        var url="/send";
-                        $.ajax({
-                            type : "POST",
-                            contentType: "application/json;charset=UTF-8",
-                            url : url,
-                            data : data,
-                            //请求成功
-                            success : function(result) {
-                                var uuid=result.data.uuid;
-                                //显示消息
-                                var content="";
-                                if(fileType=="img"){
-                                    var imgsrc=imgUrlPre+fileName;
-                                    content='<div name="'+fileName+'" class="imgShowDiv" onclick="download(this)"><img src="'+imgsrc+'"></div>';
-                                }else if(fileType=="file"){
-                                    content='<div name="'+fileName+'" class="fileShowDiv" onclick="download(this)"><img src="/img/file.png"><span class="fileShowSpan">'+fileName+'</span></div>';
-                                }
-                                showTalk(sendFileTime,content,uuid);
-                                //首页消息列表更新
-                                var name=$("#titleName").text();
-                                indexMsgListUpdate(dst,name,type,"[文件]","send");
-                                //清空文件输入框
-                                $("#fileInput").html("");
-                            },
-                            //请求失败，包含具体的错误信息
-                            error : function(e){
-                                console.log(e.status);
-                                console.log(e.responseText);
-                            }
-                        })
-                    }
-                };
-            })
-        }
+        sendFile();
+        sendText();
+    }
+    //发送文本
+    function sendText(){
         //获取文本内容
         var content=$("#talkInput").val();
         if(content==""){
@@ -540,6 +474,80 @@
                 console.log(e.responseText);
             }
         })
+    }
+    //发送文件
+    function sendFile(){
+        //获取文件
+        if($(".fileInput").length>0){
+            $(".fileInput").each(function(i,n){
+                var fileName=getFileName($(n).val());
+                var fileType=getFileType(fileName);
+                console.log("上传文件");
+                var url="/upload";
+                var file1 = n.files[0];
+                var formData = new FormData();
+                formData.append('files', file1);
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', url, true);
+                xhr.send(formData);
+                xhr.onreadystatechange=function(){
+                    if (xhr.readyState==4 && xhr.status==200){
+                        // console.log(xhr.responseText);
+                        var res=JSON.parse(xhr.responseText);
+                        var uuid=res.data.uuid;
+                        var sendFileTime=getMyDate(Date.now());
+                        var param={
+                            "type":"msg",
+                            "sendTime":sendFileTime,
+                            "data":{
+                                "type": type,
+                                "src": src,
+                                "dst": dst,
+                                "content": {
+                                    "type": "file",
+                                    "content": {
+                                        "type":fileType,
+                                        "name":fileName,
+                                        "content":uuid
+                                    }
+                                }
+                            }
+                        };
+                        var data=JSON.stringify(param);
+                        var url="/send";
+                        $.ajax({
+                            type : "POST",
+                            contentType: "application/json;charset=UTF-8",
+                            url : url,
+                            data : data,
+                            //请求成功
+                            success : function(result) {
+                                var msgUuid=result.data.uuid;
+                                //显示消息
+                                var content="";
+                                if(fileType=="img"){
+                                    var imgsrc=imgUrlPre+uuid;
+                                    content='<div name="'+uuid+'" filename="'+fileName+'" class="imgShowDiv" onclick="download(this)"><img src="'+imgsrc+'"></div>';
+                                }else if(fileType=="file"){
+                                    content='<div name="'+uuid+'" filename="'+fileName+'" class="fileShowDiv" onclick="download(this)"><img src="/img/file.png"><span class="fileShowSpan">'+fileName+'</span></div>';
+                                }
+                                showTalk(sendFileTime,content,msgUuid);
+                                //首页消息列表更新
+                                var name=$("#titleName").text();
+                                indexMsgListUpdate(dst,name,type,"[文件]","send");
+                                //清空文件输入框
+                                $("#fileInput").html("");
+                            },
+                            //请求失败，包含具体的错误信息
+                            error : function(e){
+                                console.log(e.status);
+                                console.log(e.responseText);
+                            }
+                        })
+                    }
+                };
+            })
+        }
     }
 
     //显示发送消息

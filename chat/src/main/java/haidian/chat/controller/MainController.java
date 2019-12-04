@@ -70,7 +70,7 @@ public class MainController {
             Group dstInfo=groupMapper.selectByPrimaryKey(dst);
             data.put("dst",dstInfo);
         }
-        System.out.println("添加字段后msg："+msg);
+//        System.out.println("添加字段后msg："+msg);
 
         //发送kafka  r_msg
 //        redisOnKafka(msg);//模拟已经监听到kafka消息

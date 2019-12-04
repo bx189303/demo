@@ -41,16 +41,18 @@ public class FileUploadController {
                 return Result.build(500,"上传文件为空！");
             }
             String uuid= UUID.randomUUID()+"";
+            String fileSaveName="";
             for (MultipartFile file : files) {
                 //保存文件到指定目录下
 //                File dest = new File("file/" + file.getOriginalFilename());
                 String fileName=file.getOriginalFilename();
                 //if(suffix=="BMP"||suffix=="JPG"||suffix=="JPEG"||suffix=="PNG"||suffix=="GIF"){
-                String fileSuffix=fileName.substring(fileName.lastIndexOf(".")+1).toUpperCase();
-                if("BMP".equals(fileSuffix)||"JPG".equals(fileSuffix)||"JPEG".equals(fileSuffix)||"PNG".equals(fileSuffix)||"GIF".equals(fileSuffix)){
+                String fileSuffix=fileName.substring(fileName.lastIndexOf(".")+1);
+                if("BMP".equalsIgnoreCase(fileSuffix)||"JPG".equalsIgnoreCase(fileSuffix)||"JPEG".equalsIgnoreCase(fileSuffix)||"PNG".equalsIgnoreCase(fileSuffix)||"GIF".equalsIgnoreCase(fileSuffix)){
                     type="img";
                 }
-                File dest = new File(filePath + fileName);
+                fileSaveName=uuid+"."+fileSuffix;
+                File dest = new File(filePath + fileSaveName);
                 if (!dest.getParentFile().exists()) {
                     dest.getParentFile().mkdir();//如果路径不存在，需要提前创建，否则异常
                 }
@@ -62,7 +64,7 @@ public class FileUploadController {
 //                System.out.println(request.getParameter("name"));
             }
             JSONObject json=new JSONObject();
-            json.put("uuid",uuid);
+            json.put("uuid",fileSaveName);
             json.put("type",type);
             return Result.build(200,"file upload success",json) ;
         } catch (Exception ex) {
@@ -71,13 +73,13 @@ public class FileUploadController {
         }
     }
 
-    @RequestMapping(value = "download/{fileName}", produces = "application/json;charset=UTF-8")
-    public void downloadFile( HttpServletResponse response, @PathVariable String fileName){
+    @RequestMapping(value = "download/{fileUrl}/{fileName}", produces = "application/json;charset=UTF-8")
+    public void downloadFile( HttpServletResponse response, @PathVariable String fileUrl, @PathVariable String fileName){
         InputStream fin = null;
         ServletOutputStream out = null;
         try {
             String encodeName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
-            fin = new FileInputStream(new File(filePath+fileName));
+            fin = new FileInputStream(new File(filePath+fileUrl));
             BufferedInputStream bis = new BufferedInputStream(fin);
             out = response.getOutputStream();
             response.setCharacterEncoding("utf-8");

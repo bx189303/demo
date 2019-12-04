@@ -4,8 +4,8 @@
   "data": {
     "type": "group",
     "uuid": "消息id",
-    "src": "B",
-    "dst": "A",
-    "groupId": "G"
+    "src": "0002",
+    "dst": "0001",
+    "groupId": "0001g"
   }
 }

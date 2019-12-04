@@ -1,0 +1,29 @@
+{
+  "type": "msg",
+  "sendTime": "2019-12-03 21:29:17",
+  "isValid": 1,
+  "receiveTime": "2019-12-03 21:29:17",
+  "data": {
+    "dst": {
+      "sUnitname": "香山派出所",
+      "sName": "用户一",
+      "sId": "0001"
+    },
+    "readId": "",
+    "src": {
+      "sUnitname": "青龙桥派出所",
+      "sName": "用户二",
+      "sId": "0002"
+    },
+    "type": "single",
+    "uuid": "efff2f40-84df-43f1-8951-2306dc405a75",
+    "content": {
+      "type": "file",
+      "content": {
+        "name": "HDGatewayWebapp.dll",
+        "type": "file",
+        "content": "702110b4-949c-4b80-9480-2a688e31ddf2.dll"
+      }
+    }
+  }
+}

@@ -36,6 +36,6 @@ mybatis:
   type-aliases-package: haidian.chat.pojo
   configuration:
     lazy-loading-enabled: true
-#logging:
-#  level:
-#    haidian.chat.dao:debug
+logging:
+  level:
+    haidian.chat.dao: debug

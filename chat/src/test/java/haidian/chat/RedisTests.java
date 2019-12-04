@@ -31,7 +31,8 @@ class RedisTests {
 
     @Test
     public void autotest(){
-
+        r.del("0005");
+        System.out.println(r.get("0005")==null);
     }
 
 

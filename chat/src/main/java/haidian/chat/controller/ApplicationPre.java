@@ -16,7 +16,7 @@ import java.util.List;
  * 项目启动后开始执行
  */
 @Component
-public class RedisPre implements CommandLineRunner {
+public class ApplicationPre implements CommandLineRunner {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired

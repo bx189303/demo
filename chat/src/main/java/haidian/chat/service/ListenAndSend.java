@@ -2,6 +2,7 @@ package haidian.chat.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import haidian.chat.controller.ExtraController;
 import haidian.chat.dao.GroupMapper;
 import haidian.chat.redis.RedisUtil;
 import haidian.chat.util.DateUtil;
@@ -33,14 +34,20 @@ public class ListenAndSend {
     @Value("${notifyUrlSysName}")
     String notifyUrlSysName;
 
-    @Value("${chatUrl}")
-    String chatUrl;
+    @Value("${serverHost}")
+    String serverHost;
+
+    @Value("${serverPort}")
+    String serverPort;
 
     @Autowired
     RedisUtil r;
 
     @Autowired
     private StringRedisTemplate template;
+
+    @Autowired
+    ExtraController extraController;
 
     @Resource
     GroupMapper groupMapper;
@@ -92,7 +99,8 @@ public class ListenAndSend {
                 String groupId=data.getString("groupId");
                 key=groupId;
             }
-            List<Object> records = r.lGet(key, 0, r.lGetListSize(key));
+//            List<Object> records = r.lGet(key, 0, r.lGetListSize(key));
+            List<Object> records = r.lGet(key, 0, -1);
             for (int i = records.size()-1; i >=0 ; i--) {
                 JSONObject record = (JSONObject) records.get(i);
                 JSONObject recordData = record.getJSONObject("data");
@@ -137,6 +145,10 @@ public class ListenAndSend {
             if("single".equalsIgnoreCase(type)){
                 dstId=data.getJSONObject("dst").getString("sId");
                 key=srcId.compareTo(dstId)<0?srcId+"."+dstId:dstId+"."+srcId;
+                //如果没有记录则添加好友
+                if (r.lGet(key, 0, 1).size()==0){
+                    extraController.addFriend(key.replace(".",","));
+                }
             }else if("group".equalsIgnoreCase(type)){
                 dstId=data.getJSONObject("dst").getString("id");
                 key=dstId;
@@ -206,10 +218,10 @@ public class ListenAndSend {
         map.put("PushName",srcName);
         map.put("Time", DateUtil.getDateTimeToString(new Date()));
         map.put("Accepts",dst);
-        map.put("Target",chatUrl+"?id=");
+        map.put("Target",serverHost+"/"+serverPort+"/chat/index.html?id=");
         map.put("Title","");
-//        System.out.println("发送门户接口参数："+ JSON.toJSONString(map));
-        if(!StringUtils.isBlank(notifyUrl)){
+        System.out.println("发送门户接口参数："+ JSON.toJSONString(map));
+        if(!StringUtils.isBlank(notifyUrlSysId)&&!StringUtils.isBlank(notifyUrlSysName)&&!StringUtils.isBlank(notifyUrl)){
             sendPostRequest(notifyUrl,map);
         }
     }

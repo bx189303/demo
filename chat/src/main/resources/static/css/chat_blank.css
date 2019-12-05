@@ -2,53 +2,6 @@
     margin: 0;
     padding: 0;
 }
-
-.centerDiv{
-    overflow-y: scroll;
-    overflow-x: hidden;
-    width: 100%;
-    height: 88%;
-    background-color: #102775;
-    background: url(../img/backimg.png) no-repeat;
-    background-size: 100% 100%;
-}
-.bottomBtn{
-    cursor: pointer;
-    width: 13%;
-    height: 13%;
-    float: right;
-    margin-right: 3%;
-    padding: 1%;
-    text-align: center;
-    background-color: #2e4576;
-    border-radius: 10px;
-}
-#groupNameUpdateBtn{
-    float: right;
-    margin-right: 6%;
-    width: 14%;
-    padding: 0px 2%;
-    background-color: #101144;
-    border-radius: 10px;
-}
-
-#groupNameInput::-webkit-input-placeholder {
-    color: #fff;
-    background-color: #263D89;
-}
-#groupNameInput:-webkit-autofill {
-    /*box-shadow: 0 0 0 1000px #263D89 inset;*/
-    -webkit-box-shadow: 0 0 0px 1000px #263D89 inset !important;
-    -webkit-text-fill-color: #fff;
-}
-#groupNameInput{
-    margin-left: 3%;
-    color:#fff;
-    background: url(../img/inputColor.png) no-repeat;
-    background-size: 100% 100%;
-}
-
-
 .windowTitle{
     display: block;
     position: relative;
@@ -130,7 +83,7 @@
     display: none;
 }
 li:hover{
-    background-color: #263D89;/*    PS：这里可以改变背景颜色*/
+    background-color: #EDEDED;/*    PS：这里可以改变背景颜色*/
     /* color: #FFF;                                       PS：这里可以修改字的颜色*/
     cursor: pointer;
 }
@@ -151,7 +104,7 @@ li:hover{
 .scrollDiv::-webkit-scrollbar-track {/*滚动条里面轨道*/
     -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
     border-radius: 10px;
-    background: #102775;
+    background: #EDEDED;
 }
 
 /*列表li样式*/
@@ -192,7 +145,7 @@ li:hover{
 .liSpace{
     width: 96%;
     height: 2px;
-    border-bottom: 1px solid #263D89;
+    border-bottom: 1px solid #F8F8F8;
     margin-left: 3%;
 }
 .liFriendUser{
@@ -227,7 +180,7 @@ li:hover{
 .talkBubble{
     max-width: 80%;
     display: inline-block;
-    background: #263D89;;
+    background: #fff;
     border-radius: 10px;
     padding: 5px 10px;
     word-wrap: break-word;
@@ -252,7 +205,7 @@ li:hover{
 .rightTalkBubble{
     max-width: 80%;
     display: inline-block;
-    background: #0539d8;
+    background: #95EB6C;
     border-radius: 10px;
     padding: 5px 10px;
     float:right;
@@ -291,7 +244,7 @@ li:hover{
 
 /*聊天详情*/
 .chatPersonDiv{
-    height: 70px;
+    height: 80px;
     width: 16%;
     float: left;
     text-align: center;
@@ -373,10 +326,8 @@ li:hover{
 }
 #fileBtn{
     height: 100%;
-    width: 7%;
-    margin-left: 3%;
+    width: 10%;
     background: url(../img/fileBtn.png) no-repeat;
-    background-size: 100% 100%;
     background-position: center;
 }
 .fileShowDiv{
@@ -419,7 +370,7 @@ li:hover{
 }
 
 #outGroup:hover{
-    background-color: #263D89;/*    PS：这里可以改变背景颜色*/
+    background-color: #EDEDED;/*    PS：这里可以改变背景颜色*/
     /* color: #FFF;                                       PS：这里可以修改字的颜色*/
     cursor: pointer;
 }

@@ -8,7 +8,7 @@ function openSocket() {
         // console.log("您的浏览器支持WebSocket");
         // var socketUrl="http://localhost:8080/ws/"+userId;
         // socketUrl=socketUrl.replace("https","ws").replace("http","ws");
-        var socketUrl=websocketUrl+userId;
+        var socketUrl=serverUrl.replace("http","ws")+"/ws/"+userId;
         socket = new WebSocket(socketUrl);
         //打开事件
         socket.onopen = function() {
@@ -279,7 +279,7 @@ function jumpChat(obj){
     var objClass=$(obj).attr("class");
     if(typeof(objClass)!="undefined"&&objClass.indexOf("searchFriendLi")!=-1){
         var twoUserId=src+","+dst;
-        addFriend(twoUserId);
+        // addFriend(twoUserId);
     }
     //加载对话记录
     loadChatMsg();

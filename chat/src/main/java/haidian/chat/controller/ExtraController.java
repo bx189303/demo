@@ -1,6 +1,5 @@
 package haidian.chat.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import haidian.chat.dao.FriendMapper;
 import haidian.chat.dao.GroupMapper;
@@ -12,7 +11,7 @@ import haidian.chat.pojo.GroupUser;
 import haidian.chat.pojo.Person;
 import haidian.chat.redis.RedisUtil;
 import haidian.chat.service.ListenAndSend;
-import haidian.chat.service.NotifyThread;
+import haidian.chat.service.SendNotifyThread;
 import haidian.chat.util.DateUtil;
 import haidian.chat.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +29,14 @@ import java.util.concurrent.Executors;
 @RestController
 public class ExtraController {
 
-    @Value("${nginxUrl}")
-    String nginxUrl;
+    @Value("${nginxPort}")
+    String nginxPort;
 
-    @Value("${websocketUrl}")
-    String websocketUrl;
+    @Value("${serverHost}")
+    String serverHost;
+
+    @Value("${serverPort}")
+    String serverPort;
 
     @Resource
     PersonMapper personMapper;
@@ -52,7 +54,7 @@ public class ExtraController {
     RedisUtil r;
 
     @Autowired
-    ListenAndSend listenAndSend;
+    MainController mainController;
 
     //html加载后先获取系统参数
     @RequestMapping("/getHtmlparam")
@@ -60,8 +62,8 @@ public class ExtraController {
         Result result = null;
         try {
             JSONObject json=new JSONObject();
-            json.put("nginxUrl",nginxUrl);
-            json.put("websocketUrl",websocketUrl);
+            json.put("nginxUrl",serverHost+":"+nginxPort);
+            json.put("serverUrl", serverHost+":"+serverPort);
             result = Result.ok(json);
         } catch (Exception e) {
             e.printStackTrace();
@@ -206,6 +208,7 @@ public class ExtraController {
             Group g = new Group();
             g.setId(groupId);
             g.setName(groupName);
+            g.setIsValid(1);
 //            System.out.println(JSON.toJSONString(g));
             groupMapper.updateByPrimaryKeySelective(g);
             result = Result.ok();
@@ -271,7 +274,7 @@ public class ExtraController {
                 json.put("type", "group");
                 json.put("dst", group);
                 //查redis中每个组的记录
-                List<Object> records = r.lGet(group.getId(), 0, r.lGetListSize(group.getId()));
+                List<Object> records = r.lGet(group.getId(), 0,-1);
                 int notice = 0;
                 for (int i = records.size() - 1; i >= 0; i--) {//倒序遍历组的记录
                     JSONObject record = (JSONObject) records.get(i);
@@ -310,7 +313,7 @@ public class ExtraController {
                 JSONObject json = new JSONObject();
                 json.put("type", "single");
                 //查redis中每个对话的记录
-                List<Object> records = r.lGet(singleId, 0, r.lGetListSize(singleId));
+                List<Object> records = r.lGet(singleId, 0, -1);
                 int notice = 0;
                 for (int i = records.size() - 1; i >= 0; i--) {
                     JSONObject record = (JSONObject) records.get(i);
@@ -407,11 +410,11 @@ public class ExtraController {
             }else if("group".equalsIgnoreCase(type)){
                 key=dst;
             }
-            List<Object> msgs=  r.lGet(key, 0, r.lGetListSize(key));
+            List<Object> msgs=  r.lGet(key, 0, -1);
             //前台收到数据进行显示，直接在后台发送已读
             //发送notify
-            ExecutorService executorService = Executors.newCachedThreadPool();
-            executorService.execute(new NotifyThread(src,msgs,listenAndSend));
+            ExecutorService executorService = Executors.newFixedThreadPool(2);
+            executorService.execute(new SendNotifyThread(src,msgs,mainController));
 
             result=Result.ok(msgs);
         }catch (Exception e){

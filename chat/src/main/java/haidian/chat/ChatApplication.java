@@ -1,6 +1,5 @@
 package haidian.chat;
 
-import haidian.chat.service.RedisThread;
 import haidian.chat.controller.WebSocketController;
 import haidian.chat.redis.RedisUtil;
 import org.springframework.boot.SpringApplication;
@@ -19,7 +18,7 @@ public class ChatApplication {
 
         // 获取Spring IOC容器中的bean并注入
         RedisUtil redisUtil = applicationContext.getBean(RedisUtil.class);
-        RedisThread.setRedisUtil(redisUtil);
+//        RedisThread.setRedisUtil(redisUtil);
         WebSocketController.setRedisUtil(redisUtil);
 
         StringRedisTemplate template=applicationContext.getBean(StringRedisTemplate.class);

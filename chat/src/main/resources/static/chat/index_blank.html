@@ -15,10 +15,10 @@
 
 
 </style>
-<body style="overflow: hidden;color: #fff;">
+<body style="overflow: hidden">
     <div id="indexDiv" style="width:100%;height: 100%">
         <!-- 头部 -->
-        <div style="width:100%;height: 5%;background-color: #101144;">
+        <div style="width:100%;height: 5%;background-color: #EDEDED">
             <div style="vertical-align:middle;height: 100%;width:100%;float: left">
                 <h2 id="title" class="windowTitle">消息</h2>
             </div>
@@ -27,8 +27,8 @@
             </div>
         </div>
         <!-- 消息 -->
-        <div id="chatListDiv" class="listDiv scrollDiv centerDiv">
-            <div class="container" style="width:100%;height: 6%;">
+        <div id="chatListDiv" class="listDiv scrollDiv" style="overflow-y:scroll;overflow-x: hidden;width:100%;height: 87%;">
+            <div class="container" style="width:100%;height: 6%;background-color: #EDEDED">
                 <form action="" class="parent" style="width:100%;height: 100%;">
                     <input id="chatLiInput" type="text" class="search" placeholder="" >
                     <input type="button" id="cleanChatSearchBtn" onclick="cleanIndexSearch(this)" class="searchCleanBtn">
@@ -67,8 +67,8 @@
             </div>
         </div>
         <!-- 好友 friendDiv-->
-        <div id="friendDiv" class="listDiv scrollDiv centerDiv">
-            <div class="container" style="width:100%;height: 6%;background-color: #101144">
+        <div id="friendDiv" class="listDiv scrollDiv" style="overflow-y:scroll;overflow-x: hidden;width:100%;height: 87%;">
+            <div class="container" style="width:100%;height: 6%;background-color: #EDEDED">
                 <form action="" class="parent" style="width:100%;height: 100%;">
                     <input id="friendUlInput" type="text" class="search" placeholder="" >
                     <input type="button" id="cleanFriendSearchBtn" onclick="cleanFriendSearch(this)" class="searchCleanBtn">
@@ -133,7 +133,7 @@
             </div>
         </div>
         <!-- 底部 -->
-        <div style="width:100%;height: 8%;position: fixed;bottom: 0;background-color: #101144">
+        <div style="width:100%;height: 8%;position: fixed;bottom: 0;background-color: #EDEDED">
             <div style="height: 100%;width: 50%;float: left;text-align: center;">
                 <img src="../img/chatgreen.png" class="btnIcon" id="chatIcon" height="80%" width="25%" style="margin-top: 5px">
             </div>
@@ -145,7 +145,7 @@
     </div>
     <div id="chatDiv" style="width:100%;height: 100%;display: none">
         <!-- 头部 -->
-        <div style="width:100%;height: 5%;background-color:#101144;">
+        <div style="width:100%;height: 5%;background-color: #EDEDED">
             <div class="lefttopBtn">
                 <img id="topOutIcon" class="btnIcon" src="../img/back.png" height="100%" width="100%">
                 <img id="topBackIcon" class="btnIcon" src="../img/back.png" onclick="chatDetailback()" height="100%" width="100%" style="display: none">
@@ -160,16 +160,27 @@
         </div>
 
         <!-- 聊天详情 -->
-        <div id="chatDetailDiv" style="width:100%;height: 95%;display: none;background: url(../img/backimg.png) no-repeat;background-size: 100% 100%;">
-            <div id="chatPersonDiv" style="width:100%;overflow: hidden;background-color: #263D89;">
+        <div id="chatDetailDiv" style="width:100%;height: 95%;display: none">
+            <div id="chatPersonDiv" style="width:100%;overflow: hidden">
+<!--                <div class="chatPersonDiv">-->
+<!--                    <img src="../img/head.png" >-->
+<!--                    用户A-->
+<!--                </div>-->
+<!--                <div class="chatPersonDiv">-->
+<!--                    <img src="../img/head.png" >-->
+<!--                    用户B-->
+<!--                </div>-->
+<!--                <div id="chatPersonAddIcon" class="btnIcon chatPersonDiv" onclick="addGroupHtml(this)">-->
+<!--                    <img src="../img/jia.png" >-->
+<!--                </div>-->
             </div>
             <div id="groupDetail" style="width:100%;margin-top:3%;display:none;">
-                <div id="groupDetailName" style="height: 22px;padding: 10px;background-color: #263D89;">
+                <div id="groupDetailName" style="margin:3%">
                     <span>群聊名称</span>
-                    <input id="groupNameInput" type="text" placeholder="xx讨论群">
-                    <div id="groupNameUpdateBtn" class="btnIcon" onclick="updateGroupName()">确认修改</div>
+                    <input id="groupNameInput" type="text" placeholder="xx讨论群" style="margin-left: 3%;">
+                    <input id="groupNameUpdateBtn" type="button" class="btnIcon" value="确认修改" style="float: right;margin-right: 6%;width: 16%;" onclick="updateGroupName()">
                 </div>
-                <div id="outGroup" onclick="askOutGroup()" style="text-align:center;padding:3%;margin:10% 3% 3% 3%;color:red;background-color: #263D89;">
+                <div id="outGroup" onclick="outGroup()" style="text-align:center;padding:3%;margin:70% 3% 3% 3%;color:red;border-top:1px solid #F8F8F8;">
                     退出群聊
                 </div>
             </div>
@@ -177,61 +188,63 @@
         <!--中部-->
         <div id="chatMainDiv" style="width:100%;height: 95%;">
             <!-- 聊天记录 -->
-            <div id="chatWindow" class="scrollDiv" style="overflow-y:scroll;width:100%;height: 76%;background-color: #F6F6F6;background: url(../img/backimg.png) no-repeat;background-size: 100% 100%;">
+            <div id="chatWindow" class="scrollDiv" style="overflow-y:scroll;width:100%;height: 75%;background-color: #F6F6F6">
+<!--                <div name="" class="leftTalk">-->
+<!--                    <div class="leftTalkImgDiv talkImgDiv">-->
+<!--                        <img src="../img/head.png">-->
+<!--                    </div>-->
+<!--                    <div class="leftTalkContent">-->
+<!--                        <div class="talkUser">用户A</div>-->
+<!--                        <div class="talkBubble">今天星期几</div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div name="" class="RightTalk">-->
+<!--                    <div class="rightTalkImgDiv talkImgDiv">-->
+<!--                        <img src="../img/head.png">-->
+<!--                    </div>-->
+<!--                    <div class="rightTalkContent">-->
+<!--                        <div class="talkUser">我</div>-->
+<!--                        <div class="rightTalkNotify">-->
+<!--                            <div class="rightTalkBubble">不知道</div>-->
+<!--                            <div class="read">未读</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
             <!-- 底部 -->
-            <div style="width:100%;height: 25%;background-color:#101144;">
-                <div id="toolBar" style="width:100%;height:15%;margin-bottom:1%;">
+            <div style="width:100%;height: 25%;">
+                <div id="toolBar" style="width:100%;height:15% ">
                     <div id="fileBtn" class="btnIcon" onclick="insertFile()"></div>
                 </div>
                 <div id="inputMainDiv" class="scrollDiv" style="width:100%;height:60%;overflow-y: scroll">
                     <div id="fileInput" style="width:94%;margin:0 3%;overflow: hidden">
+<!--                        <div class="fileInputDiv">-->
+<!--                            <input type="file" class="fileInput hide" onchange="showFileImg(this)">-->
+<!--                            <img src="/img/file.png">-->
+<!--                            文件名-->
+<!--                        </div>-->
                     </div>
-                    <textarea id="talkInput" class="scrollDiv" style="width: 93%;height: 85%;margin:1% 3%;background-color: #101144;color:#fff;"></textarea>
+                    <textarea id="talkInput" class="scrollDiv" style="width: 93%;height: 85%;margin:1% 3%;"></textarea>
                 </div>
-                <div id="talksub" class="bottomBtn" onclick="sendContent()">发送</div>
-                <div id="cleanTalkInput" class="bottomBtn" onclick="cleanInput()">清空</div>
+                <input type="button" id="talksub" value="发送" onclick="sendContent()" style="cursor:pointer;width: 15%;height: 20%;float: right;margin-right: 3%;">
+                <input type="button" id="cleanTalkInput" value="清空" onclick="cleanInput()" style="cursor:pointer;width: 15%;height: 20%;float: right;margin-right: 3%;">
             </div>
         </div>
     </div>
 </body>
 <script>
-    //全局变量
     var userId="";
     var src="";
     var dst="";
     var type="";
-    //系统参数
-    var imgUrlPre="";
-    var serverUrl="";
 
     $(function(){
         src=userId=GetUrlParam("id");
-        //读取参数
-        getParam();
+        openSocket();
+        loadGroups();
+        loadFriends();
+        loadIndex();
     });
-    //读取系统参数后开始加载
-    function getParam(){
-        $.ajax({
-            type : "POST",
-            contentType: "application/json;charset=UTF-8",
-            url : "/getHtmlparam",
-            //请求成功
-            success : function(result) {
-                serverUrl=result.data.serverUrl;
-                imgUrlPre=result.data.nginxUrl+"/";
-                openSocket();
-                loadGroups();
-                loadFriends();
-                loadIndex();
-            },
-            //请求失败，包含具体的错误信息
-            error : function(e){
-                console.log(e.status);
-                console.log(e.responseText);
-            }
-        })
-    }
 
     //内容输入框的回车事件
     $('#talkInput').on("keydown",function(event){
@@ -366,8 +379,10 @@
             title: false,
             type: 2,
             anim: 0,//动画0-6
-            content: serverUrl+'/chat/addGroup.html?src='+src+'&&dst='+dst+'&&type='+type,
+            // content: 'http://localhost:8080/chat/addGroup.html?userId='+src,
+            content: 'http://localhost:8080/chat/addGroup.html?src='+src+'&&dst='+dst+'&&type='+type,
             area: ['100%', '100%'],
+            // maxmin: true,
             closeBtn:0
         });
         layer.full(index);
@@ -417,7 +432,7 @@
     function sendText(){
         //获取文本内容
         var content=$("#talkInput").val();
-        if(content.trim()==""){
+        if(content==""){
             return;
         }
         //发送
@@ -687,25 +702,13 @@
             title: false,
             type: 2,
             anim: 0,//动画0-6
-            content: serverUrl+'/chat/addGroup.html?src='+src+'&&dst='+dst+'&&type='+type+'&&userId='+userIds,
+            // content: 'http://localhost:8080/chat/addGroup.html?userId='+userIds+'&&type='+type,
+            content: 'http://localhost:8080/chat/addGroup.html?src='+src+'&&dst='+dst+'&&type='+type+'&&userId='+userIds,
             area: ['100%', '100%'],
             // maxmin: true,
             closeBtn:0
         });
         layer.full(index);
-    }
-
-    function askOutGroup(){
-        layer.confirm('是否确定退出该群？', {
-            title: false,
-            skin: "blueConfirm",
-            btn: ['确定','取消'] //按钮
-        }, function(index){
-            console.log("退群")
-            layer.close(index);
-        }, function(){
-            console.log("取消退群")
-        });
     }
 
     //退群

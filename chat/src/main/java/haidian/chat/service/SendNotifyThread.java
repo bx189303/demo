@@ -2,24 +2,25 @@ package haidian.chat.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import haidian.chat.controller.MainController;
+import haidian.chat.util.ApplicationContextProvider;
 import haidian.chat.util.DateUtil;
 
 import java.util.Date;
 import java.util.List;
 
-public class NotifyThread implements Runnable {
+public class SendNotifyThread implements Runnable {
 
     private String notifySrc;
 
     private List<Object> msgList;
 
-    private ListenAndSend listenAndSend;
+    private MainController mainController;
 
-
-    public NotifyThread(String notifySrc, List<Object> msgList, ListenAndSend listenAndSend) {
+    public SendNotifyThread(String notifySrc, List<Object> msgList, MainController mainController) {
         this.notifySrc=notifySrc;
         this.msgList = msgList;
-        this.listenAndSend=listenAndSend;
+        this.mainController=mainController;
     }
 
     @Override
@@ -42,6 +43,8 @@ public class NotifyThread implements Runnable {
             JSONObject notifyJson=new JSONObject();
             notifyJson.put("type","notify");
             notifyJson.put("sendTime", DateUtil.getDateToStrings(new Date()));
+//            notifyJson.put("receiveTime", DateUtil.getDateToStrings(new Date()));
+//            notifyJson.put("idValid",1);
             JSONObject notifyJsonData=new JSONObject();
             notifyJsonData.put("type",msgType);
             notifyJsonData.put("uuid",msgJsonData.getString("uuid"));
@@ -51,9 +54,12 @@ public class NotifyThread implements Runnable {
                 notifyJsonData.put("groupId",msgJsonData.getJSONObject("dst").getString("id"));
             }
             notifyJson.put("data",notifyJsonData);
-            String notifyParam= JSON.toJSONString(notifyJson);
+            mainController.sendNotify(notifyJson);
+//            String notifyParam= JSON.toJSONString(notifyJson);
 //            System.out.println("notify参数： "+notifyParam);
-            listenAndSend.sendNotify(notifyParam);
+//            listenAndSend.sendNotify(notifyParam);
+//            ApplicationContextProvider.getBean(MainController.class).sendNotify(notifyJson);
+
         }
     }
 }

@@ -2,6 +2,7 @@ package haidian.chat.config;
 
 import haidian.chat.controller.WebSocketController;
 import haidian.chat.service.ListenAndSend;
+import haidian.chat.service.SaveMysql;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -10,6 +11,9 @@ import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
+/**
+ * 监听redis配置,需添加三处（参数，添加监听，bean）
+ */
 @Configuration
 public class RedisListenerConfig {
 
@@ -24,13 +28,15 @@ public class RedisListenerConfig {
     @Bean
     RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory,
                                             MessageListenerAdapter listenerAdapter,
-                                            MessageListenerAdapter sendUser
+                                            MessageListenerAdapter sendUser,
+                                            MessageListenerAdapter saveInMysql
     ) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
 
         //可以添加多个 messageListener
         container.addMessageListener(listenerAdapter, new PatternTopic("RECEIVE"));
+        container.addMessageListener(saveInMysql, new PatternTopic("RECEIVE"));
         container.addMessageListener(sendUser, new PatternTopic("DISPATCH"));
 
         return container;
@@ -50,6 +56,11 @@ public class RedisListenerConfig {
     @Bean
     MessageListenerAdapter sendUser(WebSocketController redisReceiver) {
         return new MessageListenerAdapter(redisReceiver, "sendMsg");
+    }
+
+    @Bean
+    MessageListenerAdapter saveInMysql(SaveMysql redisReceiver) {
+        return new MessageListenerAdapter(redisReceiver, "saveMsg");
     }
 
     //使用默认的工厂初始化redis操作模板

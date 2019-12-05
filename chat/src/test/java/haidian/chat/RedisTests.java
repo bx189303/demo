@@ -30,6 +30,22 @@ class RedisTests {
     GroupMapper groupMapper;
 
     @Test
+    public void listhavetest(){
+        String key="0001.0002";
+        List<Object> list = r.lGet(key, 0, -1);
+        System.out.println(JSON.toJSONString(list));
+        System.out.println(list.size());
+        list= r.lGet(key, 0, r.lGetListSize(key));
+        System.out.println(JSON.toJSONString(list));
+        System.out.println(list.size());
+        System.out.println(r.lGetListSize(key));
+        key="0001.00021";
+        list = r.lGet(key, 0, 1);
+        System.out.println(list.size());
+
+    }
+
+    @Test
     public void autotest(){
         r.del("0005");
         System.out.println(r.get("0005")==null);

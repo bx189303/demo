@@ -84,8 +84,8 @@ public class MainController {
 
     public Result sendNotify(JSONObject notify){
         //添加字段
-        notify.put("readCount",0);
         notify.put("isValid",1);
+        notify.put("receiveTime", DateUtil.getDateToStrings(new Date()));
         //发送kafka   r_notify
         //发送redis RECEIVE
         template.convertAndSend("RECEIVE",JSON.toJSONString(notify));
@@ -95,11 +95,9 @@ public class MainController {
 
     public Result onoff(JSONObject notify){
         //添加字段
-        notify.put("readCount",0);
         notify.put("isValid",1);
         //发送kafka   onoff
-
-
+        //改为在websocket监听事件处发送
         return Result.ok();
     }
 

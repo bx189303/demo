@@ -14,22 +14,22 @@
 
 
 </style>
-<body style="overflow-y: hidden;background-color:#101144;color:#fff">
+<body style="overflow-y: hidden">
     <!-- 头部 -->
-    <div style="width:100%;height:5%;">
+    <div style="width:100%;height: 5%;background-color: #EDEDED">
         <div style="width:8%;height:100%;float:left;margin-right: 3%;">
             <img id="topOutIcon" class="btnIcon" src="../img/back.png" height="100%" width="100%">
         </div>
-        <div style="vertical-align:middle;height: 100%;width:75%;float: left">
-            <h2 id="titleName" style="display:block;position: relative;top:50%;transform:translateY(-50%);text-align:center;">选择成员</h2>
+        <div style="vertical-align:middle;height: 100%;width:64%;float: left">
+            <h2 id="titleName" style="display:block;position: relative;top:50%;transform:translateY(-50%);left:52%;width: 20%;">选择成员</h2>
         </div>
         <div style="width:8%;height:100%;float:right;margin-right: 3%;">
-            <input id="addGroupBtn" class="btnIcon" type="button" value="确定" style="width: 100%;height: 70%;margin-top: 15%;background-color:#27439e;color: #fff;">
+            <input id="addGroupBtn" class="btnIcon" type="button" value="确定" style="width: 100%;height: 70%;margin-top: 15%;background-color: #8d8d8d;color: #fff;">
         </div>
     </div>
     <!-- 好友 friendDiv-->
-    <div id="friendDiv" class="listDiv scrollDiv" style="overflow-y:scroll;overflow-x: hidden;width:100%;height: 95%;background: url(../img/backimg.png) no-repeat;background-size: 100% 100%;">
-        <div class="container" style="width:100%;height: 6%;">
+    <div id="friendDiv" class="listDiv scrollDiv" style="overflow-y:scroll;overflow-x: hidden;width:100%;height: 87%;">
+        <div class="container" style="width:100%;height: 6%;background-color: #EDEDED">
             <form action="" class="parent" style="width:100%;height: 100%;">
                 <input id="AddGroupSearchInput" type="text" class="search" placeholder="" >
                 <input type="button" name="" id="cleanFriendSearchBtn" class="searchCleanBtn">
@@ -37,7 +37,12 @@
             </form>
         </div>
         <!--  选中的人  -->
-        <div id="checkedPerson" style="margin:0 3%;width:100%;overflow:hidden;border-bottom:1px solid #263D89;">
+        <div id="checkedPerson" style="margin:0 3%;width:100%;overflow:hidden;border-bottom:1px solid #e0dbdb;">
+<!--            <div name="0001" class="checkBoxPersonDiv">-->
+<!--                <img src="../img/head.png" >-->
+<!--                用户A-->
+<!--                <div class="checkBoxPersonDivRemove" onclick="removecheckedPerson(this)">x</div>-->
+<!--            </div>-->
         </div>
 
         <div id="friendListDiv" style="margin-top: 1%;">

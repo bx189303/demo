@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+.redText{
+    color:red !important;
+}
+
 .centerDiv{
     overflow-y: scroll;
     overflow-x: hidden;
@@ -26,10 +30,11 @@
 #groupNameUpdateBtn{
     float: right;
     margin-right: 6%;
-    width: 14%;
+    width: 20%;
     padding: 0px 2%;
     background-color: #101144;
     border-radius: 10px;
+    text-align: center;
 }
 
 #groupNameInput::-webkit-input-placeholder {

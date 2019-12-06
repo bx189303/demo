@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import haidian.chat.redis.RedisUtil;
 import haidian.chat.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServerEndpoint("/ws/{userId}")
 @Component
 public class WebSocketController {
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
@@ -42,7 +46,7 @@ public class WebSocketController {
         JSONObject msg=JSON.parseObject(message);
         String msgType=msg.getString("type");
         JSONObject data=msg.getJSONObject("data");
-        System.out.println("监听DISPATCH-"+msgType+" : "+message);
+        log.info("监听DISPATCH-"+msgType+" : "+message);
         String dstId="";
         if(msgType.equals("msg")){
             dstId=data.getJSONObject("dst").getString("sId");

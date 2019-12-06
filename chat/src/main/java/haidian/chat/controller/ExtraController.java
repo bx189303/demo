@@ -14,6 +14,8 @@ import haidian.chat.service.ListenAndSend;
 import haidian.chat.service.SendNotifyThread;
 import haidian.chat.util.DateUtil;
 import haidian.chat.util.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +30,10 @@ import java.util.concurrent.Executors;
 
 @RestController
 public class ExtraController {
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+    static ExecutorService executorService = Executors.newFixedThreadPool(3);
 
     @Value("${nginxPort}")
     String nginxPort;
@@ -55,6 +61,7 @@ public class ExtraController {
 
     @Autowired
     MainController mainController;
+
 
     //html加载后先获取系统参数
     @RequestMapping("/getHtmlparam")
@@ -413,9 +420,42 @@ public class ExtraController {
             List<Object> msgs=  r.lGet(key, 0, -1);
             //前台收到数据进行显示，直接在后台发送已读
             //发送notify
-            ExecutorService executorService = Executors.newFixedThreadPool(2);
             executorService.execute(new SendNotifyThread(src,msgs,mainController));
+            result=Result.ok(msgs);
+        }catch (Exception e){
+            e.printStackTrace();
+            result=Result.build(500,e.getMessage());
+        }
+        return result;
+    }
 
+    @RequestMapping("/getRecordByPage")
+    public Result getRecordByPage(@RequestBody JSONObject json){
+        Result result=null;
+        try {
+            String src=json.getString("src");
+            String dst=json.getString("dst");
+            String type=json.getString("type");
+            int size=json.getInteger("size");
+            int page=json.getInteger("page");
+            String key="";
+            if("single".equalsIgnoreCase(type)){
+                key=src.compareTo(dst)<0?src+"."+dst:dst+"."+src;
+            }else if("group".equalsIgnoreCase(type)){
+                key=dst;
+            }
+            int msgSize= (int) r.lGetListSize(key);
+            if(page==1){ //如果第一次请求则发送notify，默认查看最近10000次
+                int notifyListStart=msgSize-10000>0?msgSize-10000:0;
+                List<Object> notifyMsgs=  r.lGet(key, notifyListStart, msgSize);
+                executorService.execute(new SendNotifyThread(src,notifyMsgs,mainController));
+            }
+            int start=msgSize-(size*page)>0?msgSize-(size*page):0;
+            int end=msgSize-(size*(page-1))>0?msgSize-(size*(page-1)):0;
+            if(end==0){ //如果结束坐标为0，则返回
+                return result.ok();
+            }
+            List<Object> msgs=  r.lGet(key, start, end);
             result=Result.ok(msgs);
         }catch (Exception e){
             e.printStackTrace();

@@ -30,6 +30,25 @@ class RedisTests {
     GroupMapper groupMapper;
 
     @Test
+    public void listxiaolv(){
+        String key="testlist";
+        r.get("");
+        long t1=System.currentTimeMillis();
+        r.lGet(key,0,r.lGetListSize(key));
+        long t2=System.currentTimeMillis();
+        r.lGet(key,0,10000);
+        long t3=System.currentTimeMillis();
+        r.lGet(key,r.lGetListSize(key)-10000,r.lGetListSize(key));
+        long t4=System.currentTimeMillis();
+        r.lGetListSize(key);
+        long t5=System.currentTimeMillis();
+        System.out.println("取28w+耗时"+new Double(t2-t1)/1000);
+        System.out.println("取前10000耗时"+new Double(t3-t2)/1000);
+        System.out.println("取后10000耗时"+new Double(t4-t3)/1000);
+        System.out.println("获取长度耗时"+new Double(t5-t4)/1000);
+    }
+
+    @Test
     public void listhavetest(){
         String key="0001.0002";
         List<Object> list = r.lGet(key, 0, -1);

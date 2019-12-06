@@ -10,6 +10,26 @@ import java.util.*;
 
 public class JavaTest {
     public static void main(String[] args) {
+        long l=1L;
+        int i= (int) l;
+    }
+
+    private static void subListtest() {
+        List<String> l=new ArrayList<>();
+        l.add("1");
+        l.add("2");
+        l.add("3");
+        l.add("4");
+        l.add("5");
+        l.add("6");
+        l.add("7");
+        List<String> ll = l.subList(0, 5);
+        System.out.println(JSON.toJSONString(ll));
+        List<String> rl = l.subList(l.size() - 5, l.size());
+        System.out.println(JSON.toJSONString(rl));
+    }
+
+    private static void listeachcompare() {
         List<String> l=new ArrayList<>();
         for (int i = 0; i <1000 ; i++) {
             l.add("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");

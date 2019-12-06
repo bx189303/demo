@@ -9,6 +9,8 @@ import haidian.chat.redis.RedisUtil;
 import haidian.chat.util.DateUtil;
 import haidian.chat.util.Response;
 import haidian.chat.util.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +25,8 @@ import java.util.UUID;
 
 @RestController
 public class MainController {
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     RedisUtil r;

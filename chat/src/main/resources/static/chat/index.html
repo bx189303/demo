@@ -147,7 +147,7 @@
         <!-- 头部 -->
         <div style="width:100%;height: 5%;background-color:#101144;">
             <div class="lefttopBtn">
-                <img id="topOutIcon" class="btnIcon" src="../img/back.png" height="100%" width="100%">
+                <img id="topOutIcon" onclick="outChatWindow()" class="btnIcon" src="../img/back.png" height="100%" width="100%">
                 <img id="topBackIcon" class="btnIcon" src="../img/back.png" onclick="chatDetailback()" height="100%" width="100%" style="display: none">
             </div>
             <div style="vertical-align:middle;height: 100%;width:80%;float: left;margin-left:10%;">
@@ -177,7 +177,7 @@
         <!--中部-->
         <div id="chatMainDiv" style="width:100%;height: 95%;">
             <!-- 聊天记录 -->
-            <div id="chatWindow" class="scrollDiv" style="overflow-y:scroll;width:100%;height: 76%;background-color: #F6F6F6;background: url(../img/backimg.png) no-repeat;background-size: 100% 100%;">
+            <div id="chatWindow" onscroll="chatWindowScroll(this)" class="scrollDiv" style="overflow-y:scroll;width:100%;height: 76%;background-color: #F6F6F6;background: url(../img/backimg.png) no-repeat;background-size: 100% 100%;">
             </div>
             <!-- 底部 -->
             <div style="width:100%;height: 25%;background-color:#101144;">
@@ -206,7 +206,8 @@
     var serverUrl="";
 
     $(function(){
-        src=userId=GetUrlParam("id");
+        src=userId=GetUrlParam("userid");
+        page=1;
         //读取参数
         getParam();
     });
@@ -245,18 +246,17 @@
         var file='<input type="file" class="fileInput hide" onchange="showFileImg(this)">';
         setTimeout(function(){
             $(file).click();
-        },200)
+        },500)
     }
     //显示文件预览
     function showFileImg(obj){
+        console.log("显示文件预览")
+
         var file = $(obj).val();
         var fileName= getFileName(file);
         var showName= getFileName(file);
         var imgSrc="/img/file.png";
         var imgClass="fileImg";
-        // console.log("文件名是："+fileName);
-        // var suffixIndex=fileName.lastIndexOf(".");
-        // var suffix=fileName.substring(suffixIndex+1).toUpperCase();
         var fileType=getFileType(fileName);
         if(fileType=="img"){ //如果是图片
             imgSrc=window.URL.createObjectURL(obj.files.item(0));
@@ -467,6 +467,14 @@
             $(".fileInput").each(function(i,n){
                 var fileName=getFileName($(n).val());
                 var fileType=getFileType(fileName);
+                var fileImgSrc=window.URL.createObjectURL(n.files.item(0));
+                var fileSize=n.files[0].size;
+                // console.log(fileSize)
+                if(fileSize>1*1024*1024*1024){
+                    layer.msg("发送文件最大支持1G");
+                    return;
+                }
+                var sendFileTime=getMyDate(Date.now());
                 console.log("上传文件");
                 var url="/upload";
                 var file1 = n.files[0];
@@ -475,12 +483,25 @@
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', url, true);
                 xhr.send(formData);
+                //清空文件输入框
+                $("#fileInput").html("");
+                //如果不是图片，显示发送文件消息预览
+                if(fileType!="img"){
+                    var content="";
+                    if(fileType=="img"){
+                        content='<div class="imgShowDiv" onclick="download(this)"><img src="'+fileImgSrc+'"></div>';
+                    }else if(fileType=="file"){
+                        content='<div class="fileShowDiv" onclick="download(this)"><img src="/img/file.png"><span class="fileShowSpan">'+fileName+'</span></div>';
+                    }
+                    showFilePreview(sendFileTime,content,fileImgSrc);
+                }
+                //发送完成回调
                 xhr.onreadystatechange=function(){
                     if (xhr.readyState==4 && xhr.status==200){
                         // console.log(xhr.responseText);
+                        //发送消息
                         var res=JSON.parse(xhr.responseText);
                         var uuid=res.data.uuid;
-                        var sendFileTime=getMyDate(Date.now());
                         var param={
                             "type":"msg",
                             "sendTime":sendFileTime,
@@ -507,6 +528,8 @@
                             data : data,
                             //请求成功
                             success : function(result) {
+                                //删除文件消息预览
+                                $('.chatMsg[name="'+fileImgSrc+'"]').remove();
                                 var msgUuid=result.data.uuid;
                                 //显示消息
                                 var content="";
@@ -520,8 +543,6 @@
                                 //首页消息列表更新
                                 var name=$("#titleName").text();
                                 indexMsgListUpdate(dst,name,type,"[文件]","send");
-                                //清空文件输入框
-                                $("#fileInput").html("");
                             },
                             //请求失败，包含具体的错误信息
                             error : function(e){
@@ -529,6 +550,10 @@
                                 console.log(e.responseText);
                             }
                         })
+                    }else{
+                        console.log("上传文件失败");
+                        $('.chatMsg[name="'+fileImgSrc+'"] .read').text("发送失败");
+                        $('.chatMsg[name="'+fileImgSrc+'"] .read').addClass("redText");
                     }
                 };
             })
@@ -561,13 +586,37 @@
         scrollChatWindow();
     }
 
+    //显示发送文件预览
+    function showFilePreview(time,data,uuid){
+        // console.log(data)
+        var readText="发送文件中...";
+        //对话窗口显示消息
+        var html='<div name="'+uuid+'" class="RightTalk chatMsg">\n' +
+            '                    <div class="rightTalkImgDiv talkImgDiv">\n' +
+            '                        <img src="../img/head.png">\n' +
+            '                    </div>\n' +
+            '                    <div class="rightTalkContent">\n' +
+            '                        <div class="talkUser">'+time+'&nbsp;&nbsp;&nbsp;我</div>\n' +
+            '                        <div class="rightTalkNotify">\n' +
+            '                            <div class="rightTalkBubble">'+data+'</div>\n' +
+            '                            <div class="read">'+readText+'</div>\n' +
+            '                        </div>\n' +
+            '                    </div>\n' +
+            '                </div>'
+        $("#chatWindow").append(html);
+        scrollChatWindow();
+    }
+
     //左上角撤销按钮-关闭窗口
-    $("#topOutIcon").on("click",function(){
+    function outChatWindow(){
         $("#indexDiv").show();
         $("#chatDiv").hide();
         dst="";
         type="";
-    })
+        page=1;
+        noMoreRecord=false;
+        $("#chatWindow").html("");
+    }
 
     //对话窗口右上角按钮-查看对话详情
     function jumpChatDetail(){
@@ -579,13 +628,6 @@
         $("#topBackIcon").show();
         $("#topOutIcon").hide();
         $("#chatDetailDiv").show();
-        //是否显示群组名
-        // if(type=="group"){
-        //     $("#groupDetail").show();
-        //     $("#groupNameInput").attr("placeholder",$("#titleName").text());
-        // }else if(type=="single"){
-        //     $("#groupDetail").hide();
-        // }
         //加载聊天详情
         // loadChatDetail();
     }
@@ -732,5 +774,22 @@
         })
     }
 
+    //监听对话窗口滚动
+    function chatWindowScroll(obj){
+        var divScrollTop = obj.scrollTop;
+        var divClientHeight = obj.clientHeight;
+        var divScrollHeight = obj.scrollHeight;
+        if(divScrollTop + divClientHeight >= divScrollHeight){
+            // console.log('到底部了');
+        }
+        if(divScrollTop == 0){
+            // console.log('到顶部了');
+            if(noMoreRecord){
+                return;
+            }
+            page=page+1;
+            loadChatMsg(page);
+        }
+    }
 </script>
 </html>

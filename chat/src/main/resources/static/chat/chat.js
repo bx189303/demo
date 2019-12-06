@@ -1,13 +1,13 @@
-// var imgUrlPre="http://localhost:11111/";
+var size=20;
+var page;
+var noMoreRecord=false;
 
 //websocket
 function openSocket() {
     if(typeof(WebSocket) == "undefined") {
         console.log("您的浏览器不支持WebSocket");
     }else{
-        // console.log("您的浏览器支持WebSocket");
-        // var socketUrl="http://localhost:8080/ws/"+userId;
-        // socketUrl=socketUrl.replace("https","ws").replace("http","ws");
+        // var socketUrl="ws://localhost:8080/ws/"+userId;
         var socketUrl=serverUrl.replace("http","ws")+"/ws/"+userId;
         socket = new WebSocket(socketUrl);
         //打开事件
@@ -300,18 +300,24 @@ function loadChatMsg(){
     var data={
         "src":src,
         "dst":dst,
-        "type":type
+        "type":type,
+        "size":size,
+        "page":page
     }
     $.ajax({
         type : "POST",
         contentType: "application/json;charset=UTF-8",
-        url : "/getRecord",
+        // url : "/getRecord",
+        url : "/getRecordByPage",
         data: JSON.stringify(data),
         //请求成功
         success : function(result) {
             var record=result.data;
-            // console.log(record);
             var html='';
+            if(typeof(record)=="undefined"){
+                noMoreRecord=true;
+                return;
+            }
             $(record).each(function(i,n){
                 var recordSendTime=n.sendTime;
                 var recordType=n.data.type;
@@ -375,8 +381,12 @@ function loadChatMsg(){
                         '                </div>';
                 }
             })
-            $("#chatWindow").html(html);
-            scrollChatWindow();
+            var oldChatHtml=$("#chatWindow").html();
+            var oldHeight=$("#chatWindow")[0].scrollHeight;
+            $("#chatWindow").html(html+oldChatHtml);
+            var newHeight=$("#chatWindow")[0].scrollHeight;
+            // scrollChatWindow();
+            $('#chatWindow').scrollTop(newHeight-oldHeight);
         },
         //请求失败，包含具体的错误信息
         error : function(e){

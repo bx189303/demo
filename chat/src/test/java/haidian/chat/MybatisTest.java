@@ -27,6 +27,7 @@ public class MybatisTest {
     @Resource
     GroupUserMapper groupUserMapper;
 
+
     @Test
     public void guutest(){
         groupUserMapper.outByGroupIdAndUserId("92455589-cb93-44f2-9123-c85adaf96253","0002");

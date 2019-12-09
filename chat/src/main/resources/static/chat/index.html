@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="referrer" content="no-referrer" />
-    <title>微信</title>
+    <title>信息协同</title>
     <link rel="stylesheet" type="text/css" href="../css/base.css">
     <link rel="stylesheet" type="text/css" href="../css/chat.css">
 </head>
@@ -29,7 +29,7 @@
         <!-- 消息 -->
         <div id="chatListDiv" class="listDiv scrollDiv centerDiv">
             <div class="container" style="width:100%;height: 6%;">
-                <form action="" class="parent" style="width:100%;height: 100%;">
+                <form action="" class="parent" onsubmit="return false;" style="width:100%;height: 100%;">
                     <input id="chatLiInput" type="text" class="search" placeholder="" >
                     <input type="button" id="cleanChatSearchBtn" onclick="cleanIndexSearch(this)" class="searchCleanBtn">
                     <input type="button" id="chatSearchBtn" onclick="searchIndexList()" class="searchBtn">
@@ -69,7 +69,7 @@
         <!-- 好友 friendDiv-->
         <div id="friendDiv" class="listDiv scrollDiv centerDiv">
             <div class="container" style="width:100%;height: 6%;background-color: #101144">
-                <form action="" class="parent" style="width:100%;height: 100%;">
+                <form action="" class="parent" onsubmit="return false;" style="width:100%;height: 100%;">
                     <input id="friendUlInput" type="text" class="search" placeholder="" >
                     <input type="button" id="cleanFriendSearchBtn" onclick="cleanFriendSearch(this)" class="searchCleanBtn">
                     <input type="button" id="friendSearchBtn" onclick="searchFriend()" class="searchBtn">
@@ -257,13 +257,15 @@
         var showName= getFileName(file);
         var imgSrc="/img/file.png";
         var imgClass="fileImg";
+        var divClass="fileInputDiv";
         var fileType=getFileType(fileName);
         if(fileType=="img"){ //如果是图片
             imgSrc=window.URL.createObjectURL(obj.files.item(0));
             showName="";
             imgClass="imgFileImg";
+            divClass="imgInputDiv";
         }
-        var fileDiv='<div name="'+fileName+'" class="fileInputDiv"><img class="'+imgClass+'" src="'+imgSrc+'"><span class="fileNameSpan">'+showName+'</span></div>';
+        var fileDiv='<div name="'+fileName+'" class="'+divClass+'"><img class="'+imgClass+'" src="'+imgSrc+'"><span class="fileNameSpan">'+showName+'</span></div>';
         $("#fileInput").append(fileDiv);
         $("#fileInput").append(obj);
     }
@@ -337,6 +339,13 @@
         loadFriends();
         $(obj).hide();
     }
+    //好友搜索回车事件
+    $("#friendUlInput").on("keydown",function(event){
+        if(event.keyCode==13){
+            searchFriend();
+        }
+    })
+
     /*首页消息列表搜索框*/
     function searchIndexList(){
         var searchName=$("#chatLiInput").val();
@@ -359,6 +368,12 @@
         $("#chatUl li").show();
         $(obj).hide();
     }
+    //首页搜索回车事件
+    $("#chatLiInput").on("keydown",function(event){
+        if(event.keyCode==13){
+            searchIndexList();
+        }
+    })
 
     //右上按钮-弹出创建群页面
     function layAddGroup(){
@@ -550,7 +565,7 @@
                                 console.log(e.responseText);
                             }
                         })
-                    }else{
+                    }else if (xhr.readyState==4 && xhr.status!=200){
                         console.log("上传文件失败");
                         $('.chatMsg[name="'+fileImgSrc+'"] .read').text("发送失败");
                         $('.chatMsg[name="'+fileImgSrc+'"] .read').addClass("redText");
@@ -740,7 +755,7 @@
     function askOutGroup(){
         layer.confirm('是否确定退出该群？', {
             title: false,
-            skin: "blueConfirm",
+            skin: "redText",
             btn: ['确定','取消'] //按钮
         }, function(index){
             console.log("退群")

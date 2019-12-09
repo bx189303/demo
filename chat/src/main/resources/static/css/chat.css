@@ -361,10 +361,18 @@ li:hover{
     cursor: pointer;
 }
 .fileInputDiv{
-    width: 15%;
-    height: 70px;
+    /*width: 15%;*/
+    /*height: 70px;*/
+    /*text-align: center;*/
+    width: 44%;
+    height: 50px;
     font-size: 7px;
-    text-align: center;
+    float: left;
+    margin: 0 1%;
+    overflow: hidden;
+}
+.imgInputDiv{
+    width: 45%;
     float: left;
     margin: 0 1%;
 }
@@ -373,8 +381,10 @@ li:hover{
     max-width: 100%;
 }
 .fileImg{
-    height: 70%;
-    width:100%;
+    /*height: 70%;*/
+    /*width:100%;*/
+    height: 100%;
+    width: 30%;
 }
 #fileBtn{
     height: 100%;
@@ -410,10 +420,18 @@ li:hover{
     text-align: left;
 }
 .fileNameSpan{
-    width: 100%;
-    text-overflow: ellipsis;
-    overflow: hidden;
+    /*width: 100%;*/
+    /*text-overflow: ellipsis;*/
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
     display: inline-block;
+    width: 55%;
+    overflow: hidden;
+    position: relative;
+    top: -50%;
+    vertical-align: middle;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 .imgShowDiv{
     cursor: pointer;
@@ -427,4 +445,12 @@ li:hover{
     background-color: #263D89;/*    PS：这里可以改变背景颜色*/
     /* color: #FFF;                                       PS：这里可以修改字的颜色*/
     cursor: pointer;
+}
+.chatMsg a{
+    display: none;
+}
+.aFile{
+    float: right;
+    font-size: 13px;
+    padding: 5px;
 }

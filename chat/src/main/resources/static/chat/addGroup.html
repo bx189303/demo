@@ -30,7 +30,7 @@
     <!-- 好友 friendDiv-->
     <div id="friendDiv" class="listDiv scrollDiv" style="overflow-y:scroll;overflow-x: hidden;width:100%;height: 95%;background: url(../img/backimg.png) no-repeat;background-size: 100% 100%;">
         <div class="container" style="width:100%;height: 6%;">
-            <form action="" class="parent" style="width:100%;height: 100%;">
+            <form action="" onsubmit="return false;" class="parent" style="width:100%;height: 100%;">
                 <input id="AddGroupSearchInput" type="text" class="search" placeholder="" >
                 <input type="button" name="" id="cleanFriendSearchBtn" class="searchCleanBtn">
                 <input type="button" name="" class="searchBtn" onclick="friendSearch()">
@@ -140,6 +140,11 @@
         $(".friendLi").show();
         $(".searchLi").remove();
         $(this).hide();
+    })
+    $("#AddGroupSearchInput").on("keydown",function(event){
+        if(event.keyCode==13){
+            friendSearch();
+        }
     })
 
     //确定提交

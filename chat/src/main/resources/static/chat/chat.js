@@ -17,10 +17,18 @@ function openSocket() {
         //关闭事件
         socket.onclose = function() {
             console.log("websocket已关闭");
+            layer.alert('连接已断开',{
+                skin:"redText",
+                title:false
+            })
         };
         //发生了错误事件
         socket.onerror = function() {
             console.log("websocket发生了错误");
+            layer.alert('连接已断开',{
+                skin:"redText",
+                title:false
+            })
         }
         //获得消息事件
         socket.onmessage = function(msg) {
@@ -352,6 +360,7 @@ function loadChatMsg(){
                         var imgsrc=imgUrlPre+fileUrl;
                         content='<div name="'+fileUrl+'" filename="'+fileName+'" class="imgShowDiv" onclick="download(this)"><img src="'+imgsrc+'"></div>';
                     }else if(fileType=="file"){
+                        var imgsrc=imgUrlPre+fileUrl;
                         content='<div name="'+fileUrl+'" filename="'+fileName+'" class="fileShowDiv" onclick="download(this)"><img src="/img/file.png"><span class="fileShowSpan">'+fileName+'</span></div>';
                     }
                 }
@@ -365,7 +374,7 @@ function loadChatMsg(){
                         '                        <div class="talkUser">'+recordSendTime+'&nbsp;&nbsp;&nbsp;我</div>\n' +
                         '                        <div class="rightTalkNotify">\n' +
                         '                            <div class="rightTalkBubble">'+content+'</div>\n' +
-                        '                            <div class="read">'+readText+'</div>\n' +
+                        '                            <div class="aFile" onclick="openFile(this)">打开</div><div class="read">'+readText+'</div>\n' +
                         '                        </div>\n' +
                         '                    </div>\n' +
                         '                </div>';
@@ -486,6 +495,14 @@ function download(obj){
     var fileName=$(obj).attr("filename");
     console.log(fileUrl+","+fileName);
     window.location.href="/download/"+fileUrl+"/"+fileName;
+}
+
+function openFile(obj){
+    var p=$(obj).parent();
+    var fileName=$(".fileShowDiv",p).attr("name");
+    var fileUrl=imgUrlPre+fileName;
+    var a='<a href="'+fileUrl+'" target="view_frame"></a>';
+    $(a)[0].click();
 }
 
 //对话窗口滚动条默认最下方

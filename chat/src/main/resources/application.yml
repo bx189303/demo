@@ -63,6 +63,6 @@ mybatis:
   configuration:
     lazy-loading-enabled: true
 logging:
-#  level:
-#    haidian.chat.dao: debug
   config: classpath:log4j2_dev.xml
+  level:
+    haidian.chat.dao: debug

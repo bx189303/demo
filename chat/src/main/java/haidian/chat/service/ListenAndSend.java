@@ -218,10 +218,10 @@ public class ListenAndSend {
         map.put("PushName",srcName);
         map.put("Time", DateUtil.getDateTimeToString(new Date()));
         map.put("Accepts",dst);
-        map.put("Target",serverHost+":"+serverPort+"/chat/index.html?id=");
+        map.put("Target",serverHost+":"+serverPort+"/chat/index.html?userid=");
         map.put("Title","");
-//        System.out.println("发送门户接口参数："+ JSON.toJSONString(map));
         if(!StringUtils.isBlank(notifyUrlSysId)&&!StringUtils.isBlank(notifyUrlSysName)&&!StringUtils.isBlank(notifyUrl)){
+            log.info("发送门户接口参数："+ JSON.toJSONString(map));
             sendPostRequest(notifyUrl,map);
         }
     }

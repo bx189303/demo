@@ -1,16 +1,11 @@
 package haidian.chat.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import haidian.chat.dao.FriendMapper;
-import haidian.chat.dao.GroupMapper;
-import haidian.chat.dao.GroupUserMapper;
-import haidian.chat.dao.PersonMapper;
-import haidian.chat.pojo.Friend;
-import haidian.chat.pojo.Group;
-import haidian.chat.pojo.GroupUser;
-import haidian.chat.pojo.Person;
+import haidian.chat.dao.*;
+import haidian.chat.pojo.*;
 import haidian.chat.redis.RedisUtil;
 import haidian.chat.service.ListenAndSend;
+import haidian.chat.service.MysqlMsgToJson;
 import haidian.chat.service.SendNotifyThread;
 import haidian.chat.util.DateUtil;
 import haidian.chat.util.Result;
@@ -56,6 +51,12 @@ public class ExtraController {
     @Resource
     FriendMapper friendMapper;
 
+    @Resource
+    MessageMapper messageMapper;
+
+    @Autowired
+    MysqlMsgToJson msgToJson;
+
     @Autowired
     RedisUtil r;
 
@@ -79,6 +80,23 @@ public class ExtraController {
         return result;
     }
 
+    @RequestMapping("/getUserByGroup/{groupId}")
+    public Result getUserByGroup(@PathVariable String groupId) {
+        Result result = null;
+        try {
+            List<Person> persons = new ArrayList<>();
+            List<String> userIds=groupMapper.getUserByGroupId(groupId);
+            for (String userId : userIds) {
+                Person user= (Person) r.get(userId);
+                persons.add(user);
+            }
+            result = Result.ok(persons);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = Result.build(500, e.getMessage());
+        }
+        return result;
+    }
 
     @RequestMapping("/getFriend/{userId}")
     public Result getFriend(@PathVariable String userId) {
@@ -285,7 +303,6 @@ public class ExtraController {
                 int notice = 0;
                 for (int i = records.size() - 1; i >= 0; i--) {//倒序遍历组的记录
                     JSONObject record = (JSONObject) records.get(i);
-
                     if (i == records.size() - 1) {//记录最后一条的数据
                         json.put("lastTime", record.getString("sendTime"));
                         json.put("content", record.getJSONObject("data").getJSONObject("content"));
@@ -457,6 +474,43 @@ public class ExtraController {
             }
             List<Object> msgs=  r.lGet(key, start, end);
             result=Result.ok(msgs);
+        }catch (Exception e){
+            e.printStackTrace();
+            result=Result.build(500,e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping("/getRecordByGroupUser")
+    public Result getRecordByGroupUser(@RequestBody JSONObject json){
+        Result result=null;
+        try {
+            String groupId=json.getString("groupId");
+            String groupUserId=json.getString("groupUserId");
+            String type=json.getString("type");
+            int page=json.getInteger("page");
+            int size=json.getInteger("size");
+            List<Object> messages = msgToJson.getMessageByGroupUser(groupId, groupUserId,page,size);
+            result=Result.ok(messages);
+        }catch (Exception e){
+            e.printStackTrace();
+            result=Result.build(500,e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping("/getRecordByFile")
+    public Result getRecordByFile(@RequestBody JSONObject json){
+        Result result=null;
+        try {
+            String src=json.getString("src");
+            String dst=json.getString("dst");
+            String type=json.getString("type");
+            String fileType=json.getString("fileType");
+            int size=json.getInteger("size");
+            int page=json.getInteger("page");
+            List<Object> messages = msgToJson.getMessageByFile(src,dst,type,fileType,page,size);
+            result=Result.ok(messages);
         }catch (Exception e){
             e.printStackTrace();
             result=Result.build(500,e.getMessage());

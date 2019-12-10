@@ -1,3 +1,8 @@
+logging:
+  config: classpath:log4j2_dev.xml
+#  config: classpath:log4j2_prod.xml
+#  level:
+#    haidian.chat.dao: debug
 server:
   port: "${serverPort}"
 spring:
@@ -62,7 +67,3 @@ mybatis:
   type-aliases-package: haidian.chat.pojo
   configuration:
     lazy-loading-enabled: true
-logging:
-  config: classpath:log4j2_dev.xml
-  level:
-    haidian.chat.dao: debug

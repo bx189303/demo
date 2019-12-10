@@ -393,6 +393,16 @@ li:hover{
     background: url(../img/fileBtn.png) no-repeat;
     background-size: 100% 100%;
     background-position: center;
+    float: left;
+}
+#openHisBtn{
+    height: 100%;
+    width: 7%;
+    margin-left: 3%;
+    background: url(../img/point.png) no-repeat;
+    background-size: 100% 100%;
+    background-position: center;
+    float: left;
 }
 .fileShowDiv{
     width: 100%;
@@ -453,4 +463,5 @@ li:hover{
     float: right;
     font-size: 13px;
     padding: 5px;
+    display: none;
 }

@@ -518,4 +518,62 @@ public class ExtraController {
         return result;
     }
 
+    @RequestMapping("/getRecordByDate")
+    public Result getRecordByDate(@RequestBody JSONObject json){
+        Result result=null;
+        try {
+            String src=json.getString("src");
+            String dst=json.getString("dst");
+            String type=json.getString("type");
+            String date=json.getString("date");
+            int size=json.getInteger("size");
+            int page=json.getInteger("page");
+            List<Object> messages=null;
+            messages = msgToJson.getMessageByDate(src,dst,type,date,page,size);
+            result=Result.ok(messages);
+        }catch (Exception e){
+            e.printStackTrace();
+            result=Result.build(500,e.getMessage());
+        }
+        return result;
+    }
+    @RequestMapping("/getRecordByDateLeft")
+    public Result getRecordByDateLeft(@RequestBody JSONObject json){
+        Result result=null;
+        try {
+            String src=json.getString("src");
+            String dst=json.getString("dst");
+            String type=json.getString("type");
+            String date=json.getString("date");
+            int size=json.getInteger("size");
+            int page=json.getInteger("page");
+            List<Object> messages=null;
+            messages = msgToJson.getMessageByDateLeft(src,dst,type,date,page,size);
+            result=Result.ok(messages);
+        }catch (Exception e){
+            e.printStackTrace();
+            result=Result.build(500,e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping("/getRecordByContent")
+    public Result getRecordByContent(@RequestBody JSONObject json){
+        Result result=null;
+        try {
+            String src=json.getString("src");
+            String dst=json.getString("dst");
+            String type=json.getString("type");
+            String content=json.getString("content");
+            int size=json.getInteger("size");
+            int page=json.getInteger("page");
+            List<Object> messages=null;
+            messages = msgToJson.getMessageByContent(src,dst,type,content,page,size);
+            result=Result.ok(messages);
+        }catch (Exception e){
+            e.printStackTrace();
+            result=Result.build(500,e.getMessage());
+        }
+        return result;
+    }
 }

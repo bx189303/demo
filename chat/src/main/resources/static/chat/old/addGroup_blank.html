@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>微信</title>
-    <link rel="stylesheet" type="text/css" href="../css/base.css">
-    <link rel="stylesheet" type="text/css" href="../css/chat.css">
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/chat.css">
 </head>
-<script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
-<script type="text/javascript" src="../layer/layer.js"></script>
-<script type="text/javascript" src="../js/util.js"></script>
-<script type="text/javascript" src="../chat/chat.js"></script>
+<script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="../../layer/layer.js"></script>
+<script type="text/javascript" src="../../js/util.js"></script>
+<script type="text/javascript" src="../chat.js"></script>
 <style>
 
 
@@ -18,7 +18,7 @@
     <!-- 头部 -->
     <div style="width:100%;height: 5%;background-color: #EDEDED">
         <div style="width:8%;height:100%;float:left;margin-right: 3%;">
-            <img id="topOutIcon" class="btnIcon" src="../img/back.png" height="100%" width="100%">
+            <img id="topOutIcon" class="btnIcon" src="../../img/back.png" height="100%" width="100%">
         </div>
         <div style="vertical-align:middle;height: 100%;width:64%;float: left">
             <h2 id="titleName" style="display:block;position: relative;top:50%;transform:translateY(-50%);left:52%;width: 20%;">选择成员</h2>
@@ -53,7 +53,7 @@
                             <div name="0001" class="checkBoxDiv"></div>
                         </div>
                         <div class="liContentImgDiv">
-                            <img src="../img/head.png">
+                            <img src="../../img/head.png">
                         </div>
                         <div class="addGroupLiContentRightDiv">
                             <div class="liFriendUser">用户A</div>
@@ -121,7 +121,7 @@
                         '                            <div name="'+friendId+'" class="checkBoxDiv '+hasChecked+'"></div>\n' +
                         '                        </div>\n' +
                         '                        <div class="liContentImgDiv">\n' +
-                        '                            <img src="../img/head.png">\n' +
+                        '                            <img src="../../img/head.png">\n' +
                         '                        </div>\n' +
                         '                        <div class="addGroupLiContentRightDiv">\n' +
                         '                            <div class="liFriendUser">'+n.sUnitname+" "+n.sName+'</div>\n' +
@@ -188,13 +188,13 @@
                         onclick="";
                         hasChecked="hasChecked";
                         checkedPersonHtml+='<div name="'+friendId+'" class="checkBoxPersonDiv">\n' +
-                            '                <img src="../img/head.png" >'+n.sName+'</div>';
+                            '                <img src="../../img/head.png" >'+n.sName+'</div>';
                     }
                     if(srcType=="single"&&userId.indexOf(friendId)!=-1){ //从个人窗口来,并且id内有这个人
                         onclick="";
                         hasChecked="checked";
                         checkedPersonHtml+='<div name="'+friendId+'" class="checkBoxPersonDiv addPerson">\n' +
-                            '                <img src="../img/head.png" >'+n.sName+'</div>';
+                            '                <img src="../../img/head.png" >'+n.sName+'</div>';
                     }
                     if(n.sId==src){
                         return true;//遍历到自己则不显示
@@ -205,7 +205,7 @@
                         '                            <div name="'+friendId+'" class="checkBoxDiv '+hasChecked+'"></div>\n' +
                         '                        </div>\n' +
                         '                        <div class="liContentImgDiv">\n' +
-                        '                            <img src="../img/head.png">\n' +
+                        '                            <img src="../../img/head.png">\n' +
                         '                        </div>\n' +
                         '                        <div class="addGroupLiContentRightDiv">\n' +
                         '                            <div class="liFriendUser">'+n.sUnitname+" "+n.sName+'</div>\n' +
@@ -236,7 +236,7 @@
             userName=userName.split(" ")[1];
             // console.log(userId+" "+userName)
             var html='<div name="'+userId+'" class="checkBoxPersonDiv addPerson">\n' +
-                '                <img src="../img/head.png" >'+userName+'<div class="checkBoxPersonDivRemove" onclick="removecheckedPerson(this)">x</div></div>';
+                '                <img src="../../img/head.png" >'+userName+'<div class="checkBoxPersonDivRemove" onclick="removecheckedPerson(this)">x</div></div>';
             $("#checkedPerson").append($(html));
         }
         $(obj.getElementsByClassName("checkBoxDiv")).toggleClass("checked");

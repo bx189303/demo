@@ -57,8 +57,15 @@ function test(obj){
 
 function test2(o){
     console.log($(o).text())
+    var tmp = "abcda";
+    var type = "xza";
+    // var strHTML = "<div onclick=func('" + tmp + "','" + type + "')>点击弹出数据及其类型</div>";
+    var strHTML = '<div onclick=func("' + tmp + '","' + type + '")>点击弹出数据及其类型</div>';
+    $(o).append(strHTML);
 }
-
+function func(tmp, type) {
+    alert(tmp + " " + type);
+}
 
 </script>
 

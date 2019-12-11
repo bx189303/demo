@@ -81,11 +81,11 @@ public class MainController {
 //        redisOnKafka(msg);//模拟已经监听到kafka消息
         template.convertAndSend("RECEIVE",JSON.toJSONString(msg));
 
-        //返回uuid和接受时间
-        JSONObject dataJson=new JSONObject();
-        dataJson.put("uuid",uuid);
-        dataJson.put("receiveTime",receiveTime);
-        return Result.ok(dataJson);
+//        //返回uuid和接受时间
+//        JSONObject dataJson=new JSONObject();
+//        dataJson.put("uuid",uuid);
+//        dataJson.put("receiveTime",receiveTime);
+        return Result.ok(msg);
     }
 
     public Result sendNotify(JSONObject notify){

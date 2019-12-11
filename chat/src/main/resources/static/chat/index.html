@@ -11,6 +11,7 @@
 <script type="text/javascript" src="../layer/layer.js"></script>
 <script type="text/javascript" src="../js/util.js"></script>
 <script type="text/javascript" src="../chat/chat.js"></script>
+<script type="text/javascript" src="../chat/chatView.js"></script>
 <style>
 
 
@@ -37,32 +38,6 @@
             </div>
             <div id="msgListDiv">
                 <ul id="chatUl" class="chatUl">
-<!--                    <li name="0001" type="single" onclick="jumpChat(this)">-->
-<!--                        <div class="liContentDiv scrollDiv">-->
-<!--                            <div class="liContentImgDiv">-->
-<!--                                <img src="../img/head.png">-->
-<!--                                <div class="notice">13</div>-->
-<!--                            </div>-->
-<!--                            <div class="liContentRightDiv">-->
-<!--                                <div class="liContentUser liName">用户A</div>-->
-<!--                                <div class="liContentRecord">现在几点了</div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="liSpace"/>-->
-<!--                    </li>-->
-<!--                    <li name="0001g"  type="group" onclick="jumpChat(this)">-->
-<!--                        <div class="liContentDiv scrollDiv">-->
-<!--                            <div class="liContentImgDiv">-->
-<!--                                <img src="../img/head.png">-->
-<!--                                <div class="notice">13</div>-->
-<!--                            </div>-->
-<!--                            <div class="liContentRightDiv">-->
-<!--                                <div class="liContentUser liName">群组一</div>-->
-<!--                                <div class="liContentRecord">群组消息</div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="liSpace"/>-->
-<!--                    </li>-->
                 </ul>
             </div>
         </div>
@@ -77,68 +52,24 @@
             </div>
 
             <div style="width:97%;height:4%;margin:1%;border-bottom: 1px solid #F8F8F8;">
-                <div id="singleTab" class="friendTab checkedFriendTab" style="">联系人</div>
-                <div id="groupTab" class="friendTab" style="">群组</div>
+                <div id="singleTab" onclick="checkSingle()" class="friendTab checkedFriendTab" style="">联系人</div>
+                <div id="groupTab" onclick="checkGroup()" class="friendTab" style="">群组</div>
             </div>
 
             <div id="friendListDiv" style="margin-top: 1%;">
                 <ul id="friendUl" class="chatUl friendUl">
-                    <li name="0001" type="single" onclick="jumpChat(this)">
-                        <div class="liContentDiv scrollDiv">
-                            <div class="liContentImgDiv">
-                                <img src="../img/head.png">
-                            </div>
-                            <div class="liContentRightDiv">
-                                <div class="liFriendUser liName">用户A</div>
-                            </div>
-                        </div>
-                        <div class="liSpace"/>
-                    </li>
-                    <li name="0002" type="single" onclick="jumpChat(this)">
-                        <div class="liContentDiv scrollDiv">
-                            <div class="liContentImgDiv">
-                                <img src="../img/head.png">
-                            </div>
-                            <div class="liContentRightDiv">
-                                <div class="liFriendUser liName">用户B</div>
-                            </div>
-                        </div>
-                        <div class="liSpace"/>
-                    </li>
                 </ul>
                 <ul id="groupUl" class="chatUl friendUl" style="display: none">
-                    <li name="0001g" type="group" onclick="jumpChat(this)">
-                        <div class="liContentDiv scrollDiv">
-                            <div class="liContentImgDiv">
-                                <img src="../img/grouphead.png">
-                            </div>
-                            <div class="liContentRightDiv">
-                                <div class="liFriendUser liName">群组G</div>
-                            </div>
-                        </div>
-                        <div class="liSpace"/>
-                    </li>
-                    <li name="0002g" type="group" onclick="jumpChat(this)">
-                        <div class="liContentDiv scrollDiv">
-                            <div class="liContentImgDiv">
-                                <img src="../img/grouphead.png">
-                            </div>
-                            <div class="liContentRightDiv">
-                                <div class="liFriendUser liName">群组Q</div>
-                            </div>
-                        </div>
-                        <div class="liSpace"/>
-                    </li>
                 </ul>
             </div>
         </div>
         <!-- 底部 -->
         <div style="width:100%;height: 8%;position: fixed;bottom: 0;background-color: #101144">
             <div style="height: 100%;width: 50%;float: left;text-align: center;">
-                <img src="../img/chatgreen.png" class="btnIcon" id="chatIcon" height="80%" width="25%" style="margin-top: 5px">
+                <img src="../img/chatgreen.png" class="btnIcon" id="chatIcon" onclick="checkChat()" height="80%" width="25%" style="margin-top: 5px">
             </div>
             <div style="height: 100%;width: 50%;float: left;text-align: center;">
-                <img src="../img/friend.png" class="btnIcon" id="friendIcon" height="80%" width="25%" style="margin-top: 5px">
+                <img src="../img/friend.png" class="btnIcon" id="friendIcon" onclick="checkFriend()" height="80%" width="25%" style="margin-top: 5px">
             </div>
 
         </div>
@@ -235,13 +166,6 @@
         })
     }
 
-    //内容输入框的回车事件
-    $('#talkInput').on("keydown",function(event){
-        if(event.keyCode==13){
-            sendContent();
-        }
-    })
-
     //查看历史记录
     function openHisRecord(){
         var index = layer.open({
@@ -254,46 +178,6 @@
             closeBtn:0
         });
         layer.full(index);
-    }
-
-    //发送文件
-    function insertFile(){
-        var file='<input type="file" class="fileInput hide" onchange="showFileImg(this)">';
-        setTimeout(function(){
-            $(file).click();
-        },500)
-    }
-    //显示文件预览
-    function showFileImg(obj){
-        console.log("显示文件预览")
-
-        var file = $(obj).val();
-        var fileName= getFileName(file);
-        var showName= getFileName(file);
-        var imgSrc="/img/file.png";
-        var imgClass="fileImg";
-        var divClass="fileInputDiv";
-        var fileType=getFileType(fileName);
-        if(fileType=="img"){ //如果是图片
-            imgSrc=window.URL.createObjectURL(obj.files.item(0));
-            showName="";
-            imgClass="imgFileImg";
-            divClass="imgInputDiv";
-        }
-        var fileDiv='<div name="'+fileName+'" class="'+divClass+'"><img class="'+imgClass+'" src="'+imgSrc+'"><span class="fileNameSpan">'+showName+'</span></div>';
-        $("#fileInput").append(fileDiv);
-        $("#fileInput").append(obj);
-    }
-    //获取文件名-显示预览用
-    function getFileName(file){//通过第二种方式获取文件名
-        var arr = file.split('\\');//通过\分隔字符串，成字符串数组
-        return arr[arr.length-1];//取最后一个，就是文件名
-    }
-
-    //清空内容输入框
-    function cleanInput(){
-        $("#talkInput").val("");
-        $("#fileInput").html("");
     }
 
     /*好友列表搜索框*/
@@ -318,17 +202,7 @@
                     if(n.sId==src){
                         return true;
                     }
-                    html+='<li name="'+n.sId+'" class="searchFriendLi" type="single" username="'+n.sName+'" unit="'+n.sUnitname+'" duty="'+n.sDuty+'" tel="'+n.sTel+'" onclick="showUserInfo(this)">\n' +
-                        '                        <div class="liContentDiv scrollDiv">\n' +
-                        '                            <div class="liContentImgDiv">\n' +
-                        '                                <img src="../img/head.png">\n' +
-                        '                            </div>\n' +
-                        '                            <div class="liContentRightDiv">\n' +
-                        '                                <div class="liFriendUser liName">'+n.sUnitname+' '+n.sName+'</div>\n' +
-                        '                            </div>\n' +
-                        '                        </div>\n' +
-                        '                        <div class="liSpace"/>\n' +
-                        '                    </li>';
+                    html+=showFriendList("search",n);
                 })
                 $("#friendUl").html(html);
             },
@@ -402,38 +276,14 @@
         });
         layer.full(index);
     }
-    function showUserInfo(obj){
-        var index=layer.open({
-            title:false,
-            skin:"blueBackground",
-            btn:false,
-            content:'    <div id="userInfoImg"><img src="../img/head.png"></div>\n' +
-                '    <div id="userInfoName" class="userInfoDiv">姓名&nbsp;:&nbsp;<span>'+$(obj).attr("username")+'</span></div>\n' +
-                '    <div id="userInfoUnit" class="userInfoDiv">单位&nbsp;:&nbsp;<span>'+$(obj).attr("unit")+'</span></div>\n' +
-                '    <div id="userInfoDuty" class="userInfoDiv">职务&nbsp;:&nbsp;<span>'+$(obj).attr("duty")+'</span></div>\n' +
-                '    <div id="userInfoTel" class="userInfoDiv">电话&nbsp;:&nbsp;<span>'+$(obj).attr("tel")+'</span></div>\n' +
-                '    <div id="openChatBtn" class="userInfoBtn">发送消息</div>'
-        })
-        $("#openChatBtn").on("click",function(){
-            jumpChat(obj);
-            layer.close(index); //再执行关闭
-        })
-
-    }
 
     //切换显示个人和群组
-    $("#singleTab").on("click",function(){
-        checkSingle();
-    })
     function checkSingle(){
         $(".friendTab").removeClass("checkedFriendTab");
         $("#singleTab").addClass("checkedFriendTab");
         $("#groupUl").hide();
         $("#friendUl").show();
     }
-    $("#groupTab").on("click",function(){
-        checkGroup();
-    })
     function checkGroup(){
         $(".friendTab").removeClass("checkedFriendTab");
         $("#groupTab").addClass("checkedFriendTab");
@@ -441,28 +291,72 @@
         $("#groupUl").show();
     }
 
-
     //底部按钮
-    $("#friendIcon").on("click",function(){
+    function checkFriend(){
         //切换图标
-        this.src="../img/friendgreen.png";
+        $("#friendIcon").attr("src","../img/friendgreen.png");
         $("#chatIcon").attr("src","../img/chat.png");
         //显示好友列表
         $("#chatListDiv").hide();
         $("#friendDiv").show();
         $("#title").text("好友");
-    })
-    $("#chatIcon").on("click",function(){
+    }
+    function checkChat(){
         //切换图标
-        this.src="../img/chatgreen.png";
+        $("#chatIcon").attr("src","../img/chatgreen.png");
         $("#friendIcon").attr("src","../img/friend.png");
         //显示好友列表
         $("#friendDiv").hide();
         $("#chatListDiv").show();
         $("#title").text("消息");
-    })
+    }
 
 //----------------------------------------聊天界面js--------------------------------------------------
+    //发送文件
+    function insertFile(){
+        var file='<input type="file" class="fileInput hide" onchange="showFileImg(this)">';
+        setTimeout(function(){
+            $(file).click();
+        },500)
+    }
+    //显示文件预览
+    function showFileImg(obj){
+        // console.log("显示文件预览")
+        var file = $(obj).val();
+        var fileName= getFileName(file);
+        var showName= getFileName(file);
+        var imgSrc="/img/file.png";
+        var imgClass="fileImg";
+        var divClass="fileInputDiv";
+        var fileType=getFileType(fileName);
+        if(fileType=="img"){ //如果是图片
+            imgSrc=window.URL.createObjectURL(obj.files.item(0));
+            showName="";
+            imgClass="imgFileImg";
+            divClass="imgInputDiv";
+        }
+        var fileDiv='<div name="'+fileName+'" class="'+divClass+'"><img class="'+imgClass+'" src="'+imgSrc+'"><span class="fileNameSpan">'+showName+'</span></div>';
+        $("#fileInput").append(fileDiv);
+        $("#fileInput").append(obj);
+    }
+    //获取文件名-显示预览用
+    function getFileName(file){//通过第二种方式获取文件名
+        var arr = file.split('\\');//通过\分隔字符串，成字符串数组
+        return arr[arr.length-1];//取最后一个，就是文件名
+    }
+
+    //清空内容输入框
+    function cleanInput(){
+        $("#talkInput").val("");
+        $("#fileInput").html("");
+    }
+
+    //内容输入框的回车事件
+    $('#talkInput').on("keydown",function(event){
+        if(event.keyCode==13){
+            sendContent();
+        }
+    })
     //发送消息
     function sendContent(){
         sendFile();
@@ -499,10 +393,10 @@
             data : data,
             //请求成功
             success : function(result) {
-                var uuid=result.data.uuid;
-                var receiveTIme=result.data.receiveTime;
-                //显示消息
-                showTalk(receiveTIme,content,uuid);
+                //窗口显示发送的消息
+                var html=showMsgInChatWindow(result.data);
+                $("#chatWindow").append(html);
+                scrollChatWindow();
                 //首页消息列表更新
                 var name=$("#titleName").text();
                 indexMsgListUpdate(dst,name,type,content,"send");
@@ -584,19 +478,12 @@
                             data : data,
                             //请求成功
                             success : function(result) {
-                                //删除文件消息预览
+                                //删除上传非图片文件时显示的消息预览
                                 $('.chatMsg[name="'+fileImgSrc+'"]').remove();
-                                var msgUuid=result.data.uuid;
-                                var receiveTIme=result.data.receiveTime;
                                 //显示消息
-                                var content="";
-                                if(fileType=="img"){
-                                    var imgsrc=imgUrlPre+uuid;
-                                    content='<div name="'+uuid+'" filename="'+fileName+'" class="imgShowDiv" onclick="download(this)"><img src="'+imgsrc+'"></div>';
-                                }else if(fileType=="file"){
-                                    content='<div name="'+uuid+'" filename="'+fileName+'" class="fileShowDiv" onclick="download(this)"><img src="/img/file.png"><span class="fileShowSpan">'+fileName+'</span></div>';
-                                }
-                                showTalk(receiveTIme,content,msgUuid);
+                                var html=showMsgInChatWindow(result.data);
+                                $("#chatWindow").append(html);
+                                scrollChatWindow();
                                 //首页消息列表更新
                                 var name=$("#titleName").text();
                                 indexMsgListUpdate(dst,name,type,"[文件]","send");
@@ -615,53 +502,6 @@
                 };
             })
         }
-    }
-
-    //显示发送消息
-    function showTalk(time,data,uuid){
-        // console.log(data)
-        var readText="";
-        if(type=="single"){
-            readText="未读";
-        }else if(type=="group"){
-            readText="0人已读";
-        }
-        //对话窗口显示消息
-        var html='<div name="'+uuid+'" class="RightTalk chatMsg">\n' +
-            '                    <div class="rightTalkImgDiv talkImgDiv">\n' +
-            '                        <img src="../img/head.png">\n' +
-            '                    </div>\n' +
-            '                    <div class="rightTalkContent">\n' +
-            '                        <div class="talkUser">'+time+'&nbsp;&nbsp;&nbsp;我</div>\n' +
-            '                        <div class="rightTalkNotify">\n' +
-            '                            <div class="rightTalkBubble">'+data+'</div>\n' +
-            '                            <div class="read">'+readText+'</div>\n' +
-            '                        </div>\n' +
-            '                    </div>\n' +
-            '                </div>'
-        $("#chatWindow").append(html);
-        scrollChatWindow();
-    }
-
-    //显示发送文件预览
-    function showFilePreview(time,data,uuid){
-        // console.log(data)
-        var readText="发送文件中...";
-        //对话窗口显示消息
-        var html='<div name="'+uuid+'" class="RightTalk chatMsg">\n' +
-            '                    <div class="rightTalkImgDiv talkImgDiv">\n' +
-            '                        <img src="../img/head.png">\n' +
-            '                    </div>\n' +
-            '                    <div class="rightTalkContent">\n' +
-            '                        <div class="talkUser">'+time+'&nbsp;&nbsp;&nbsp;我</div>\n' +
-            '                        <div class="rightTalkNotify">\n' +
-            '                            <div class="rightTalkBubble">'+data+'</div>\n' +
-            '                            <div class="read">'+readText+'</div>\n' +
-            '                        </div>\n' +
-            '                    </div>\n' +
-            '                </div>'
-        $("#chatWindow").append(html);
-        scrollChatWindow();
     }
 
     //左上角撤销按钮-关闭窗口
@@ -717,7 +557,7 @@
                     $("#groupNameInput").attr("placeholder",$("#titleName").text());
                     var oldtitle=$("#titleName").text();
                     $("#titleName").html(oldtitle+"&nbsp;("+$(users).length+")");
-                    // 更新详情页
+                    // 更新详情页的群组成员
                     var html='';
                     $(users).each(function(i,n){
                         html+='<div name="'+n.sId+'" class="chatPersonDiv">\n' +
@@ -795,13 +635,14 @@
         layer.full(index);
     }
 
+    //退群时弹出询问框
     function askOutGroup(){
         layer.confirm('是否确定退出该群？', {
             title: false,
             skin: "redText",
             btn: ['确定','取消'] //按钮
         }, function(index){
-            console.log("退群")
+            outGroup();
             layer.close(index);
         }, function(){
             console.log("取消退群")

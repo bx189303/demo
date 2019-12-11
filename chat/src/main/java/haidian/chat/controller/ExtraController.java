@@ -80,6 +80,19 @@ public class ExtraController {
         return result;
     }
 
+    @RequestMapping("/getUserByUserId/{userId}")
+    public Result getUserByUserId(@PathVariable String userId) {
+        Result result = null;
+        try {
+            Person person = (Person) r.get(userId);
+            result = Result.ok(person);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = Result.build(500, e.getMessage());
+        }
+        return result;
+    }
+
     @RequestMapping("/getUserByGroup/{groupId}")
     public Result getUserByGroup(@PathVariable String groupId) {
         Result result = null;

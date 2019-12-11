@@ -56,7 +56,8 @@ public class MainController {
     public Result sendMsg(JSONObject msg){
         //添加字段 uuid ,readCount ,isValid,receiveTime
         msg.put("isValid",1);
-        msg.put("receiveTime", DateUtil.getDateToStrings(new Date()));
+        String receiveTime=DateUtil.getDateToStrings(new Date());
+        msg.put("receiveTime", receiveTime);
         JSONObject data=msg.getJSONObject("data");
         String uuid=""+ UUID.randomUUID();
         data.put("uuid",uuid);
@@ -80,10 +81,11 @@ public class MainController {
 //        redisOnKafka(msg);//模拟已经监听到kafka消息
         template.convertAndSend("RECEIVE",JSON.toJSONString(msg));
 
-        //返回uuid
-        JSONObject uuidJson=new JSONObject();
-        uuidJson.put("uuid",uuid);
-        return Result.ok(uuidJson);
+        //返回uuid和接受时间
+        JSONObject dataJson=new JSONObject();
+        dataJson.put("uuid",uuid);
+        dataJson.put("receiveTime",receiveTime);
+        return Result.ok(dataJson);
     }
 
     public Result sendNotify(JSONObject notify){

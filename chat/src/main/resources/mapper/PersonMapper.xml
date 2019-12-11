@@ -58,7 +58,7 @@
   </select>
   <select id="getAll" resultMap="ResultMapWithBLOBs">
     select
-    p.S_ID S_ID,p.S_NAME S_NAME,u.S_DESCRIPTION S_UNITNAME
+    p.S_ID S_ID,p.S_NAME S_NAME,u.S_DESCRIPTION S_UNITNAME,p.S_DUTY S_DUTY,p.S_TEL S_TEL
     from T_PERSON p,T_UNIT u where p.S_UNIT=u.S_ID
     order by p.s_unit desc
   </select>

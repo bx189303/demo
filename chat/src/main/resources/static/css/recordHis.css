@@ -7,11 +7,24 @@
     color:red !important;
 }
 
+.searchTypeDiv{
+    height: 50%;
+    width: 33%;
+    text-align: center;
+    display: table;
+    float: left;
+}
+.searchTypeSpan{
+    display: table-cell;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
 .centerDiv{
     overflow-y: scroll;
     overflow-x: hidden;
     width: 100%;
-    height: 88%;
+    height: 95%;
     background-color: #102775;
     background: url(../img/backimg.png) no-repeat;
     background-size: 100% 100%;
@@ -393,16 +406,6 @@ li:hover{
     background: url(../img/fileBtn.png) no-repeat;
     background-size: 100% 100%;
     background-position: center;
-    float: left;
-}
-#openHisBtn{
-    height: 100%;
-    width: 7%;
-    margin-left: 3%;
-    background: url(../img/hisRecord.png) no-repeat;
-    background-size: 100% 100%;
-    background-position: center;
-    float: left;
 }
 .fileShowDiv{
     width: 100%;
@@ -454,44 +457,5 @@ li:hover{
 #outGroup:hover{
     background-color: #263D89;/*    PS：这里可以改变背景颜色*/
     /* color: #FFF;                                       PS：这里可以修改字的颜色*/
-    cursor: pointer;
-}
-.chatMsg a{
-    display: none;
-}
-.aFile{
-    float: right;
-    font-size: 13px;
-    padding: 5px;
-    display: none;
-}
-
-/*人员信息样式*/
-#userInfoImg{
-    /*width: 95%;*/
-    max-width: 100%;
-    margin: 5% 2% 0;
-    height: 40px;
-    text-align: center;
-    border: 1px solid #FFF;
-}
-#userInfoImg img {
-    height: 100%;
-    width: 25%;
-}
-.userInfoDiv{
-    max-width: 100%;
-    margin: 0 2%;
-    padding: 1% 0 1% 10%;
-    border: 1px solid #FFF;
-    /*height:20px;*/
-}
-.userInfoBtn{
-    max-width: 100%;
-    margin: 0 2%;
-    padding: 2% 0;
-    border: 1px solid #FFF;
-    text-align: center;
-    margin-bottom: 5%;
     cursor: pointer;
 }

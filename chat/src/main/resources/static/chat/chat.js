@@ -84,7 +84,7 @@ function openSocket() {
                         '                        <img src="../img/head.png">\n' +
                         '                    </div>\n' +
                         '                    <div class="leftTalkContent">\n' +
-                        '                        <div class="talkUser">'+msg.data.src.sName+'</div>\n' +
+                        '                        <div class="talkUser">'+msg.data.src.sName+'&nbsp;&nbsp;&nbsp;'+msg.receiveTime+'</div>\n' +
                         '                        <div class="talkBubble">'+content+'</div>\n' +
                         '                    </div>\n' +
                         '                </div>';
@@ -218,7 +218,7 @@ function loadFriends(){
                 if(n.sId==src){
                     return true;//遍历到自己则不显示
                 }
-                html+='<li name="'+n.sId+'" class="" type="single" onclick="jumpChat(this)">\n' +
+                html+='<li name="'+n.sId+'" class="" type="single" username="'+n.sName+'" unit="'+n.sUnitname+'" duty="'+n.sDuty+'" tel="'+n.sTel+'" onclick="showUserInfo(this)">\n' +
                     '                        <div class="liContentDiv scrollDiv">\n' +
                     '                            <div class="liContentImgDiv">\n' +
                     '                                <img src="../img/head.png">\n' +
@@ -284,18 +284,18 @@ function jumpChat(obj){
     type=toType;
     console.log("跳转窗口 ： "+src+"  "+dst+"  "+type);
     //如果是从搜索好友列表跳转来，则添加好友
-    var objClass=$(obj).attr("class");
-    if(typeof(objClass)!="undefined"&&objClass.indexOf("searchFriendLi")!=-1){
-        var twoUserId=src+","+dst;
-        // addFriend(twoUserId);
-    }
+    // var objClass=$(obj).attr("class");
+    // if(typeof(objClass)!="undefined"&&objClass.indexOf("searchFriendLi")!=-1){
+    //     var twoUserId=src+","+dst;
+    //     // addFriend(twoUserId);
+    // }
     //加载对话记录
     loadChatMsg();
     //加载对话窗口信息
     var name=$(obj.getElementsByClassName("liName")[0]).text();//获取对话人姓名
     $("#titleName").text(name);//改对话窗口标题
+    //加载对话窗口详情
     loadChatDetail();
-
     //窗口切换
     $("#indexDiv").hide();//首页隐藏
     $("#chatDiv").show();//对话窗口显示
@@ -305,6 +305,9 @@ function jumpChat(obj){
 
 }
 function loadChatMsg(){
+    if(dst==""||type==""){
+        return;
+    }
     var data={
         "src":src,
         "dst":dst,
@@ -324,10 +327,15 @@ function loadChatMsg(){
             var html='';
             if(typeof(record)=="undefined"){
                 noMoreRecord=true;
+                if(page>1){
+                    layer.msg("无更多记录",{
+                        time:1000
+                    });
+                }
                 return;
             }
             $(record).each(function(i,n){
-                var recordSendTime=n.sendTime;
+                var recordSendTime=n.receiveTime;
                 var recordType=n.data.type;
                 var recordSrc=n.data.src.sId;
                 var readId=n.data.readId;
@@ -395,7 +403,11 @@ function loadChatMsg(){
             $("#chatWindow").html(html+oldChatHtml);
             var newHeight=$("#chatWindow")[0].scrollHeight;
             // scrollChatWindow();
-            $('#chatWindow').scrollTop(newHeight-oldHeight);
+            if(page==1){
+                $('#chatWindow').scrollTop(newHeight);
+            }else{
+                $('#chatWindow').scrollTop(newHeight-oldHeight);
+            }
         },
         //请求失败，包含具体的错误信息
         error : function(e){

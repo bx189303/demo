@@ -143,7 +143,7 @@
 
         </div>
     </div>
-    <div id="chatDiv" style="width:100%;height: 100%;display: none">
+    <div id="chatDiv" style="width:100%;height: 100%;">
         <!-- 头部 -->
         <div style="width:100%;height: 5%;background-color:#101144;">
             <div class="lefttopBtn">
@@ -318,7 +318,7 @@
                     if(n.sId==src){
                         return true;
                     }
-                    html+='<li name="'+n.sId+'" class="searchFriendLi" type="single" onclick="jumpChat(this)">\n' +
+                    html+='<li name="'+n.sId+'" class="searchFriendLi" type="single" username="'+n.sName+'" unit="'+n.sUnitname+'" duty="'+n.sDuty+'" tel="'+n.sTel+'" onclick="showUserInfo(this)">\n' +
                         '                        <div class="liContentDiv scrollDiv">\n' +
                         '                            <div class="liContentImgDiv">\n' +
                         '                                <img src="../img/head.png">\n' +
@@ -402,19 +402,44 @@
         });
         layer.full(index);
     }
+    function showUserInfo(obj){
+        var index=layer.open({
+            title:false,
+            skin:"blueBackground",
+            btn:false,
+            content:'    <div id="userInfoImg"><img src="../img/head.png"></div>\n' +
+                '    <div id="userInfoName" class="userInfoDiv">姓名&nbsp;:&nbsp;<span>'+$(obj).attr("username")+'</span></div>\n' +
+                '    <div id="userInfoUnit" class="userInfoDiv">单位&nbsp;:&nbsp;<span>'+$(obj).attr("unit")+'</span></div>\n' +
+                '    <div id="userInfoDuty" class="userInfoDiv">职务&nbsp;:&nbsp;<span>'+$(obj).attr("duty")+'</span></div>\n' +
+                '    <div id="userInfoTel" class="userInfoDiv">电话&nbsp;:&nbsp;<span>'+$(obj).attr("tel")+'</span></div>\n' +
+                '    <div id="openChatBtn" class="userInfoBtn">发送消息</div>'
+        })
+        $("#openChatBtn").on("click",function(){
+            jumpChat(obj);
+            layer.close(index); //再执行关闭
+        })
+
+    }
+
     //切换显示个人和群组
     $("#singleTab").on("click",function(){
+        checkSingle();
+    })
+    function checkSingle(){
         $(".friendTab").removeClass("checkedFriendTab");
         $("#singleTab").addClass("checkedFriendTab");
         $("#groupUl").hide();
         $("#friendUl").show();
-    })
+    }
     $("#groupTab").on("click",function(){
+        checkGroup();
+    })
+    function checkGroup(){
         $(".friendTab").removeClass("checkedFriendTab");
         $("#groupTab").addClass("checkedFriendTab");
         $("#friendUl").hide();
         $("#groupUl").show();
-    })
+    }
 
 
     //底部按钮
@@ -475,8 +500,9 @@
             //请求成功
             success : function(result) {
                 var uuid=result.data.uuid;
+                var receiveTIme=result.data.receiveTime;
                 //显示消息
-                showTalk(sendTextTime,content,uuid);
+                showTalk(receiveTIme,content,uuid);
                 //首页消息列表更新
                 var name=$("#titleName").text();
                 indexMsgListUpdate(dst,name,type,content,"send");
@@ -561,6 +587,7 @@
                                 //删除文件消息预览
                                 $('.chatMsg[name="'+fileImgSrc+'"]').remove();
                                 var msgUuid=result.data.uuid;
+                                var receiveTIme=result.data.receiveTime;
                                 //显示消息
                                 var content="";
                                 if(fileType=="img"){
@@ -569,7 +596,7 @@
                                 }else if(fileType=="file"){
                                     content='<div name="'+uuid+'" filename="'+fileName+'" class="fileShowDiv" onclick="download(this)"><img src="/img/file.png"><span class="fileShowSpan">'+fileName+'</span></div>';
                                 }
-                                showTalk(sendFileTime,content,msgUuid);
+                                showTalk(receiveTIme,content,msgUuid);
                                 //首页消息列表更新
                                 var name=$("#titleName").text();
                                 indexMsgListUpdate(dst,name,type,"[文件]","send");
@@ -640,11 +667,12 @@
     //左上角撤销按钮-关闭窗口
     function outChatWindow(){
         $("#indexDiv").show();
-        $("#chatDiv").hide();
+        // $("#chatDiv").hide();
         dst="";
         type="";
         page=1;
         noMoreRecord=false;
+        $('#chatWindow').scrollTop(0);
         $("#chatWindow").html("");
     }
 
@@ -806,19 +834,26 @@
 
     //监听对话窗口滚动
     function chatWindowScroll(obj){
+        if(dst==""||type==""){
+            return;
+        }
         var divScrollTop = obj.scrollTop;
         var divClientHeight = obj.clientHeight;
         var divScrollHeight = obj.scrollHeight;
+        // console.log(page+" : "+divScrollTop+" , "+divClientHeight+" , "+divScrollHeight);
         if(divScrollTop + divClientHeight >= divScrollHeight){
             // console.log('到底部了');
         }
-        if(divScrollTop == 0){
+        if(divScrollTop==0){
             // console.log('到顶部了');
             if(noMoreRecord){
+                layer.msg("无更多记录",{
+                    time:1000
+                });
                 return;
             }
             page=page+1;
-            loadChatMsg(page);
+            loadChatMsg();
         }
     }
 </script>

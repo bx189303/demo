@@ -6,6 +6,9 @@
 .redText{
     color:red;
 }
+.blueBackground{
+    background-color: #072498 !important;
+}
 
 html #layuicss-layer {
     display: none;

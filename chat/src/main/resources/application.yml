@@ -7,7 +7,7 @@ server:
   port: "${serverPort}"
 spring:
   profiles:
-    include: config
+    include: config_dev
 #    include: config_prod
   redis:
     # Redis数据库索引（默认为0）
@@ -31,10 +31,6 @@ spring:
     # 连接超时时间（毫秒）
     timeout: 10000
   datasource:
-#    url: jdbc:mysql://127.0.0.1:3306/chat?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
-#    username: root
-#    password: root
-#    driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       initial-size: 1

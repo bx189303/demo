@@ -116,6 +116,24 @@ function openSocket() {
                     var readNewCount=parseInt(readOldCount)+1;
                     $('.chatMsg[name="'+notifyUuid+'"] .read').text(readNewCount+"人已读");
                 }
+            }else if(msgType=="groupNotify"){
+                var groupNotifyType=msg.data.type;
+                if(groupNotifyType=="updateGroup"){
+                    var groupId=msg.data.groupId;
+                    //如果在对话窗口，更新标题名
+                    if(type=="group"&&dst==groupId){
+                        loadGroups(groupId);
+                    }else{
+                        loadGroups();
+                    }
+                    //如果是群更新，更新首页列表的名字
+                    setTimeout(function(){
+                        var groupName=$('#groupUl li[name="'+groupId+'"] .liName').text();
+                        $('#chatUl li[name="'+groupId+'"] .liName').text(groupName);
+                    },500)
+                }else if(groupNotifyType=="addUser"){
+                    loadGroups();
+                }
             }
 
         };
@@ -151,7 +169,7 @@ function loadFriends(){
     })
 }
 //加载群组列表
-function loadGroups(){
+function loadGroups(id){
     $.ajax({
         type : "POST",
         contentType: "application/json;charset=UTF-8",
@@ -166,6 +184,9 @@ function loadGroups(){
                 // groups.push(n.id);
             })
             $("#groupUl").html(html);
+            if(typeof(id)!="undefined"){
+                $('#groupUl li[name="'+id+'"]').click();
+            }
         },
         //请求失败，包含具体的错误信息
         error : function(e){
@@ -185,12 +206,15 @@ function jumpChat(id, idType, name){
     //加载对话记录
     loadChatMsg();
     //加载对话窗口信息
-    $("#titleName").text(name);//改对话窗口标题
+    $("#chatWindowCount").text("");
+    // $("#titleName").text(name);//改对话窗口标题
+    $("#chatWindowName").text(name);//改对话窗口标题
     //加载对话窗口详情
     loadChatDetail();
     //窗口切换
     $("#indexDiv").hide();//首页隐藏
     $("#chatDiv").show();//对话窗口显示
+    chatDetailback();//关闭详情页
     //消除首页未读提醒
     $('#chatUl li[name="'+id+'"] .notice').text(0);
     $('#chatUl li[name="'+id+'"] .notice').addClass("hide");
@@ -309,4 +333,22 @@ function openFile(obj){
 //对话窗口滚动条默认最下方
 function scrollChatWindow(){
     $('#chatWindow').scrollTop( $('#chatWindow')[0].scrollHeight);
+}
+
+//重新加载人员信息
+function reloadUserInfo(){
+    $.ajax({
+        type : "POST",
+        contentType: "application/json;charset=UTF-8",
+        url : "/reloadUserInfo",
+        //请求成功
+        success : function(result) {
+            console.log("重新加载人员信息！")
+        },
+        //请求失败，包含具体的错误信息
+        error : function(e){
+            console.log(e.status);
+            console.log(e.responseText);
+        }
+    })
 }

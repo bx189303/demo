@@ -82,7 +82,9 @@
                 <img id="topBackIcon" class="btnIcon" src="../img/back.png" onclick="chatDetailback()" height="100%" width="100%" style="display: none">
             </div>
             <div style="vertical-align:middle;height: 100%;width:80%;float: left;margin-left:10%;">
-                <h2 id="titleName" class="windowTitle">对方姓名</h2>
+                <h2 id="titleName" class="windowTitle">
+                    <span id="chatWindowName">对方姓名</span><span id="chatWindowCount">群人数</span>
+                </h2>
                 <h2 id="titleChatDetail"  class="windowTitle hide">对话详情</h2>
             </div>
             <div class="righttopBtn">
@@ -398,7 +400,8 @@
                 $("#chatWindow").append(html);
                 scrollChatWindow();
                 //首页消息列表更新
-                var name=$("#titleName").text();
+                // var name=$("#titleName").text();
+                var name=$("#chatWindowName").text();
                 indexMsgListUpdate(dst,name,type,content,"send");
                 //清空输入框
                 $("#talkInput").val("");
@@ -485,7 +488,8 @@
                                 $("#chatWindow").append(html);
                                 scrollChatWindow();
                                 //首页消息列表更新
-                                var name=$("#titleName").text();
+                                // var name=$("#titleName").text();
+                                var name=$("#chatWindowName").text();
                                 indexMsgListUpdate(dst,name,type,"[文件]","send");
                             },
                             //请求失败，包含具体的错误信息
@@ -528,14 +532,15 @@
         $("#chatDetailDiv").show();
         //加载聊天详情
         // loadChatDetail();
+        $("#groupNameInput").attr("placeholder",$("#chatWindowName").text());
     }
     function loadChatDetail(){
         //加载聊天详情页
         var chatPersonHtml="";
         if(type=="single"){
             $("#groupDetail").hide();//隐藏群名输入框
-            var name=$("#titleName").text();//获取对话人姓名
-            var personName=name.split(" ");
+            var name=$("#chatWindowName").text();//获取对话人姓名
+            var personName=name.split("_");
             personName=personName[personName.length-1];
             chatPersonHtml='<div name="'+dst+'" class="chatPersonDiv">\n' +
                 '<img src="../img/head.png" >'+personName+'</div>';
@@ -554,13 +559,12 @@
                     var users=result.data;
                     // 窗口群名加上人数
                     $("#groupDetail").show();
-                    $("#groupNameInput").attr("placeholder",$("#titleName").text());
-                    var oldtitle=$("#titleName").text();
-                    $("#titleName").html(oldtitle+"&nbsp;("+$(users).length+")");
+                    $("#groupNameInput").attr("placeholder",$("#chatWindowName").text());
+                    $("#chatWindowCount").text(" ("+$(users).length+")");
                     // 更新详情页的群组成员
                     var html='';
                     $(users).each(function(i,n){
-                        html+='<div name="'+n.sId+'" class="chatPersonDiv">\n' +
+                        html+='<div name="'+n.sId+'" class="chatPersonDiv" onclick=showUserInfo("'+n.sId+'","single")>\n' +
                             '<img src="../img/head.png" >'+n.sName+'</div>';
                     })
                     html+='<div id="chatPersonAddIcon" class="btnIcon chatPersonDiv" onclick="addGroupHtml(this)">\n' +
@@ -603,8 +607,8 @@
             data : JSON.stringify(param),
             //请求成功
             success : function(result) {
-                console.log("更新群名 : "+result.msg);
-                $("#titleName").text(groupName);
+                // console.log("更新群名 "+groupName+" : "+result.msg);
+                $("#chatWindowName").text(groupName);
                 chatDetailback();
             },
             //请求失败，包含具体的错误信息
@@ -697,5 +701,10 @@
             loadChatMsg();
         }
     }
+
+    $("#title").dblclick(function(){
+        console.log("双击事件");
+        reloadUserInfo();
+    })
 </script>
 </html>

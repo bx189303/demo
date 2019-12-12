@@ -5,7 +5,7 @@ import haidian.chat.dao.*;
 import haidian.chat.pojo.*;
 import haidian.chat.redis.RedisUtil;
 import haidian.chat.service.ListenAndSend;
-import haidian.chat.service.MysqlMsgToJson;
+import haidian.chat.service.ExtraService;
 import haidian.chat.service.SendNotifyThread;
 import haidian.chat.util.DateUtil;
 import haidian.chat.util.Result;
@@ -51,17 +51,17 @@ public class ExtraController {
     @Resource
     FriendMapper friendMapper;
 
-    @Resource
-    MessageMapper messageMapper;
-
     @Autowired
-    MysqlMsgToJson msgToJson;
+    ExtraService extraService;
 
     @Autowired
     RedisUtil r;
 
     @Autowired
     MainController mainController;
+
+    @Autowired
+    ListenAndSend listenAndSend;
 
 
     //html加载后先获取系统参数
@@ -73,6 +73,25 @@ public class ExtraController {
             json.put("nginxUrl",serverHost+":"+nginxPort);
             json.put("serverUrl", serverHost+":"+serverPort);
             result = Result.ok(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = Result.build(500, e.getMessage());
+        }
+        return result;
+    }
+
+    //重新加载redis中的人员基本信息
+    @RequestMapping("/reloadUserInfo")
+    public Result reloadUserInfo(){
+        Result result = null;
+        try {
+            List<Person> persons = personMapper.getAll();
+            r.set("persons",persons);
+            for (Person person : persons) {
+                r.set(person.getsId(),person);
+            }
+            log.info("重新加载人员信息完毕");
+            result = Result.ok();
         } catch (Exception e) {
             e.printStackTrace();
             result = Result.build(500, e.getMessage());
@@ -194,33 +213,6 @@ public class ExtraController {
     }
 
 
-    @RequestMapping("/addGroup")
-    public Result addGroup(@RequestBody JSONObject json) {
-        Result result = null;
-        try {
-            String groupId = json.getString("groupId");
-            String ids=json.getString("userIds");
-            String[] idArray= ids.split(",");
-            GroupUser gu = new GroupUser();
-            gu.setIsValid(1);
-            gu.setCreateTime(new Date());
-            gu.setGroupid(groupId);
-            List<String> userIdInGroup = groupMapper.getUserByGroupId(groupId);
-            for (int i = 0; i <idArray.length ; i++) {
-                if(userIdInGroup.contains(idArray[i])){ //如果群内已经有这人，则不添加
-                    continue;
-                }
-                gu.setUserid(idArray[i]);
-                groupUserMapper.insertSelective(gu);
-            }
-            result = Result.ok();
-        } catch (Exception e) {
-            e.printStackTrace();
-            result = Result.build(500, e.getMessage());
-        }
-        return result;
-    }
-
     @RequestMapping("/outGroup")
     public Result outGroup(@RequestBody JSONObject json) {
         Result result = null;
@@ -247,8 +239,38 @@ public class ExtraController {
             g.setId(groupId);
             g.setName(groupName);
             g.setIsValid(1);
-//            System.out.println(JSON.toJSONString(g));
             groupMapper.updateByPrimaryKeySelective(g);
+            //发送群更新的群通知
+            extraService.sendGroupNotify("updateGroup",groupId,"");
+            result = Result.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = Result.build(500, e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping("/addGroup")
+    public Result addGroup(@RequestBody JSONObject json) {
+        Result result = null;
+        try {
+            String groupId = json.getString("groupId");
+            String ids=json.getString("userIds");
+            String[] idArray= ids.split(",");
+            GroupUser gu = new GroupUser();
+            gu.setIsValid(1);
+            gu.setCreateTime(new Date());
+            gu.setGroupid(groupId);
+            List<String> userIdInGroup = groupMapper.getUserByGroupId(groupId);
+            for (int i = 0; i <idArray.length ; i++) {
+                if(userIdInGroup.contains(idArray[i])){ //如果群内已经有这人，则不添加
+                    continue;
+                }
+                gu.setUserid(idArray[i]);
+                groupUserMapper.insertSelective(gu);
+            }
+            //发送群加人的群通知
+            extraService.sendGroupNotify("addUser",groupId,ids);
             result = Result.ok();
         } catch (Exception e) {
             e.printStackTrace();
@@ -265,6 +287,25 @@ public class ExtraController {
             if(userIdArray.length<3){
                 return Result.build(500,"创建新群最少3人");
             }
+            //判断是否已经有群,如果有直接返回
+            List<String> groups=new ArrayList<>();
+            for (int i = 0; i <userIdArray.length ; i++) {
+                if(i==1){
+                    groups = groupMapper.getGroupIdByUserId(userIdArray[i]);
+                }else{
+                    List<String> groupsByUserId= groupMapper.getGroupIdByUserId(userIdArray[i]);
+                    groups.retainAll(groupsByUserId);
+                }
+            }
+            for (String group : groups) {
+                List<String> userIdsByGroupId = groupMapper.getUserByGroupId(group);
+                if(userIdsByGroupId.size()==userIdArray.length){
+                    //返回群id
+                    JSONObject uuidJson = new JSONObject();
+                    uuidJson.put("uuid", group);
+                    return Result.build(200,"已有该群!",uuidJson);
+                }
+            }
             //建群
             String groupOwnerId = userIdArray[0];
             String uuid = UUID.randomUUID() + "";
@@ -277,17 +318,14 @@ public class ExtraController {
             newGroup.setIsValid(1);
             groupMapper.insert(newGroup);
             //加人
-            GroupUser gu = new GroupUser();
-            gu.setIsValid(1);
-            gu.setCreateTime(new Date());
-            gu.setGroupid(uuid);
-            for (String userId : userIdArray) {
-                gu.setUserid(userId);
-                groupUserMapper.insertSelective(gu);
-            }
+            JSONObject addJson=new JSONObject();
+            addJson.put("groupId",uuid);
+            addJson.put("userIds",userIds);
+            addGroup(addJson);
+            //返回群id
             JSONObject uuidJson = new JSONObject();
             uuidJson.put("uuid", uuid);
-            result = Result.ok(uuidJson);
+            result = Result.build(200,"创建群成功!",uuidJson);
         } catch (Exception e) {
             e.printStackTrace();
             result = Result.build(500, e.getMessage());
@@ -503,7 +541,7 @@ public class ExtraController {
             String type=json.getString("type");
             int page=json.getInteger("page");
             int size=json.getInteger("size");
-            List<Object> messages = msgToJson.getMessageByGroupUser(groupId, groupUserId,page,size);
+            List<Object> messages = extraService.getMessageByGroupUser(groupId, groupUserId,page,size);
             result=Result.ok(messages);
         }catch (Exception e){
             e.printStackTrace();
@@ -522,7 +560,7 @@ public class ExtraController {
             String fileType=json.getString("fileType");
             int size=json.getInteger("size");
             int page=json.getInteger("page");
-            List<Object> messages = msgToJson.getMessageByFile(src,dst,type,fileType,page,size);
+            List<Object> messages = extraService.getMessageByFile(src,dst,type,fileType,page,size);
             result=Result.ok(messages);
         }catch (Exception e){
             e.printStackTrace();
@@ -542,7 +580,7 @@ public class ExtraController {
             int size=json.getInteger("size");
             int page=json.getInteger("page");
             List<Object> messages=null;
-            messages = msgToJson.getMessageByDate(src,dst,type,date,page,size);
+            messages = extraService.getMessageByDate(src,dst,type,date,page,size);
             result=Result.ok(messages);
         }catch (Exception e){
             e.printStackTrace();
@@ -561,7 +599,7 @@ public class ExtraController {
             int size=json.getInteger("size");
             int page=json.getInteger("page");
             List<Object> messages=null;
-            messages = msgToJson.getMessageByDateLeft(src,dst,type,date,page,size);
+            messages = extraService.getMessageByDateLeft(src,dst,type,date,page,size);
             result=Result.ok(messages);
         }catch (Exception e){
             e.printStackTrace();
@@ -581,7 +619,7 @@ public class ExtraController {
             int size=json.getInteger("size");
             int page=json.getInteger("page");
             List<Object> messages=null;
-            messages = msgToJson.getMessageByContent(src,dst,type,content,page,size);
+            messages = extraService.getMessageByContent(src,dst,type,content,page,size);
             result=Result.ok(messages);
         }catch (Exception e){
             e.printStackTrace();

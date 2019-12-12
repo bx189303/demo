@@ -50,8 +50,11 @@ public class WebSocketController {
         String dstId="";
         if(msgType.equals("msg")){
             dstId=data.getJSONObject("dst").getString("sId");
-        }else if(msgType.equals("notify")){
+        }else if(msgType.equals("notify")||msgType.equals("groupNotify")){
             dstId=data.getString("dst");
+        }else {
+            log.info("未知类型消息");
+            return;
         }
         WebSocketController dstCli= websocketList.get(dstId);
         if(dstCli!=null){

@@ -119,7 +119,7 @@
                         '                            <img src="../img/head.png">\n' +
                         '                        </div>\n' +
                         '                        <div class="addGroupLiContentRightDiv">\n' +
-                        '                            <div class="liFriendUser">'+n.sUnitname+" "+n.sName+'</div>\n' +
+                        '                            <div class="liFriendUser">'+n.sUnitname+"_"+n.sName+'</div>\n' +
                         '                        </div>\n' +
                         '                    </div>\n' +
                         '                    <div class="liSpace"/>\n' +
@@ -208,7 +208,7 @@
                         '                            <img src="../img/head.png">\n' +
                         '                        </div>\n' +
                         '                        <div class="addGroupLiContentRightDiv">\n' +
-                        '                            <div class="liFriendUser">'+n.sUnitname+" "+n.sName+'</div>\n' +
+                        '                            <div class="liFriendUser">'+n.sUnitname+"_"+n.sName+'</div>\n' +
                         '                        </div>\n' +
                         '                    </div>\n' +
                         '                    <div class="liSpace"/>\n' +
@@ -233,7 +233,7 @@
             $(".checkBoxPersonDiv[name='"+userId+"']").remove()
         }else if($(".checkBoxPersonDiv[name='"+userId+"']").length==0){  //如果添加人栏没有则添加
             var userName=$(obj.getElementsByClassName("liFriendUser")[0]).text();
-            userName=userName.split(" ")[1];
+            userName=userName.split("_")[1];
             // console.log(userId+" "+userName)
             var html='<div name="'+userId+'" class="checkBoxPersonDiv addPerson">\n' +
                 '                <img src="../img/head.png" >'+userName+'<div class="checkBoxPersonDivRemove" onclick="removecheckedPerson(this)">x</div></div>';
@@ -259,11 +259,10 @@
             //请求成功
             success : function(result) {
                 var groupId=result.data.uuid;
-                console.log("创建群 : "+result.data.uuid);
-                window.parent.loadGroups();
-                layer.msg("创建群成功!");
+                window.parent.loadGroups(groupId);//更新群列表并跳转新建的群
+                layer.msg(result.msg);
                 setTimeout(function(){
-                    window.parent.$("#groupUl li[name='"+groupId+"']").click();//跳转新建的群
+                    // window.parent.$("#groupUl li[name='"+groupId+"']").click();//跳转新建的群
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index); //再执行关闭
                 },1000);
@@ -291,11 +290,10 @@
             //请求成功
             success : function(result) {
                 console.log("群内加人 : "+result.msg);
-                window.parent.loadGroups();
+                window.parent.loadGroups(srcDst);
                 layer.msg("添加人员成功!");
                 setTimeout(function(){
-                    // window.parent.$("#topBackIcon").click();//返回聊天窗口
-                    window.parent.$('#groupUl li[name="'+srcDst+'"]').click();
+                    // window.parent.$('#groupUl li[name="'+srcDst+'"]').click();
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index); //再执行关闭
                 },1000);

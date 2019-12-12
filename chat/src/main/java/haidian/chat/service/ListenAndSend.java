@@ -62,6 +62,44 @@ public class ListenAndSend {
             sendNotify(msg);
         }else if("onoff".equalsIgnoreCase(type)){
             saveOnoff(msg);
+        }else if("groupNotify".equalsIgnoreCase(type)){
+            sendGroupNotify(msg);
+        }
+    }
+
+    private void sendGroupNotify(String msg) {
+        try {
+            JSONObject groupNotify=JSON.parseObject(msg);
+            JSONObject data=groupNotify.getJSONObject("data");
+            String groupNotifyType=data.getString("type");
+            String groupId=data.getString("groupId");
+            if("addUser".equals(groupNotifyType)){
+                String userIds=data.getString("userIds");
+                String[] idArray = userIds.split(",");
+                for (String id : idArray) {
+                    if (r.get(id+"on")!=null){ //如果在线则发送群通知
+                        JSONObject toGroupNotify=groupNotify;
+                        JSONObject toGroupNotifyData=data;
+                        toGroupNotifyData.remove("userIds");
+                        toGroupNotifyData.put("dst",id);
+                        toGroupNotify.put("data",toGroupNotifyData);
+                        template.convertAndSend("DISPATCH",JSON.toJSONString(toGroupNotify));
+                    }
+                }
+            }else if("updateGroup".equals(groupNotifyType)){
+                List<String> userIds = groupMapper.getUserByGroupId(groupId);
+                for (String id : userIds) {
+                    if (r.get(id+"on")!=null) { //如果在线则发送群通知
+                        JSONObject toGroupNotify = groupNotify;
+                        JSONObject toGroupNotifyData = data;
+                        toGroupNotifyData.put("dst", id);
+                        toGroupNotify.put("data", toGroupNotifyData);
+                        template.convertAndSend("DISPATCH", JSON.toJSONString(toGroupNotify));
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -225,4 +263,5 @@ public class ListenAndSend {
             sendPostRequest(notifyUrl,map);
         }
     }
+
 }

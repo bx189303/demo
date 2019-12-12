@@ -10,8 +10,24 @@ import java.util.*;
 
 public class JavaTest {
     public static void main(String[] args) {
-        long l=1L;
-        int i= (int) l;
+        jiaojitest();
+    }
+
+    private static void jiaojitest() {
+        List<String> l=new ArrayList<>();
+        l.add("1");
+        l.add("2");
+        l.add("3");
+        l.add("4");
+        l.add("5");
+        List<String> ll=new ArrayList<>();
+        ll.add("6");
+        ll.add("7");
+        ll.add("3");
+        ll.add("4");
+        ll.add("5");
+        l.retainAll(ll);
+        System.out.println(JSON.toJSON(l));
     }
 
     private static void subListtest() {

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer"/>
+    <title>战位</title>
+    <link rel="stylesheet" type="text/css" href="../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../css/duty.css">
+    <link rel="stylesheet" type="text/css" href="../zTree/css/zTreeStyle/zTreeStyle.css">
+</head>
+<script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="../layer/layer.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="../zTree/js/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="./duty.js"></script>
+<style>
+
+
+</style>
+<body style="overflow: hidden;color: #fff;">
+
+<div id="dutyHtml">
+    <div id="duTyWindowTitle">
+        <div class="titleName"><h2>战位信息</h2></div>
+        <div class="rightTopBtn" onclick="closeDuty()">X</div>
+    </div>
+    <div id="dutyWindowBody">
+        <div id="leftDiv">
+            <div id="unitTree" class="divShadow treeScroll">
+                <ul id="zTree" class="ztree"></ul>
+            </div>
+        </div>
+        <div id="rightDiv">
+            <div id="mainDutyDiv" class="divShadow">
+                <div id="dutyTitle" class="unitName">
+                    <div id="unitName"></div>
+                </div>
+                <div id="mainDutyTypeDiv" class="scrollDiv">
+                </div>
+            </div>
+            <div id="dutyDetailDiv" class="divShadow">
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+<script>
+    $(function(){
+        var userId=GetUrlParam("id");
+        if(userId==null){
+            userId="6DFEB2D364DA4CD3A4A1EB12A1F462B1";
+        }
+        loadUnit(userId);
+    });
+
+</script>
+</html>

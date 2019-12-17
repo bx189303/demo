@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="haidian.duty.dao.UnitMapper">
+  <resultMap id="BaseResultMap" type="haidian.duty.pojo.Unit">
+    <id column="S_ID" jdbcType="VARCHAR" property="sId" />
+    <result column="S_DESCRIPTION" jdbcType="VARCHAR" property="sDescription" />
+    <result column="S_PARENT" jdbcType="VARCHAR" property="sParent" />
+    <result column="S_PRINCIPAL" jdbcType="VARCHAR" property="sPrincipal" />
+    <result column="S_ADDRESS" jdbcType="VARCHAR" property="sAddress" />
+    <result column="S_TEL" jdbcType="VARCHAR" property="sTel" />
+    <result column="N_SEQUENCE" jdbcType="DECIMAL" property="nSequence" />
+    <result column="S_FAX" jdbcType="VARCHAR" property="sFax" />
+    <result column="S_EMAIL" jdbcType="VARCHAR" property="sEmail" />
+    <result column="S_IP" jdbcType="VARCHAR" property="sIp" />
+    <result column="S_TASK" jdbcType="VARCHAR" property="sTask" />
+    <result column="S_REGION" jdbcType="VARCHAR" property="sRegion" />
+    <result column="S_SPELL" jdbcType="VARCHAR" property="sSpell" />
+    <result column="N_EXECUTE" jdbcType="DECIMAL" property="nExecute" />
+    <result column="N_DISUSE" jdbcType="DECIMAL" property="nDisuse" />
+    <result column="N_ISDELETE" jdbcType="DECIMAL" property="nIsdelete" />
+    <result column="S_CATEGORY" jdbcType="VARCHAR" property="sCategory" />
+    <result column="D_CREATETIME" jdbcType="TIMESTAMP" property="dCreatetime" />
+    <result column="D_UPDATETIME" jdbcType="TIMESTAMP" property="dUpdatetime" />
+    <result column="S_NAME" jdbcType="VARCHAR" property="sName" />
+    <result column="S_SIMPLE" jdbcType="VARCHAR" property="sSimple" />
+    <result column="N_NORMAL" jdbcType="DECIMAL" property="nNormal" />
+    <result column="S_FONTCOLOR" jdbcType="VARCHAR" property="sFontcolor" />
+    <result column="S_DY" jdbcType="VARCHAR" property="sDy" />
+    <result column="S_UNITTJ" jdbcType="VARCHAR" property="sUnittj" />
+    <result column="S_UNITTYPE" jdbcType="VARCHAR" property="sUnittype" />
+    <result column="N_X" jdbcType="DECIMAL" property="nX" />
+    <result column="N_Y" jdbcType="DECIMAL" property="nY" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="haidian.duty.pojo.Unit">
+    <result column="S_FULLNAME" jdbcType="LONGVARCHAR" property="sFullname" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    S_ID, S_DESCRIPTION, S_PARENT, S_PRINCIPAL, S_ADDRESS, S_TEL, N_SEQUENCE, S_FAX, 
+    S_EMAIL, S_IP, S_TASK, S_REGION, S_SPELL, N_EXECUTE, N_DISUSE, N_ISDELETE, S_CATEGORY, 
+    D_CREATETIME, D_UPDATETIME, S_NAME, S_SIMPLE, N_NORMAL, S_FONTCOLOR, S_DY, S_UNITTJ, 
+    S_UNITTYPE, N_X, N_Y
+  </sql>
+  <sql id="Blob_Column_List">
+    S_FULLNAME
+  </sql>
+  <sql id="SIMPLE_LIST">
+    S_ID,  S_NAME, S_PARENT
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="SIMPLE_LIST" />
+    from hdyhtx.t_unit
+    where S_ID = #{sId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByParentId" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="SIMPLE_LIST" />
+    from hdyhtx.t_unit
+    where S_PARENT = #{sId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from hdyhtx.t_unit
+    where S_ID = #{sId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="haidian.duty.pojo.Unit">
+    insert into t_unit (S_ID, S_DESCRIPTION, S_PARENT, 
+      S_PRINCIPAL, S_ADDRESS, S_TEL, 
+      N_SEQUENCE, S_FAX, S_EMAIL, 
+      S_IP, S_TASK, S_REGION, 
+      S_SPELL, N_EXECUTE, N_DISUSE, 
+      N_ISDELETE, S_CATEGORY, D_CREATETIME, 
+      D_UPDATETIME, S_NAME, S_SIMPLE, 
+      N_NORMAL, S_FONTCOLOR, S_DY, 
+      S_UNITTJ, S_UNITTYPE, N_X, 
+      N_Y, S_FULLNAME)
+    values (#{sId,jdbcType=VARCHAR}, #{sDescription,jdbcType=VARCHAR}, #{sParent,jdbcType=VARCHAR}, 
+      #{sPrincipal,jdbcType=VARCHAR}, #{sAddress,jdbcType=VARCHAR}, #{sTel,jdbcType=VARCHAR}, 
+      #{nSequence,jdbcType=DECIMAL}, #{sFax,jdbcType=VARCHAR}, #{sEmail,jdbcType=VARCHAR}, 
+      #{sIp,jdbcType=VARCHAR}, #{sTask,jdbcType=VARCHAR}, #{sRegion,jdbcType=VARCHAR}, 
+      #{sSpell,jdbcType=VARCHAR}, #{nExecute,jdbcType=DECIMAL}, #{nDisuse,jdbcType=DECIMAL}, 
+      #{nIsdelete,jdbcType=DECIMAL}, #{sCategory,jdbcType=VARCHAR}, #{dCreatetime,jdbcType=TIMESTAMP}, 
+      #{dUpdatetime,jdbcType=TIMESTAMP}, #{sName,jdbcType=VARCHAR}, #{sSimple,jdbcType=VARCHAR}, 
+      #{nNormal,jdbcType=DECIMAL}, #{sFontcolor,jdbcType=VARCHAR}, #{sDy,jdbcType=VARCHAR}, 
+      #{sUnittj,jdbcType=VARCHAR}, #{sUnittype,jdbcType=VARCHAR}, #{nX,jdbcType=DECIMAL}, 
+      #{nY,jdbcType=DECIMAL}, #{sFullname,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="haidian.duty.pojo.Unit">
+    insert into t_unit
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sId != null">
+        S_ID,
+      </if>
+      <if test="sDescription != null">
+        S_DESCRIPTION,
+      </if>
+      <if test="sParent != null">
+        S_PARENT,
+      </if>
+      <if test="sPrincipal != null">
+        S_PRINCIPAL,
+      </if>
+      <if test="sAddress != null">
+        S_ADDRESS,
+      </if>
+      <if test="sTel != null">
+        S_TEL,
+      </if>
+      <if test="nSequence != null">
+        N_SEQUENCE,
+      </if>
+      <if test="sFax != null">
+        S_FAX,
+      </if>
+      <if test="sEmail != null">
+        S_EMAIL,
+      </if>
+      <if test="sIp != null">
+        S_IP,
+      </if>
+      <if test="sTask != null">
+        S_TASK,
+      </if>
+      <if test="sRegion != null">
+        S_REGION,
+      </if>
+      <if test="sSpell != null">
+        S_SPELL,
+      </if>
+      <if test="nExecute != null">
+        N_EXECUTE,
+      </if>
+      <if test="nDisuse != null">
+        N_DISUSE,
+      </if>
+      <if test="nIsdelete != null">
+        N_ISDELETE,
+      </if>
+      <if test="sCategory != null">
+        S_CATEGORY,
+      </if>
+      <if test="dCreatetime != null">
+        D_CREATETIME,
+      </if>
+      <if test="dUpdatetime != null">
+        D_UPDATETIME,
+      </if>
+      <if test="sName != null">
+        S_NAME,
+      </if>
+      <if test="sSimple != null">
+        S_SIMPLE,
+      </if>
+      <if test="nNormal != null">
+        N_NORMAL,
+      </if>
+      <if test="sFontcolor != null">
+        S_FONTCOLOR,
+      </if>
+      <if test="sDy != null">
+        S_DY,
+      </if>
+      <if test="sUnittj != null">
+        S_UNITTJ,
+      </if>
+      <if test="sUnittype != null">
+        S_UNITTYPE,
+      </if>
+      <if test="nX != null">
+        N_X,
+      </if>
+      <if test="nY != null">
+        N_Y,
+      </if>
+      <if test="sFullname != null">
+        S_FULLNAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sId != null">
+        #{sId,jdbcType=VARCHAR},
+      </if>
+      <if test="sDescription != null">
+        #{sDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="sParent != null">
+        #{sParent,jdbcType=VARCHAR},
+      </if>
+      <if test="sPrincipal != null">
+        #{sPrincipal,jdbcType=VARCHAR},
+      </if>
+      <if test="sAddress != null">
+        #{sAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="sTel != null">
+        #{sTel,jdbcType=VARCHAR},
+      </if>
+      <if test="nSequence != null">
+        #{nSequence,jdbcType=DECIMAL},
+      </if>
+      <if test="sFax != null">
+        #{sFax,jdbcType=VARCHAR},
+      </if>
+      <if test="sEmail != null">
+        #{sEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="sIp != null">
+        #{sIp,jdbcType=VARCHAR},
+      </if>
+      <if test="sTask != null">
+        #{sTask,jdbcType=VARCHAR},
+      </if>
+      <if test="sRegion != null">
+        #{sRegion,jdbcType=VARCHAR},
+      </if>
+      <if test="sSpell != null">
+        #{sSpell,jdbcType=VARCHAR},
+      </if>
+      <if test="nExecute != null">
+        #{nExecute,jdbcType=DECIMAL},
+      </if>
+      <if test="nDisuse != null">
+        #{nDisuse,jdbcType=DECIMAL},
+      </if>
+      <if test="nIsdelete != null">
+        #{nIsdelete,jdbcType=DECIMAL},
+      </if>
+      <if test="sCategory != null">
+        #{sCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="dCreatetime != null">
+        #{dCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dUpdatetime != null">
+        #{dUpdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sName != null">
+        #{sName,jdbcType=VARCHAR},
+      </if>
+      <if test="sSimple != null">
+        #{sSimple,jdbcType=VARCHAR},
+      </if>
+      <if test="nNormal != null">
+        #{nNormal,jdbcType=DECIMAL},
+      </if>
+      <if test="sFontcolor != null">
+        #{sFontcolor,jdbcType=VARCHAR},
+      </if>
+      <if test="sDy != null">
+        #{sDy,jdbcType=VARCHAR},
+      </if>
+      <if test="sUnittj != null">
+        #{sUnittj,jdbcType=VARCHAR},
+      </if>
+      <if test="sUnittype != null">
+        #{sUnittype,jdbcType=VARCHAR},
+      </if>
+      <if test="nX != null">
+        #{nX,jdbcType=DECIMAL},
+      </if>
+      <if test="nY != null">
+        #{nY,jdbcType=DECIMAL},
+      </if>
+      <if test="sFullname != null">
+        #{sFullname,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="haidian.duty.pojo.Unit">
+    update t_unit
+    <set>
+      <if test="sDescription != null">
+        S_DESCRIPTION = #{sDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="sParent != null">
+        S_PARENT = #{sParent,jdbcType=VARCHAR},
+      </if>
+      <if test="sPrincipal != null">
+        S_PRINCIPAL = #{sPrincipal,jdbcType=VARCHAR},
+      </if>
+      <if test="sAddress != null">
+        S_ADDRESS = #{sAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="sTel != null">
+        S_TEL = #{sTel,jdbcType=VARCHAR},
+      </if>
+      <if test="nSequence != null">
+        N_SEQUENCE = #{nSequence,jdbcType=DECIMAL},
+      </if>
+      <if test="sFax != null">
+        S_FAX = #{sFax,jdbcType=VARCHAR},
+      </if>
+      <if test="sEmail != null">
+        S_EMAIL = #{sEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="sIp != null">
+        S_IP = #{sIp,jdbcType=VARCHAR},
+      </if>
+      <if test="sTask != null">
+        S_TASK = #{sTask,jdbcType=VARCHAR},
+      </if>
+      <if test="sRegion != null">
+        S_REGION = #{sRegion,jdbcType=VARCHAR},
+      </if>
+      <if test="sSpell != null">
+        S_SPELL = #{sSpell,jdbcType=VARCHAR},
+      </if>
+      <if test="nExecute != null">
+        N_EXECUTE = #{nExecute,jdbcType=DECIMAL},
+      </if>
+      <if test="nDisuse != null">
+        N_DISUSE = #{nDisuse,jdbcType=DECIMAL},
+      </if>
+      <if test="nIsdelete != null">
+        N_ISDELETE = #{nIsdelete,jdbcType=DECIMAL},
+      </if>
+      <if test="sCategory != null">
+        S_CATEGORY = #{sCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="dCreatetime != null">
+        D_CREATETIME = #{dCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dUpdatetime != null">
+        D_UPDATETIME = #{dUpdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sName != null">
+        S_NAME = #{sName,jdbcType=VARCHAR},
+      </if>
+      <if test="sSimple != null">
+        S_SIMPLE = #{sSimple,jdbcType=VARCHAR},
+      </if>
+      <if test="nNormal != null">
+        N_NORMAL = #{nNormal,jdbcType=DECIMAL},
+      </if>
+      <if test="sFontcolor != null">
+        S_FONTCOLOR = #{sFontcolor,jdbcType=VARCHAR},
+      </if>
+      <if test="sDy != null">
+        S_DY = #{sDy,jdbcType=VARCHAR},
+      </if>
+      <if test="sUnittj != null">
+        S_UNITTJ = #{sUnittj,jdbcType=VARCHAR},
+      </if>
+      <if test="sUnittype != null">
+        S_UNITTYPE = #{sUnittype,jdbcType=VARCHAR},
+      </if>
+      <if test="nX != null">
+        N_X = #{nX,jdbcType=DECIMAL},
+      </if>
+      <if test="nY != null">
+        N_Y = #{nY,jdbcType=DECIMAL},
+      </if>
+      <if test="sFullname != null">
+        S_FULLNAME = #{sFullname,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where S_ID = #{sId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="haidian.duty.pojo.Unit">
+    update t_unit
+    set S_DESCRIPTION = #{sDescription,jdbcType=VARCHAR},
+      S_PARENT = #{sParent,jdbcType=VARCHAR},
+      S_PRINCIPAL = #{sPrincipal,jdbcType=VARCHAR},
+      S_ADDRESS = #{sAddress,jdbcType=VARCHAR},
+      S_TEL = #{sTel,jdbcType=VARCHAR},
+      N_SEQUENCE = #{nSequence,jdbcType=DECIMAL},
+      S_FAX = #{sFax,jdbcType=VARCHAR},
+      S_EMAIL = #{sEmail,jdbcType=VARCHAR},
+      S_IP = #{sIp,jdbcType=VARCHAR},
+      S_TASK = #{sTask,jdbcType=VARCHAR},
+      S_REGION = #{sRegion,jdbcType=VARCHAR},
+      S_SPELL = #{sSpell,jdbcType=VARCHAR},
+      N_EXECUTE = #{nExecute,jdbcType=DECIMAL},
+      N_DISUSE = #{nDisuse,jdbcType=DECIMAL},
+      N_ISDELETE = #{nIsdelete,jdbcType=DECIMAL},
+      S_CATEGORY = #{sCategory,jdbcType=VARCHAR},
+      D_CREATETIME = #{dCreatetime,jdbcType=TIMESTAMP},
+      D_UPDATETIME = #{dUpdatetime,jdbcType=TIMESTAMP},
+      S_NAME = #{sName,jdbcType=VARCHAR},
+      S_SIMPLE = #{sSimple,jdbcType=VARCHAR},
+      N_NORMAL = #{nNormal,jdbcType=DECIMAL},
+      S_FONTCOLOR = #{sFontcolor,jdbcType=VARCHAR},
+      S_DY = #{sDy,jdbcType=VARCHAR},
+      S_UNITTJ = #{sUnittj,jdbcType=VARCHAR},
+      S_UNITTYPE = #{sUnittype,jdbcType=VARCHAR},
+      N_X = #{nX,jdbcType=DECIMAL},
+      N_Y = #{nY,jdbcType=DECIMAL},
+      S_FULLNAME = #{sFullname,jdbcType=LONGVARCHAR}
+    where S_ID = #{sId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="haidian.duty.pojo.Unit">
+    update t_unit
+    set S_DESCRIPTION = #{sDescription,jdbcType=VARCHAR},
+      S_PARENT = #{sParent,jdbcType=VARCHAR},
+      S_PRINCIPAL = #{sPrincipal,jdbcType=VARCHAR},
+      S_ADDRESS = #{sAddress,jdbcType=VARCHAR},
+      S_TEL = #{sTel,jdbcType=VARCHAR},
+      N_SEQUENCE = #{nSequence,jdbcType=DECIMAL},
+      S_FAX = #{sFax,jdbcType=VARCHAR},
+      S_EMAIL = #{sEmail,jdbcType=VARCHAR},
+      S_IP = #{sIp,jdbcType=VARCHAR},
+      S_TASK = #{sTask,jdbcType=VARCHAR},
+      S_REGION = #{sRegion,jdbcType=VARCHAR},
+      S_SPELL = #{sSpell,jdbcType=VARCHAR},
+      N_EXECUTE = #{nExecute,jdbcType=DECIMAL},
+      N_DISUSE = #{nDisuse,jdbcType=DECIMAL},
+      N_ISDELETE = #{nIsdelete,jdbcType=DECIMAL},
+      S_CATEGORY = #{sCategory,jdbcType=VARCHAR},
+      D_CREATETIME = #{dCreatetime,jdbcType=TIMESTAMP},
+      D_UPDATETIME = #{dUpdatetime,jdbcType=TIMESTAMP},
+      S_NAME = #{sName,jdbcType=VARCHAR},
+      S_SIMPLE = #{sSimple,jdbcType=VARCHAR},
+      N_NORMAL = #{nNormal,jdbcType=DECIMAL},
+      S_FONTCOLOR = #{sFontcolor,jdbcType=VARCHAR},
+      S_DY = #{sDy,jdbcType=VARCHAR},
+      S_UNITTJ = #{sUnittj,jdbcType=VARCHAR},
+      S_UNITTYPE = #{sUnittype,jdbcType=VARCHAR},
+      N_X = #{nX,jdbcType=DECIMAL},
+      N_Y = #{nY,jdbcType=DECIMAL}
+    where S_ID = #{sId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="../js/jquery-3.4.1.min.js"></script>
+    <style>
+        ul li{
+            list-style-type:none;
+        }
+        .on{
+            background-color:red;
+        }
+        .off{
+            background-color:none;
+        }
+    </style>
+</head>
+<script>
+
+</script>
+<body>
+<ul id="meslib">
+    <li id="1">1111111</li>
+    <li id="2">2222</li>
+    <li id="3">3333</li>
+    <li id="4">444444444</li>
+</ul>
+<input type='button' value='获取选中的li' onclick="getSelect()"></input>
+<script>
+    function getSelect(){
+        var g="";
+        $('.on').each(function(i,n){
+            var id="";
+            id=$('.on')[i].id;
+            console.log(id);
+        })
+
+
+    }
+    $('li').click(function(){
+        $(this).toggleClass('on');
+    });
+</script>
+</body>
+</html>

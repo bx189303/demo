@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="referrer" content="no-referrer"/>
     <title>战位</title>
-    <link rel="stylesheet" type="text/css" href="../css/base.css">
-    <link rel="stylesheet" type="text/css" href="../css/duty.css">
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/duty.css">
 <!--    <link rel="stylesheet" type="text/css" href="../css/dateTime.css">-->
-    <link rel="stylesheet" type="text/css" href="../zTree/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" type="text/css" href="../../zTree/css/zTreeStyle/zTreeStyle.css">
 </head>
-<script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
-<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="../../js/util.js"></script>
 <!--<script type="text/javascript" src="../js/dateTime.min.js"></script>-->
-<script type="text/javascript" src="../layer/layer.js"></script>
-<script type="text/javascript" src="../zTree/js/jquery.ztree.core.js"></script>
-<script type="text/javascript" src="./duty.js"></script>
-<!--<script type="text/javascript" src="./getDuty.js"></script>-->
+<script type="text/javascript" src="../../layer/layer.js"></script>
+<script type="text/javascript" src="../../zTree/js/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="../duty.js"></script>
+<!--<script type="text/javascript" src="./getDuty_iframe.jsrame.js"></script>-->
 <style>
 
 
@@ -23,15 +23,15 @@
 <body style="overflow: hidden;color: #fff;">
 
 <div id="mainWindow">
-    <div id="leftDiv">
-        <div id="unitTree" class="divShadow treeScroll">
+    <div id="dutyLeftDiv">
+        <div id="dutyUnitTree" class="dutyDivShadow treeScroll">
             <ul id="zTree" class="ztree"></ul>
         </div>
     </div>
-    <div id="rightDiv">
-        <div id="mainDutyDiv" class="divShadow">
+    <div id="dutyRightDiv">
+        <div id="mainDutyDiv" class="dutyDivShadow">
             <div id="dutyTitle" class="unitName">
-                <div id="unitName">海淀分局</div>
+                <div id="dutyUnitName">海淀分局</div>
 <!--                <div id="dateInputDiv" class="mycontainer">-->
 <!--                    <input type="text" readonly="readonly" id="dateInput">-->
 <!--                </div>-->
@@ -69,7 +69,7 @@
 <!--                </div>-->
             </div>
         </div>
-        <div id="dutyDetailDiv" class="divShadow">
+        <div id="dutyDetailDiv" class="dutyDivShadow">
 <!--            <div class="dutyInfo"><div class="infoName">职位</div><div class="infoValue">指挥长</div></div>-->
 <!--            <div class="dutyInfo"><div class="infoName">单位</div><div class="infoValue">海淀派出所</div></div>-->
 <!--            <div class="dutyInfo"><div class="infoName">姓名</div><div class="infoValue">张三</div></div>-->

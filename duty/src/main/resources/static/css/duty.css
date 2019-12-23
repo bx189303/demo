@@ -21,6 +21,8 @@
 #dutyHtml{
     color:#fff;
     width: 700px;
+    height:470px;
+    /*background-color: #010e55;*/
     position: fixed;
     top: 10%;
     left: 0px;
@@ -38,12 +40,12 @@
     overflow: hidden;
     /*display: none;*/
 }
-.titleName{
+.dutyTitleName{
     width: 70%;
     margin-left: 15%;
     float: left;
 }
-.rightTopBtn{
+.dutyRightTopBtn{
     margin-right: 1%;
     height: 19px;
     width: 4%;
@@ -58,13 +60,13 @@
     background: url(../img/background.jpg) no-repeat;
     background-size: 100% 100%;
 }
-.divShadow{
+.dutyDivShadow{
     border: 1px solid #000;
     box-shadow: #fff 0px 0px 2px 1px;
     /*background: url(../img/border.png) no-repeat;*/
     /*background-size: 100% 100%;*/
 }
-#unitTree{
+#dutyUnitTree{
     width: 87%;
     height: 90.5%;
     margin: 4.5% 0 2% 5%;
@@ -77,12 +79,12 @@
     margin: 0;
     padding: 0;
 }
-#leftDiv{
+#dutyLeftDiv{
     width:30%;
     height:100%;
     float: left;
 }
-#rightDiv{
+#dutyRightDiv{
     width:69%;
     height:100%;
     float: left;
@@ -94,7 +96,7 @@
     border-radius: 5px;
     overflow: hidden;
 }
-#unitName{
+#dutyUnitName{
     /*max-width: 70%;*/
     width:100%;
     margin-left: 2%;
@@ -103,16 +105,6 @@
     white-space: nowrap;/*禁止换行*/
     float: left;
     text-align: center;
-}
-#dateInput{
-    background-color: transparent;
-    border: 0;
-    color: #fff;
-}
-
-#dateInputDiv{
-    width:21%;
-    float: right;
 }
 .dutyList{
     width: 26%;
@@ -160,7 +152,7 @@
     background-color: #002551;
     border-radius: 5px;
 }
-.infoName{
+.dutyInfoName{
     width:30%;
     float: left;
     text-align: center;
@@ -169,7 +161,7 @@
     text-overflow: ellipsis;/*显示省略符号来代表被修剪的文本。*/
     white-space: nowrap;/*禁止换行*/
 }
-.infoValue{
+.dutyInfoValue{
     width: 65%;
     float: left;
     padding-left: 3%;
@@ -177,11 +169,11 @@
     text-overflow: ellipsis;/*显示省略符号来代表被修剪的文本。*/
     white-space: nowrap;/*禁止换行*/
 }
-.notips{
+.dutyNotips{
     text-align: center;
     position: relative;
     top: 50%;
 }
-.fullHeight{
+.dutyFullHeight{
     height:95.5% !important;
 }

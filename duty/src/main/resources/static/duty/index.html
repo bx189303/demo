@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="referrer" content="no-referrer"/>
     <title>战位</title>
-    <link rel="stylesheet" type="text/css" href="../css/base.css">
+    <link rel="stylesheet" type="text/css" href="./dutybase.css">
     <link rel="stylesheet" type="text/css" href="../css/duty.css">
     <link rel="stylesheet" type="text/css" href="../zTree/css/zTreeStyle/zTreeStyle.css">
 </head>
@@ -13,6 +13,7 @@
 <script type="text/javascript" src="../js/util.js"></script>
 <script type="text/javascript" src="../zTree/js/jquery.ztree.core.js"></script>
 <script type="text/javascript" src="./duty.js"></script>
+<!--<script type="text/javascript" src="./child.js"></script>-->
 <style>
 
 
@@ -21,24 +22,24 @@
 
 <div id="dutyHtml">
     <div id="duTyWindowTitle">
-        <div class="titleName"><h2>战位信息</h2></div>
-        <div class="rightTopBtn" onclick="closeDuty()">X</div>
+        <div class="dutyTitleName"><h2>战位信息</h2></div>
+        <div class="dutyRightTopBtn" onclick="closeDutyWindow()">X</div>
     </div>
     <div id="dutyWindowBody">
-        <div id="leftDiv">
-            <div id="unitTree" class="divShadow treeScroll">
+        <div id="dutyLeftDiv">
+            <div id="dutyUnitTree" class="dutyDivShadow treeScroll">
                 <ul id="zTree" class="ztree"></ul>
             </div>
         </div>
-        <div id="rightDiv">
-            <div id="mainDutyDiv" class="divShadow">
+        <div id="dutyRightDiv">
+            <div id="mainDutyDiv" class="dutyDivShadow">
                 <div id="dutyTitle" class="unitName">
-                    <div id="unitName"></div>
+                    <div id="dutyUnitName"></div>
                 </div>
                 <div id="mainDutyTypeDiv" class="scrollDiv">
                 </div>
             </div>
-            <div id="dutyDetailDiv" class="divShadow">
+            <div id="dutyDetailDiv" class="dutyDivShadow">
             </div>
         </div>
 
@@ -49,7 +50,9 @@
     $(function(){
         var userId=GetUrlParam("id");
         if(userId==null){
+            console.log("没有收到id，默认显示海淀分局");
             userId="6DFEB2D364DA4CD3A4A1EB12A1F462B1";
+            // userId='C3413364EDB0416094D5E44FC101DB8E';
         }
         loadUnit(userId);
     });

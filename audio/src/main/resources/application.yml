@@ -1,0 +1,40 @@
+logging:
+  config: classpath:log4j2_dev.xml
+#  config: classpath:log4j2_prod.xml
+#  level:
+#    haidian.chat.dao: debug
+server:
+  port: "${serverPort}"
+spring:
+  profiles:
+    include: config_dev
+#    include: config_prod
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: "${mysqlDriver}"
+    url: "${mysqlUrl}"
+    username: "${mysqlUsername}"
+    password: "${mysqlPassword}"
+    hikari:
+      minimum-idle: 5
+      idle-timeout: 600000
+      maximum-pool-size: 10
+      auto-commit: true
+      pool-name: MyHikariCP
+      max-lifetime: 180000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
+  #返回值空字段不显示
+  jackson:
+    default-property-inclusion: non_null
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: haidian.audio.pojo
+  configuration:
+    lazy-loading-enabled: true

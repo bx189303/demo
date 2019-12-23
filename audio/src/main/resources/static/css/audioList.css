@@ -1,0 +1,36 @@
+#audioHtml{
+    width:550px;
+    height:600px;
+}
+#audioCheckDiv{
+    overflow: hidden;
+    height: 35px;
+}
+#audioTabs{
+    margin-bottom: 0 !important;
+    float: left;
+    height:100%;
+}
+#audioDateDiv{
+    float: left;
+    height: 100%;
+    margin-left: 100px;
+}
+#audioDateDiv input{
+    height: 100%;
+}
+#searchAudioBtn{
+    float: left;
+    height: 100%;
+}
+
+
+#recordAudio{
+    width:100%;
+}
+.table th,.table td{
+    text-align: center;
+}
+.table tbody tr td:last-child{
+    font-weight: bold;
+}

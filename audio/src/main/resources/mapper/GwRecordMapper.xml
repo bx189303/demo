@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="haidian.audio.dao.GwRecordMapper" >
+  <resultMap id="BaseResultMap" type="haidian.audio.pojo.GwRecord" >
+    <id column="call_id" property="callId" jdbcType="VARCHAR" />
+    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+    <result column="file_type" property="fileType" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    call_id, file_name, file_type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_srvdata_gw_record_log
+    where call_id = #{callId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_srvdata_gw_record_log
+    where call_id = #{callId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="haidian.audio.pojo.GwRecord" >
+    insert into t_srvdata_gw_record_log (call_id, file_name, file_type
+      )
+    values (#{callId,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{fileType,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="haidian.audio.pojo.GwRecord" >
+    insert into t_srvdata_gw_record_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="callId != null" >
+        call_id,
+      </if>
+      <if test="fileName != null" >
+        file_name,
+      </if>
+      <if test="fileType != null" >
+        file_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="callId != null" >
+        #{callId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileType != null" >
+        #{fileType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="haidian.audio.pojo.GwRecord" >
+    update t_srvdata_gw_record_log
+    <set >
+      <if test="fileName != null" >
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileType != null" >
+        file_type = #{fileType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where call_id = #{callId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="haidian.audio.pojo.GwRecord" >
+    update t_srvdata_gw_record_log
+    set file_name = #{fileName,jdbcType=VARCHAR},
+      file_type = #{fileType,jdbcType=INTEGER}
+    where call_id = #{callId,jdbcType=VARCHAR}
+  </update>
+</mapper>

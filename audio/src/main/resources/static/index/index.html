@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer"/>
+    <title>录音播放</title>
+    <link rel="stylesheet" type="text/css" href="../css/bulma.css">
+    <link rel="stylesheet" type="text/css" href="../css/audio-base.css">
+    <link rel="stylesheet" type="text/css" href="../css/audioList.css">
+</head>
+<script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="../layer/layer.js"></script>
+<script type="text/javascript" src="/laydate/laydate.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<style>
+
+
+</style>
+<body style="overflow: hidden;">
+
+<div id="audioHtml">
+    <div id="audioCheckDiv">
+        <div id="audioTabs" class="tabs is-toggle">
+            <ul>
+                <li id="singleLi" class="is-active" onclick=showSingleHis(this)><a>单呼</a></li>
+                <li id="groupLi" onclick=showGroupHis(this)><a>会议</a></li>
+            </ul>
+        </div>
+        <div id="audioDateDiv">
+            时间：
+            <input id="audioDateInput">
+        </div>
+        <button id="searchAudioBtn" class="button">查询</button>
+    </div>
+
+    <div id="audioTable">
+        <table class="table is-hoverable is-bordered is-narrow">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>呼叫人</th>
+                    <th>被呼叫人</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>呼叫人</td>
+                    <td>被呼叫人</td>
+                    <td>2019-12-12 15:15:02</td>
+                    <td>2019-12-12 15:15:05</td>
+                    <td onclick=addAudio(this)>播放</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>呼叫人</td>
+                    <td>被呼叫人</td>
+                    <td>2019-12-12 15:15:02</td>
+                    <td>2019-12-12 15:15:05</td>
+                    <td onclick=addAudio(this)>播放</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>呼叫人</td>
+                    <td>被呼叫人</td>
+                    <td>2019-12-12 15:15:02</td>
+                    <td>2019-12-12 15:15:05</td>
+                    <td onclick=addAudio(this)>播放</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>呼叫人</td>
+                    <td>被呼叫人</td>
+                    <td>2019-12-12 15:15:02</td>
+                    <td>2019-12-12 15:15:05</td>
+                    <td onclick=addAudio(this)>播放</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>呼叫人</td>
+                    <td>被呼叫人</td>
+                    <td>2019-12-12 15:15:02</td>
+                    <td>2019-12-12 15:15:05</td>
+                    <td onclick=addAudio(this)>播放</td>
+                </tr>
+<!--                <tr>-->
+<!--                    <td colspan="6">-->
+<!--                        <audio id="recordAudio" autoplay="autoplay" controls="controls" src="../wav/20191212114251.wav"></audio>-->
+<!--                    </td>-->
+<!--                </tr>-->
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
+
+</body>
+<script>
+
+    function addAudio(obj){
+        // console.log(obj.tagName)
+        if(obj.tagName=="TD"){
+            var audioTr='                <tr>\n' +
+                '                    <td colspan="6">\n' +
+                '                        <audio id="recordAudio" autoplay="autoplay" controls="controls" src="../wav/20191212114251.wav" onended=addAudio(this)></audio>\n' +
+                '                    </td>\n' +
+                '                </tr>';
+            $(obj).parent().after(audioTr);
+        }else if(obj.tagName=="AUDIO"){
+            // console.log("播放结束，进入下一段")
+            $(obj).parents("tr").next().find("td:last").click();
+            $(obj).parents("tr").remove();
+        }
+    }
+
+    laydate.render({
+        elem: '#audioDateInput',
+        type: 'datetime',
+        value:'2019-12-23 00:00:00'
+    });
+
+    function showSingleHis(obj){
+        $("#singleLi").addClass("is-active");
+        $("#groupLi").removeClass("is-active");
+        $("thead th:eq(1)").html("呼叫人");
+        $("thead th:eq(2)").html("被呼叫人");
+        //加载单呼记录
+    }
+
+    function showGroupHis(obj){
+        $("#groupLi").addClass("is-active");
+        $("#singleLi").removeClass("is-active");
+        $("thead th:eq(1)").html("发言人");
+        $("thead th:eq(2)").html("会议");
+        //加载会议记录
+    }
+
+</script>
+</html>

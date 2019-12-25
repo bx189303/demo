@@ -10,7 +10,19 @@ import java.util.*;
 
 public class JavaTest {
     public static void main(String[] args) {
-        jiaojitest();
+        List<String> l=new ArrayList<>();
+        l.add("1");
+        l.add("2");
+        l.add("1");
+        l.add("3");
+        l.add("4");
+        l.add("5");
+        l.add("2");
+        LinkedHashSet s=new LinkedHashSet(l);
+        List ll=new ArrayList(s);
+        l=new ArrayList(s);
+        System.out.println(JSON.toJSONString(ll));
+        System.out.println(JSON.toJSONString(l));
     }
 
     private static void jiaojitest() {

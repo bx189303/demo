@@ -15,6 +15,7 @@
     <result column="talk_start_time" property="talkStartTime" jdbcType="TIMESTAMP" />
     <result column="talk_end_time" property="talkEndTime" jdbcType="TIMESTAMP" />
     <result column="is_readed" property="isReaded" jdbcType="INTEGER" />
+    <result column="file_name" property="fileName" />
   </resultMap>
   <sql id="Base_Column_List" >
     call_id, gw_name, line_id, line_name, call_type, calling_nbr, called_nbr, connect_flag, 
@@ -26,7 +27,16 @@
     from t_srvdata_gw_call_log
     where call_id = #{callId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    <select id="getCallRecord"  resultMap="BaseResultMap">
+      select
+          c.call_id call_id, gw_name, line_id, line_name, call_type, calling_nbr, called_nbr, connect_flag,
+          end_code, call_start_time, talk_start_time, talk_end_time, is_readed,file_name
+      from t_srvdata_gw_call_log c,t_srvdata_gw_record_log r
+      where c.call_id=r.call_id and (c.calling_nbr = #{userId} or c.called_nbr= #{userId}) and
+            (talk_start_time between #{start} and #{end}) and c.called_nbr not like '900%'
+      order by talk_start_time
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from t_srvdata_gw_call_log
     where call_id = #{callId,jdbcType=VARCHAR}
   </delete>

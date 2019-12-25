@@ -48,6 +48,26 @@ public class DateUtil {
     public static final String DATE_DEFAULT_FORMAT_NO_SPACE = "yyyyMMdd";
 
     /**
+     * 返回输入日期的下一天
+     */
+    public static String nextDate(String date){
+        DateFormat dft = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date temp = dft.parse(date);
+            Calendar cld = Calendar.getInstance();
+            cld.setTime(temp);
+            cld.add(Calendar.DATE, 1);
+            temp = cld.getTime();
+            //获得下一天日期字符串
+            String nextDay = dft.format(temp);
+            return nextDay;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
      * 获取当前日期(yyyy-MM-dd)
      *
      * @return Date

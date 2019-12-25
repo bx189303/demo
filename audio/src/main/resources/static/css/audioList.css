@@ -1,10 +1,48 @@
 #audioHtml{
-    width:550px;
-    height:600px;
+    border: 1px solid #dbdbdb;
+    width:535px;
+    height:245px;
+    /*margin:50px 0 0 50px;*/
+    position: fixed;
+    top: 0%;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    margin: auto;
+    z-index: 11111;
+}
+#audioWindowTitle{
+    width: 100%;
+    background-color:  #f1f1f1;
+    text-align: center;
+    /*border-radius: 5px 5px 0 0;*/
+    overflow: hidden;
+    /*display: none;*/
+}
+.audioTitleName{
+    width: 70%;
+    margin-left: 15%;
+    float: left;
+}
+.audioTitleName h2{
+    font-size: 17px;
+    font-weight: bold;
+}
+.audioRightTopBtn{
+    margin-right: 1%;
+    height: 19px;
+    width: 4%;
+    float: right;
+    cursor: pointer;
 }
 #audioCheckDiv{
     overflow: hidden;
     height: 35px;
+}
+#AudioSpaceAfterCheck{
+    background-color: #3674D7;
+    width:100%;
+    height:1px;
 }
 #audioTabs{
     margin-bottom: 0 !important;
@@ -14,13 +52,16 @@
 #audioDateDiv{
     float: left;
     height: 100%;
-    margin-left: 100px;
+    margin-left: 30px;
+    padding-left: 30px;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
 }
 #audioDateDiv input{
     height: 100%;
 }
 #searchAudioBtn{
-    float: left;
+    float: right;
     height: 100%;
 }
 
@@ -33,4 +74,31 @@
 }
 .table tbody tr td:last-child{
     font-weight: bold;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.table thead tr{
+    background-color: #F1F1F1;
+    display: block;
+}
+#audioTable tbody{
+    height:150px;
+    overflow-y: scroll;
+    display: block;
+    font-size:13px;
+}
+.audioTd1{
+    width:45px;
+}
+.audioTd2{
+    width:125px;
+}
+.audioTd3{
+    width:155px;
+}
+.audioTd4{
+    width:155px;
+}
+.audioTd5{
+    width:50px;
 }

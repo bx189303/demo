@@ -1,8 +1,8 @@
 logging:
   config: classpath:log4j2_dev.xml
 #  config: classpath:log4j2_prod.xml
-#  level:
-#    haidian.chat.dao: debug
+  level:
+    haidian.audio.dao: debug
 server:
   port: "${serverPort}"
 spring:

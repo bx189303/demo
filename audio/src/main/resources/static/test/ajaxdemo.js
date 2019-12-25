@@ -1,3 +1,8 @@
+$(function(){
+
+});
+
+
 $.ajax({
     type : "POST",
     contentType: "application/json;charset=UTF-8",

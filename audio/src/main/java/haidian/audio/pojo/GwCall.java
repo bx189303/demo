@@ -1,6 +1,10 @@
 package haidian.audio.pojo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
+import java.util.Objects;
 
 public class GwCall {
     private String callId;
@@ -21,13 +25,26 @@ public class GwCall {
 
     private Integer endCode;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date callStartTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date talkStartTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date talkEndTime;
 
     private Integer isReaded;
+
+    private String fileName;
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     public String getCallId() {
         return callId;
@@ -131,5 +148,22 @@ public class GwCall {
 
     public void setIsReaded(Integer isReaded) {
         this.isReaded = isReaded;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GwCall gwCall = (GwCall) o;
+        return Objects.equals(callingNbr, gwCall.callingNbr) &&
+                Objects.equals(calledNbr, gwCall.calledNbr) &&
+                Objects.equals(callStartTime, gwCall.callStartTime) &&
+                Objects.equals(talkStartTime, gwCall.talkStartTime) &&
+                Objects.equals(talkEndTime, gwCall.talkEndTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(callingNbr, calledNbr, callStartTime, talkStartTime, talkEndTime);
     }
 }

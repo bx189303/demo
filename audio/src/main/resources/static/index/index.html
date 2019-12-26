@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="referrer" content="no-referrer"/>
     <title>录音播放</title>
-    <link rel="stylesheet" type="text/css" href="../css/bulma.css">
     <link rel="stylesheet" type="text/css" href="../css/audio-base.css">
     <link rel="stylesheet" type="text/css" href="../css/audioList.css">
 </head>
@@ -25,16 +24,16 @@
     </div>
     <div id="audioCheckDiv">
         <div id="audioTabs" class="tabs is-toggle">
-            <ul>
-                <li id="singleLi" class="is-active" onclick=showSingleHis(this)><a>单呼</a></li>
-                <li id="groupLi" onclick=showGroupHis(this)><a>会议</a></li>
-            </ul>
+            <div id="singleLi" class="audioTab audioTabChecked" onclick=showSingleHis(this)>单呼</div>
+            <div id="groupLi" class="audioTab" onclick=showGroupHis(this)>会议</div>
         </div>
         <div id="audioDateDiv">
-            时间：
-            <input id="audioDateInput" class="btn" onload=alert(1)>
+            <span>开始时间:</span>
+            <input id="audioStartDateInput" class="btn">
+            <span>结束时间:</span>
+            <input id="audioEndDateInput" class="btn">
         </div>
-        <button id="searchAudioBtn" class="button" onclick=queryAudio()>查询</button>
+        <div id="searchAudioBtn" class="audioCheckBtn" onclick=queryAudio()>查询</div>
     </div>
     <div id="audioTable">
         <table class="table is-hoverable is-bordered is-narrow">
@@ -59,7 +58,7 @@
     $(function(){
         initDate();
         audioUserId=GetUrlParam("id");
-        loadSingleAudio(audioUserId,getNowFormatDate());
+        loadSingleAudio(audioUserId,getNowFormatDate(),getNextFormatDate());
     });
 
 

@@ -10,6 +10,10 @@
     bottom: 0px;
     margin: auto;
     z-index: 11111;
+    box-sizing: inherit;
+    color: #4a4a4a;
+    font-weight: 400;
+    line-height: 1.5;
 }
 #audioWindowTitle{
     width: 100%;
@@ -19,25 +23,27 @@
     overflow: hidden;
     /*display: none;*/
 }
-.audioTitleName{
+#audioHtml .audioTitleName{
     width: 70%;
     margin-left: 15%;
     float: left;
 }
-.audioTitleName h2{
+#audioHtml .audioTitleName h2{
     font-size: 17px;
     font-weight: bold;
+    margin: 0;
 }
-.audioRightTopBtn{
+#audioHtml .audioRightTopBtn{
     margin-right: 1%;
     height: 19px;
     width: 4%;
     float: right;
     cursor: pointer;
+    font-weight: bold;
 }
 #audioCheckDiv{
     overflow: hidden;
-    height: 35px;
+    height: 25px;
 }
 #AudioSpaceAfterCheck{
     background-color: #3674D7;
@@ -49,56 +55,90 @@
     float: left;
     height:100%;
 }
+#audioHtml .audioTab{
+    float: left;
+    height: 100%;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    cursor: pointer;
+    /*font-weight: bold;*/
+    padding: 0 3px;
+}
+#audioHtml .audioTabChecked{
+    background-color: #13e059;
+    font-weight: bold;
+}
+
 #audioDateDiv{
     float: left;
     height: 100%;
-    margin-left: 30px;
-    padding-left: 30px;
+    margin-left: 10px;
+    padding-left: 5px;
     border: 1px solid #dbdbdb;
     border-radius: 3px;
+    overflow: hidden;
+    font-size:13px;
 }
-#audioDateDiv input{
-    height: 100%;
-}
-#searchAudioBtn{
-    float: right;
-    height: 100%;
+#audioDateDiv span{
+    font-size:13px;
 }
 
+#audioDateDiv input{
+    height: 100%;
+    width: 130px;
+}
+#audioHtml .audioCheckBtn{
+    float: right;
+    height: 100%;
+    width:50px;
+    text-align: center;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+}
 
 #recordAudio{
     width:100%;
 }
-.table th,.table td{
+#audioHtml .table th, #audioHtml .table td{
     text-align: center;
+    border: 1px solid #dbdbdb;
+    font-size:13px;
+    /*padding: 0.25em 0.5em;*/
 }
-.table tbody tr td:last-child{
+#audioHtml .table tbody tr:hover{
+    background-color: #f1f1f1;
+
+}
+#audioHtml .table tbody tr td:last-child{
     font-weight: bold;
     cursor: pointer;
     vertical-align: middle;
 }
-.table thead tr{
+#audioHtml .table thead tr{
     background-color: #F1F1F1;
     display: block;
 }
 #audioTable tbody{
-    height:150px;
+    height:170px;
     overflow-y: scroll;
     display: block;
     font-size:13px;
 }
-.audioTd1{
+#audioHtml .audioTd1{
     width:45px;
 }
-.audioTd2{
+#audioHtml .audioTd2{
     width:125px;
 }
-.audioTd3{
+#audioHtml .audioTd3{
     width:155px;
 }
-.audioTd4{
+#audioHtml .audioTd4{
     width:155px;
 }
-.audioTd5{
+#audioHtml .audioTd5{
     width:50px;
 }

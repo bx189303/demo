@@ -35,8 +35,9 @@ public class RecordController {
         Result result = null;
         try {
             String userId=json.getString("userId");
-            String date=json.getString("date");
-            List<GroupRecord> groupRecords=groupRecordService.getGroupAudio(userId,date);
+            String start=json.getString("startDate");
+            String end=json.getString("endDate");
+            List<GroupRecord> groupRecords=groupRecordService.getGroupAudio(userId,start,end);
             result = Result.ok(groupRecords);
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,8 +51,9 @@ public class RecordController {
         Result result = null;
         try {
             String userId=json.getString("userId");
-            String date=json.getString("date");
-            List<GwCall> audioList= gwCallService.getSingleAudio(userId,date);
+            String start=json.getString("startDate");
+            String end=json.getString("endDate");
+            List<GwCall> audioList= gwCallService.getSingleAudio(userId,start,end);
             result = Result.ok(audioList);
         } catch (Exception e) {
             e.printStackTrace();

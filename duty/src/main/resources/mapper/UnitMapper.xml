@@ -50,17 +50,17 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
     select
     <include refid="SIMPLE_LIST" />
-    from hdyhtx.t_unit
+    from hdyhtx.T_UNIT
     where S_ID = #{sId,jdbcType=VARCHAR}
   </select>
   <select id="selectByParentId" resultMap="ResultMapWithBLOBs">
     select
     <include refid="SIMPLE_LIST" />
-    from hdyhtx.t_unit
+    from hdyhtx.T_UNIT
     where S_PARENT = #{sId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from hdyhtx.t_unit
+    delete from hdyhtx.T_UNIT
     where S_ID = #{sId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="haidian.duty.pojo.Unit">

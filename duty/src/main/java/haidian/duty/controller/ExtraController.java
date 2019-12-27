@@ -32,15 +32,6 @@ public class ExtraController {
 
     static ExecutorService executorService = Executors.newFixedThreadPool(3);
 
-    @Value("${nginxPort}")
-    String nginxPort;
-
-    @Value("${serverHost}")
-    String serverHost;
-
-    @Value("${serverPort}")
-    String serverPort;
-
     @Resource
     PersonMapper personMapper;
 
@@ -58,7 +49,6 @@ public class ExtraController {
         Result result = null;
         try {
             String userId=json.getString("userId");
-//            String date=json.getString("date");
             Duty duty= dutyService.getDtuyByUserId(userId);
             result = Result.ok(duty);
         } catch (Exception e) {
@@ -73,7 +63,6 @@ public class ExtraController {
         Result result = null;
         try {
             String unitId=json.getString("unitId");
-//            String date=json.getString("date");
             List<Duty> dutys= dutyService.getDtuyByUnitId(unitId);
             result = Result.ok(dutys);
         } catch (Exception e) {

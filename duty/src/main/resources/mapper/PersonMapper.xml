@@ -52,7 +52,7 @@
     select 
     S_UNIT
     from hdyhtx.T_PERSON
-    where S_ID = #{sId}
+    where S_POLICENUM = #{userId}
   </select>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
     select

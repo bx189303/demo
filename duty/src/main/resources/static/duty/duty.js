@@ -1,11 +1,8 @@
-var serverUrl="http://192.168.8.102:23268";
-var userLevel='';
+var dutyServerUrl="http://192.168.8.102:23268";//localhost
+// var dutyServerUrl="http://10.2.68.70:23268";//centos
+var dutyUserZtreeLevel='';
 
-$(function(){
-
-});
-
-var setting = {
+var dutyZtreeSetting = {
     view: {
         // dblClickExpand: true,
         dblClickExpand: dblClickExpand,
@@ -29,7 +26,7 @@ var setting = {
         beforeClick: function (treeId, treeNode) {
             var zTree = $.fn.zTree.getZTreeObj("zTree");
             // console.log(treeNode.sId);
-            if(userLevel>treeNode.level){
+            if(dutyUserZtreeLevel>treeNode.level){
                 console.log("不能查看父节点");
                 return true;
             }
@@ -56,19 +53,19 @@ function loadUnit(userId){
     $.ajax({
         type : "POST",
         contentType: "application/json;charset=UTF-8",
-        url : serverUrl+"/getUnitByUserId/"+userId,
+        url : dutyServerUrl+"/getUnitByUserId/"+userId,
         //请求成功
         success : function(result) {
             var zNodes=result.data;
             var userUnitId=result.data[0].sId;
             var t = $("#zTree");
-            t = $.fn.zTree.init(t, setting, zNodes);
+            t = $.fn.zTree.init(t, dutyZtreeSetting, zNodes);
             var zTree = $.fn.zTree.getZTreeObj("zTree");
             var userTreeNode=zTree.getNodeByParam("sId",userUnitId);
-            userLevel=userTreeNode.level;
+            dutyUserZtreeLevel=userTreeNode.level;
             zTree.selectNode(userTreeNode);
             zTree.expandNode(userTreeNode);
-            setting.callback.beforeClick(userUnitId,userTreeNode);
+            dutyZtreeSetting.callback.beforeClick(userUnitId,userTreeNode);
         },
         //请求失败，包含具体的错误信息
         error : function(e){
@@ -86,7 +83,7 @@ function loadDutyType(unitId){
     $.ajax({
         type : "POST",
         contentType: "application/json;charset=UTF-8",
-        url : serverUrl+"/getDutyByUnitId",
+        url : dutyServerUrl+"/getDutyByUnitId",
         data: JSON.stringify(data),
         //请求成功
         success : function(result) {
@@ -104,18 +101,16 @@ function loadDutyType(unitId){
 //根据选中人加载人员信息
 function loadDutyDetail(userId){
     var data={
-        "userId":userId,
-        "date":"2019-12-17"
+        "userId":userId
     }
     $.ajax({
         type : "POST",
         contentType: "application/json;charset=UTF-8",
-        url : serverUrl+"/getDutyByUserId",
+        url : dutyServerUrl+"/getDutyByUserId",
         data: JSON.stringify(data),
         //请求成功
         success : function(result) {
-            // console.log(result.data)
-
+            // console.log('loadDutyDetail : '+result.data);
             showDutyDetail(result);
         },
         //请求失败，包含具体的错误信息
@@ -134,12 +129,12 @@ function showDutyType(res){
     if(list.length!=0){
         $("#mainDutyDiv").removeClass("dutyFullHeight");
         $(list).each(function(i,n){
-            html+='            <div class="dutyList" onclick=loadDutyDetail("'+n.policeid+'")>\n' +
+            html+='            <div class="dutyList" onclick=loadDutyDetail("'+n.policenum+'")>\n' +
                 '                <div class="dutyType">'+n.duty+'</div><div class="dutyName">'+n.policename+'</div>\n' +
                 '            </div>'
         })
         $("#mainDutyTypeDiv").html(html);
-        loadDutyDetail(list[0].policeid);
+        loadDutyDetail(list[0].policenum);
     }else {
         $("#mainDutyTypeDiv").html('<div class="dutyNotips">暂无战位信息</div>');
         $("#mainDutyDiv").addClass("dutyFullHeight");

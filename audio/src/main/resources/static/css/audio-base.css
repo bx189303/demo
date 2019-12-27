@@ -47,10 +47,10 @@
 /*可选*/
 /*单选框和复选框的配置，一般是分开的*/
 #audioHtml input[type="radio"],#audioHtml input[type="checkbox"]{
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    display: none;
+    /*appearance: none;*/
+    /*-webkit-appearance: none;*/
+    /*outline: none;*/
+    /*display: none;*/
 }
 
 #audioHtml label{

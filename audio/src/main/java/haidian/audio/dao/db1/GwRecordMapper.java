@@ -1,4 +1,4 @@
-package haidian.audio.dao;
+package haidian.audio.dao.db1;
 
 import haidian.audio.pojo.GwRecord;
 import org.apache.ibatis.annotations.Mapper;

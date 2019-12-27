@@ -10,6 +10,13 @@ import java.util.*;
 
 public class JavaTest {
     public static void main(String[] args) {
+        Map<String,String> m=new HashMap<>();
+        m.put("a","");
+        m.put("b","");
+        System.out.println(DateUtil.getDateToGaplessString(new Date()));
+    }
+
+    private static void listyouxuquchong() {
         List<String> l=new ArrayList<>();
         l.add("1");
         l.add("2");

@@ -10,20 +10,36 @@ spring:
     include: config_dev
 #    include: config_prod
   datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    driver-class-name: "${mysqlDriver}"
-    url: "${mysqlUrl}"
-    username: "${mysqlUsername}"
-    password: "${mysqlPassword}"
-    hikari:
-      minimum-idle: 5
-      idle-timeout: 600000
-      maximum-pool-size: 10
-      auto-commit: true
-      pool-name: MyHikariCP
-      max-lifetime: 180000
-      connection-timeout: 30000
-      connection-test-query: SELECT 1
+    db1:
+      type: com.zaxxer.hikari.HikariDataSource
+      driverClassName: "${db1Driver}"
+      jdbcUrl: "${db1Url}"
+      username: "${db1Username}"
+      password: "${db1Password}"
+      hikari:
+        minimum-idle: 5
+        idle-timeout: 600000
+        maximum-pool-size: 10
+        auto-commit: true
+        pool-name: MyHikariCP
+        max-lifetime: 180000
+        connection-timeout: 30000
+        connection-test-query: SELECT 1
+    db2:
+      type: com.zaxxer.hikari.HikariDataSource
+      driverClassName: "${db2Driver}"
+      jdbcUrl: "${db2Url}"
+      username: "${db2Username}"
+      password: "${db2Password}"
+      hikari:
+        minimum-idle: 5
+        idle-timeout: 600000
+        maximum-pool-size: 10
+        auto-commit: true
+        pool-name: MyHikariCP
+        max-lifetime: 180000
+        connection-timeout: 30000
+        connection-test-query: SELECT 1
 
   #返回值空字段不显示
   jackson:

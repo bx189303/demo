@@ -4,20 +4,28 @@
     <meta charset="UTF-8">
     <title>wav测试播放</title>
 </head>
+<script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
 <body>
     <h2>wav测试播放</h2>
     <audio id="audio" autoplay="autoplay" controls="controls">
         <source src="../wav/20191212114251.wav" />
     </audio>
-
+    <a href="http://localhost:23333/logs.zip" download="测试下载.zip">zip下载</a>
 </body>
 <script>
     function aplay(){
         // document.getElementById("audio").play();
     }
     setTimeout(function(){
-        document.getElementById("audio").play();
+        // document.getElementById("audio").play();
+        ziptest();
     },200);
+
+    function ziptest(){
+        var a='<a src="http://localhost:23333/logs.zip" download="测试下载.zip"></a>';
+        $(a)[0].click();
+    }
+
 
 </script>
 </html>

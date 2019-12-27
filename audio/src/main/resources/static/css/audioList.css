@@ -1,6 +1,6 @@
 #audioHtml{
     border: 1px solid #dbdbdb;
-    width:535px;
+    width:560px;
     height:245px;
     /*margin:50px 0 0 50px;*/
     position: fixed;
@@ -63,17 +63,19 @@
     cursor: pointer;
     /*font-weight: bold;*/
     padding: 0 3px;
+    font-size: 14px;
 }
 #audioHtml .audioTabChecked{
-    background-color: #13e059;
+    background-color: #009688;
     font-weight: bold;
+    color: #fff;
 }
 
 #audioDateDiv{
     float: left;
     height: 100%;
     margin-left: 10px;
-    padding-left: 5px;
+    padding: 0 5px;
     border: 1px solid #dbdbdb;
     border-radius: 3px;
     overflow: hidden;
@@ -85,7 +87,8 @@
 
 #audioDateDiv input{
     height: 100%;
-    width: 130px;
+    width: 125px;
+    color: #4a4a4a;
 }
 #audioHtml .audioCheckBtn{
     float: right;
@@ -97,6 +100,9 @@
     cursor: pointer;
     font-size: 13px;
     font-weight: bold;
+}
+#searchAudioBtn{
+    float: left!important;
 }
 
 #recordAudio{
@@ -110,7 +116,6 @@
 }
 #audioHtml .table tbody tr:hover{
     background-color: #f1f1f1;
-
 }
 #audioHtml .table tbody tr td:last-child{
     font-weight: bold;
@@ -127,18 +132,22 @@
     display: block;
     font-size:13px;
 }
+
+#audioHtml .audioCheckBoxTd input{
+    vertical-align: middle;
+}
+#audioHtml .audioCheckBoxTd{
+    width:25px;
+}
 #audioHtml .audioTd1{
     width:45px;
 }
 #audioHtml .audioTd2{
     width:125px;
 }
-#audioHtml .audioTd3{
+#audioHtml .audioTdDate{
     width:155px;
 }
-#audioHtml .audioTd4{
-    width:155px;
-}
-#audioHtml .audioTd5{
+#audioHtml .audioTdBtn{
     width:50px;
 }

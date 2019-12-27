@@ -77,3 +77,7 @@ function getNextFormatDate() {
     var currentdate = year + seperator1 + month + seperator1 + strDate;
     return currentdate;
 }
+//js没有 replaceAll 方法，需要手写
+String.prototype.replaceAll = function(s1, s2) {
+    return this.replace(new RegExp(s1, "gm"), s2);
+}

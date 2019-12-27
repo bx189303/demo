@@ -1,7 +1,7 @@
 package haidian.audio.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import haidian.audio.dao.GwCallMapper;
+import haidian.audio.dao.db1.GwCallMapper;
 import haidian.audio.pojo.GroupRecord;
 import haidian.audio.pojo.GwCall;
 import haidian.audio.service.GroupRecordService;

@@ -213,6 +213,10 @@ public class DateUtil {
         return new DateTime(date).toString(DATETIME_DEFAULT_FORMAT);
     }
 
+    public static String getDateToGaplessString(Date date) {
+        return new DateTime(date).toString("YYYYMMddHHmmss");
+    }
+
     /**
      * 日期格式化yyyy-MM-dd
      *

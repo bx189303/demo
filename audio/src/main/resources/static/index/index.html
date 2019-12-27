@@ -28,22 +28,24 @@
             <div id="groupLi" class="audioTab" onclick=showGroupHis(this)>会议</div>
         </div>
         <div id="audioDateDiv">
-            <span>开始时间:</span>
+            <span>时间范围:</span>
             <input id="audioStartDateInput" class="btn">
-            <span>结束时间:</span>
+            <span>至</span>
             <input id="audioEndDateInput" class="btn">
         </div>
+        <div id="downloadAudioBtn" class="audioCheckBtn" onclick=downloadAudios()>下载</div>
         <div id="searchAudioBtn" class="audioCheckBtn" onclick=queryAudio()>查询</div>
     </div>
     <div id="audioTable">
         <table class="table is-hoverable is-bordered is-narrow">
             <thead>
                 <tr>
+                    <th class="audioCheckBoxTd"><input type="checkbox" class="audioTdCheckBox" onchange=audioTdSelectAll(this)></th>
                     <th class="audioTd1">序号</th>
                     <th class="audioTd2">通话人</th>
-                    <th class="audioTd3">开始时间</th>
-                    <th class="audioTd4">结束时间</th>
-                    <th class="audioTd5">操作</th>
+                    <th class="audioTdDate audioTdStartDate">开始时间</th>
+                    <th class="audioTdDate audioTdEndDate">结束时间</th>
+                    <th class="audioTdBtn">操作</th>
                 </tr>
             </thead>
             <tbody class="scrollDiv">

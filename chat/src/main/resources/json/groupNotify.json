@@ -1,0 +1,22 @@
+[
+
+{
+  "type": "groupNotify",
+  "sendTime": "消息发送时间",
+  "data": {
+    "type": "addUser",
+    "groupId": "0001g",
+    "userIds": "1,2,3,4"
+  }
+}
+,
+{
+  "type": "groupNotify",
+  "sendTime": "消息发送时间",
+  "data": {
+    "type": "updateGroup",
+    "groupId": "0001g"
+  }
+}
+
+]

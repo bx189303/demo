@@ -62,7 +62,7 @@
     from hdyhtx.T_PERSON p,hdyhtx.T_UNIT u where p.S_UNIT=u.S_ID
     order by p.s_unit desc
   </select>
-    <select id="searchByNameOrUnitname" resultType="java.lang.String">
+    <select id="searchByNameOrUnitnameOrPolicenum" resultType="java.lang.String">
       select
       S_ID
       FROM hdyhtx.T_PERSON
@@ -72,6 +72,11 @@
       S_ID
       FROM hdyhtx.T_PERSON
       WHERE S_UNITNAME like #{name}
+      union
+      select
+      S_ID
+      FROM hdyhtx.T_PERSON
+      WHERE S_POLICENUM like #{name}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from T_PERSON

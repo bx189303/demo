@@ -1,4 +1,4 @@
-package haidian.chat.controller;
+package haidian.chat.config;
 
 import haidian.chat.dao.PersonMapper;
 import haidian.chat.pojo.Person;
@@ -47,7 +47,7 @@ public class ApplicationPre implements CommandLineRunner {
             }
         }
         log.info("移除所有在线状态");
-        log.info("=============项目启动完成=========");
+        log.info("============= chat项目启动完成 =========");
 
     }
 }

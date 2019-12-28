@@ -10,7 +10,8 @@ import java.util.*;
 
 public class JavaTest {
     public static void main(String[] args) {
-        jiaojitest();
+        String s="qwe.zxc";
+        System.out.println(JSON.toJSONString(s.split("\\.")));
     }
 
     private static void jiaojitest() {

@@ -31,25 +31,21 @@ spring:
     # 连接超时时间（毫秒）
     timeout: 10000
   datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    druid:
-      initial-size: 1
-      max-active: 100
-      min-idle: 1
-      max-wait: 30000
-      pool-prepared-statements: true #是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql5.5以下的版本中没有PSCache功能，建议关闭掉。5.5及以上版本有PSCache，建议开启。
-      max-pool-prepared-statement-per-connection-size: 20
-      validation-query: SELECT 1 FROM DUAL
-      validation-query-timeout: 30000
-      test-on-borrow: false #申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
-      test-on-return: false #归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
-      test-while-idle: true #建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。
-      time-between-eviction-runs-millis: 30000 #有两个含义：1) Destroy线程会检测连接的间隔时间  2) testWhileIdle的判断依据，详细看testWhileIdle属性的说明
-      min-evictable-idle-time-millis: 60000 #Destory线程中如果检测到当前连接的最后活跃时间和当前时间的差值大于minEvictableIdleTimeMillis，则关闭当前连接。
-      url: "${mysqlUrl}"
-      username: "${mysqlUsername}"
-      password: "${mysqlPassword}"
-      driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "${mysqlUrl}"
+    username: "${mysqlUsername}"
+    password: "${mysqlPassword}"
+    hikari:
+      minimum-idle: 5
+      idle-timeout: 600000
+      maximum-pool-size: 10
+      auto-commit: true
+      pool-name: MyHikariCP
+      max-lifetime: 180000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
   #返回值空字段不显示
   jackson:
     default-property-inclusion: non_null
@@ -60,6 +56,6 @@ spring:
 
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
-  type-aliases-package: haidian.chat.pojo
+  type-aliases-package: haidian.base.pojo
   configuration:
     lazy-loading-enabled: true

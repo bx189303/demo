@@ -39,6 +39,6 @@ function getFileType(fileName){
 
 //处理undenfind
 function handleNull(str){
-    s=typeof(s)=="undefined"?"":s;
-    return s;
+    str=typeof(str)=="undefined"?"":str;
+    return str;
 }

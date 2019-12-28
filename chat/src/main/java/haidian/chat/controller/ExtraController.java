@@ -181,7 +181,7 @@ public class ExtraController {
         try {
             List<Person> users=new ArrayList<>();
             String name="%"+input+"%";
-            List<String> userIds = personMapper.searchByNameOrUnitname(name);
+            List<String> userIds = personMapper.searchByNameOrUnitnameOrPolicenum(name);
             for (String userId : userIds) {
                 Person user= (Person) r.get(userId);
                 users.add(user);
@@ -290,11 +290,14 @@ public class ExtraController {
             //判断是否已经有群,如果有直接返回
             List<String> groups=new ArrayList<>();
             for (int i = 0; i <userIdArray.length ; i++) {
-                if(i==1){
+                if(i==0){
                     groups = groupMapper.getGroupIdByUserId(userIdArray[i]);
                 }else{
                     List<String> groupsByUserId= groupMapper.getGroupIdByUserId(userIdArray[i]);
                     groups.retainAll(groupsByUserId);
+                    if(groups.size()==0){
+                        break;
+                    }
                 }
             }
             for (String group : groups) {

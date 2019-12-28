@@ -7,7 +7,6 @@ import haidian.chat.pojo.Group;
 import haidian.chat.pojo.Person;
 import haidian.chat.redis.RedisUtil;
 import haidian.chat.util.DateUtil;
-import haidian.chat.util.Response;
 import haidian.chat.util.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @RestController

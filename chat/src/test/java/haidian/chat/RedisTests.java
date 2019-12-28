@@ -9,10 +9,7 @@ import haidian.chat.util.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.redis.core.Cursor;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ScanOptions;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -28,6 +25,11 @@ class RedisTests {
 
     @Resource
     GroupMapper groupMapper;
+
+    @Test
+    public void hashtest(){
+
+    }
 
     @Test
     public void listxiaolv(){

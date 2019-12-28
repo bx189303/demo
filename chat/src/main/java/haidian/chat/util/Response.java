@@ -1,10 +1,8 @@
 package haidian.chat.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * mvc结果集封装工具类

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <properties>
-        <property name="LOG_HOME">/usr/loacl/project/chat/logs</property>
+        <property name="LOG_HOME">/usr/local/project/chat/logs</property>
         <property name="FILE_NAME">service_chat_log</property>
         <property name="log.sql.level">info</property>
     </properties>

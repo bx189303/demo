@@ -413,6 +413,7 @@ li:hover{
     text-align: center;
     float: left;
     margin: 0 1%;
+    border: 1px solid #4872fa;
     cursor: pointer;
 }
 .fileShowDiv img{
@@ -425,11 +426,13 @@ li:hover{
     transform: translateY(-50%);
 }
 .fileShowSpan{
+    max-width: 78%;
     display: block;
     position: relative;
     top: 50%;
     transform: translateY(-50%);
     text-align: left;
+    float: left;
 }
 .fileNameSpan{
     /*width: 100%;*/

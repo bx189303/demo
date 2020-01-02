@@ -28,4 +28,10 @@ public class DutyService {
         Duty duty = dutyMapper.getDutyByUserId(userId,time);
         return duty;
     }
+
+    public Duty getDtuyByUserNameOrNum(String nameOrNum) {
+        String time=DateUtil.getDateToString(new Date());
+        Duty duty = dutyMapper.getDutyByUserNameOrNum(nameOrNum,time);
+        return duty;
+    }
 }

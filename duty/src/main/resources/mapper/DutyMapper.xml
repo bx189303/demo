@@ -45,6 +45,13 @@
         where isValid=1 and policeNum=#{userId} and
         (#{time} between startTime and endTime or to_days(startTime)=to_days(#{time}) or to_days(endTime)=to_days(#{time}))
     </select>
+    <select id="getDutyByUserNameOrNum" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_duty
+        where isValid=1 and (policeNum=#{nameOrNum} or policeName=#{nameOrNum}) and
+        (#{time} between startTime and endTime or to_days(startTime)=to_days(#{time}) or to_days(endTime)=to_days(#{time}))
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from t_duty
     where id = #{id,jdbcType=INTEGER}

@@ -114,32 +114,72 @@
     text-align: center;
 }
 .dutyList{
-    width: 26%;
+    width: 25.5%;
     float: left;
     text-align: center;
-    margin: 4% 0% 0% 5%;
+    margin: 2% 0% 0% 5%;
+    border-radius: 5px;
+    border: 1px solid #000;
     cursor: pointer;
 }
+.checkedDutyList{
+    border: 1px solid #fff;
+}
 .dutyType{
+    font-size: 14px;
     background-color: #1C4579;
     border-radius: 5px 5px 0 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .dutyName{
     font-size: 13px;
     background-color: #002551;
     border-radius: 0 0 5px 5px;
     margin-top: 1%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #mainDutyDiv{
     width:96%;
-    height: 53%;
+    /*height: 53%;*/
+    height: 44%;
     margin: 2%;
 }
 #mainDutyTypeDiv{
     width:100%;
-    height: 88%;
+    /*height: 88%;*/
+    height: 84%;
     overflow: scroll;
+}
+#dutyInputDiv{
+    width: 96%;
+    margin: 2%;
+    height: 6%;
+    font-size: 14px;
+}
+#dutyInputDiv input{
+    background: url(../img/inputbackground.jpg) no-repeat;
+    background-size: 100% 100%;
+    color:#fff;
+    border: 1px solid #9b9696;
+    padding: 0.5% 1%;
+}
+#dutyInputDiv .dutyInputTitleDiv{
+    float:left;
+    margin: 0.2% 1% 0 5%;
+}
+#dutyInfoSearchBtn{
+    float: right;
+    margin-right: 8%;
+    padding: 0.5% 2%;
+    background-color: #002551;;
+    border-radius: 5px;
+    border: 1px solid #9b9696;
+    cursor: pointer;
 }
 
 #dutyDetailDiv{
@@ -175,6 +215,9 @@
     overflow: hidden;/*对超出容器的部分强制截取，高度不确定则换行*/
     text-overflow: ellipsis;/*显示省略符号来代表被修剪的文本。*/
     white-space: nowrap;/*禁止换行*/
+}
+.dutyInfoValue u {
+    cursor: pointer;
 }
 .dutyNotips{
     text-align: center;

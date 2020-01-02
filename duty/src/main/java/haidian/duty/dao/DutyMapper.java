@@ -7,6 +7,10 @@ import java.util.List;
 
 @Mapper
 public interface DutyMapper {
+
+    //根据用户名或警号查职位
+    Duty getDutyByUserNameOrNum(String nameOrNum, String time);
+
     //根据用户id查职位
     Duty getDutyByUserId(String userId, String time);
 
@@ -24,6 +28,7 @@ public interface DutyMapper {
     int updateByPrimaryKeySelective(Duty record);
 
     int updateByPrimaryKey(Duty record);
+
 
 
 }

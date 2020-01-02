@@ -23,7 +23,9 @@ var dutyZtreeSetting = {
         }
     },
     callback: {
-        beforeClick: function (treeId, treeNode) {
+        beforeClick: function (treeId, treeNode,clickFlag,policeNum) {
+            // console.log("树点击事件："+treeNode.sId)
+            // console.log("树点击事件： "+policeNum+","+treeId+","+treeNode+","+clickFlag)
             var zTree = $.fn.zTree.getZTreeObj("zTree");
             // console.log(treeNode.sId);
             if(dutyUserZtreeLevel>treeNode.level){
@@ -31,7 +33,7 @@ var dutyZtreeSetting = {
                 return true;
             }
             $("#dutyUnitName").html(treeNode.sName);
-            loadDutyType(treeNode.sId);
+            loadDutyType(treeNode.sId,policeNum);
             return true;
             // if (treeNode.isParent) {
             //     zTree.expandNode(treeNode);
@@ -65,6 +67,7 @@ function loadUnit(userId){
             dutyUserZtreeLevel=userTreeNode.level;
             zTree.selectNode(userTreeNode);
             zTree.expandNode(userTreeNode);
+            //树的点击事件
             dutyZtreeSetting.callback.beforeClick(userUnitId,userTreeNode);
         },
         //请求失败，包含具体的错误信息
@@ -76,7 +79,8 @@ function loadUnit(userId){
 }
 
 //根据选中节点加载职位类型
-function loadDutyType(unitId){
+function loadDutyType(unitId,policeNum){
+    // console.log("加载战位类型 ："+policeNum)
     var data={
         "unitId":unitId
     }
@@ -88,7 +92,18 @@ function loadDutyType(unitId){
         //请求成功
         success : function(result) {
             // console.log(result.data)
+            // if(result.data.length==0){
+            //     return;
+            // }
             showDutyType(result);
+            if(result.data.length!=0){
+                if(typeof policeNum=="undefined"){
+                    policeNum=(result.data[0].policenum);
+                }
+                $('.dutyList[name="'+policeNum+'"]').click();
+                $('.dutyList[name="'+policeNum+'"]')[0].scrollIntoView();
+            }
+
         },
         //请求失败，包含具体的错误信息
         error : function(e){
@@ -100,6 +115,10 @@ function loadDutyType(unitId){
 
 //根据选中人加载人员信息
 function loadDutyDetail(userId){
+    //选中效果
+    $('.dutyList').removeClass("checkedDutyList");
+    $('.dutyList[name="'+userId+'"]').addClass("checkedDutyList");
+    //请求
     var data={
         "userId":userId
     }
@@ -120,6 +139,38 @@ function loadDutyDetail(userId){
         }
     })
 }
+//根据搜索框查询人员信息
+function loadDutyDetailByName(name){
+    var data={
+        "name":name
+    }
+    $.ajax({
+        type : "POST",
+        contentType: "application/json;charset=UTF-8",
+        url : dutyServerUrl+"/getDutyByUserNameOrNum",
+        data: JSON.stringify(data),
+        //请求成功
+        success : function(result) {
+            // console.log('searchDutyDetail : '+result.data);
+            if(typeof (result.data)=="undefined"){
+                return;
+            }
+            var userUnitId=result.data.unitid;
+            var userPoliceNum=result.data.policenum;
+            var zTree = $.fn.zTree.getZTreeObj("zTree");
+            var userTreeNode=zTree.getNodeByParam("sId",userUnitId);
+            zTree.selectNode(userTreeNode);
+            zTree.expandNode(userTreeNode,true);
+            //树的点击事件
+            dutyZtreeSetting.callback.beforeClick(userUnitId,userTreeNode,null,userPoliceNum);
+        },
+        //请求失败，包含具体的错误信息
+        error : function(e){
+            console.log(e.status);
+            console.log(e.responseText);
+        }
+    })
+}
 
 //***************************************************************************************************************************
 //***************************************************************************************************************************
@@ -129,12 +180,11 @@ function showDutyType(res){
     if(list.length!=0){
         $("#mainDutyDiv").removeClass("dutyFullHeight");
         $(list).each(function(i,n){
-            html+='            <div class="dutyList" onclick=loadDutyDetail("'+n.policenum+'")>\n' +
-                '                <div class="dutyType">'+n.duty+'</div><div class="dutyName">'+n.policename+'</div>\n' +
+            html+='            <div class="dutyList" name="'+n.policenum+'" onclick=loadDutyDetail("'+n.policenum+'")>\n' +
+                '                <div class="dutyType" title="'+n.duty+'">'+n.duty+'</div><div class="dutyName" title="'+n.policename+'">'+n.policename+'</div>\n' +
                 '            </div>'
         })
         $("#mainDutyTypeDiv").html(html);
-        loadDutyDetail(list[0].policenum);
     }else {
         $("#mainDutyTypeDiv").html('<div class="dutyNotips">暂无战位信息</div>');
         $("#mainDutyDiv").addClass("dutyFullHeight");
@@ -146,21 +196,91 @@ function showDutyDetail(res){
     // console.log(res);
     var n=res.data;
     var html='<div class="dutyInfo"><div class="dutyInfoName">职位</div><div class="dutyInfoValue">'+n.duty+'</div></div>\n' +
-        '            <div class="dutyInfo"><div class="dutyInfoName">单位</div><div class="dutyInfoValue" title="'+n.unitname+'">'+n.unitname+'</div></div>\n' +
-        '            <div class="dutyInfo"><div class="dutyInfoName">姓名</div><div class="dutyInfoValue" title="'+n.policename+'">'+n.policename+'</div></div>\n' +
-        '            <div class="dutyInfo"><div class="dutyInfoName">警号</div><div class="dutyInfoValue" title="'+n.policenum+'">'+n.policenum+'</div></div>\n' +
-        '            <div class="dutyInfo"><div class="dutyInfoName">电话</div><div class="dutyInfoValue" title="'+handleNull(n.tel)+'">'+handleNull(n.tel)+'</div></div>\n' +
+        '            <div class="dutyInfo"><div class="dutyInfoName">单位</div><div class="dutyInfoValue" title="'+handleNull(n.unitname)+'">'+handleNull(n.unitname)+'</div></div>\n' +
+        '            <div class="dutyInfo"><div class="dutyInfoName">姓名</div><div class="dutyInfoValue dutyInfoOfUserName" title="'+handleNull(n.policename)+'">'+handleNull(n.policename)+'</div></div>\n' +
+        '            <div class="dutyInfo"><div class="dutyInfoName">警号</div><div class="dutyInfoValue" title="'+handleNull(n.policenum)+'"><u onclick=dutyCallbackZh(this)>'+handleNull(n.policenum)+'</u></div></div>\n' +
+        '            <div class="dutyInfo"><div class="dutyInfoName">电话</div><div class="dutyInfoValue" title="'+handleNull(n.tel)+'"><u onclick=dutyCallbackSj(this)>'+handleNull(n.tel)+'</u></div></div>\n' +
         '            <div class="dutyInfo"><div class="dutyInfoName">移动警务</div><div class="dutyInfoValue" title="'+handleNull(n.ydjw)+'">'+handleNull(n.ydjw)+'</div></div>\n' +
-        '            <div class="dutyInfo"><div class="dutyInfoName">内线</div><div class="dutyInfoValue" title="'+handleNull(n.nx)+'">'+handleNull(n.nx)+'</div></div>\n' +
-        '            <div class="dutyInfo"><div class="dutyInfoName">外线</div><div class="dutyInfoValue" title="'+handleNull(n.wx)+'">'+handleNull(n.wx)+'</div></div>\n' +
-        '            <div class="dutyInfo"><div class="dutyInfoName">800M</div><div class="dutyInfoValue" title="'+handleNull(n.tel800m)+'">'+handleNull(n.tel800m)+'</div></div>\n' +
+        '            <div class="dutyInfo"><div class="dutyInfoName">内线</div><div class="dutyInfoValue" title="'+handleNull(n.nx)+'"><u onclick=dutyCallbackNx(this)>'+handleNull(n.nx)+'</u></div></div>\n' +
+        '            <div class="dutyInfo"><div class="dutyInfoName">外线</div><div class="dutyInfoValue" title="'+handleNull(n.wx)+'"><u onclick=dutyCallbackWx(this)>'+handleNull(n.wx)+'</u></div></div>\n' +
+        '            <div class="dutyInfo"><div class="dutyInfoName">800M</div><div class="dutyInfoValue" title="'+handleNull(n.tel800m)+'"><u onclick=dutyCallbackSt(this)>'+handleNull(n.tel800m)+'</u></div></div>\n' +
         '            <div class="dutyInfo"><div class="dutyInfoName">身份证</div><div class="dutyInfoValue" title="'+handleNull(n.idcard)+'">'+handleNull(n.idcard)+'</div></div>'+
         '            <div class="dutyInfo"><div class="dutyInfoName">开始时间</div><div class="dutyInfoValue" title="'+DateToYMDH(n.starttime)+'">'+DateToYMDH(n.starttime)+'</div></div>\n' +
         '            <div class="dutyInfo"><div class="dutyInfoName">结束时间</div><div class="dutyInfoValue" title="'+DateToYMDH(n.endtime)+'">'+DateToYMDH(n.endtime)+'</div></div>\n' ;
     $("#dutyDetailDiv").html(html);
 }
 
+function dutyCallbackZh(obj){
+    var username=$("#dutyDetailDiv .dutyInfoOfUserName").text();
+    var res=[{
+        "name":username,
+        "tel":$(obj).text(),
+        "type":"zh"
+    }]
+    // console.log(res)
+    if(typeof(getDutyCallbackFunc)!="undefined"&&getDutyCallbackFunc != null){
+        getDutyCallbackFunc(res);
+    }
+}
+function dutyCallbackSj(obj){
+    var username=$("#dutyDetailDiv .dutyInfoOfUserName").text();
+    var res=[{
+        "name":username,
+        "tel":$(obj).text(),
+        "type":"sj"
+    }]
+    // console.log(res)
+    if(typeof(getDutyCallbackFunc)!="undefined"&&getDutyCallbackFunc != null){
+        getDutyCallbackFunc(res);
+    }
+}
+function dutyCallbackNx(obj){
+    var username=$("#dutyDetailDiv .dutyInfoOfUserName").text();
+    var res=[{
+        "name":username,
+        "tel":$(obj).text(),
+        "type":"nx"
+    }]
+    // console.log(res)
+    if(typeof(getDutyCallbackFunc)!="undefined"&&getDutyCallbackFunc != null){
+        getDutyCallbackFunc(res);
+    }
+}
+function dutyCallbackWx(obj){
+    var username=$("#dutyDetailDiv .dutyInfoOfUserName").text();
+    var res=[{
+        "name":username,
+        "tel":$(obj).text(),
+        "type":"wx"
+    }]
+    // console.log(res)
+    if(typeof(getDutyCallbackFunc)!="undefined"&&getDutyCallbackFunc != null){
+        getDutyCallbackFunc(res);
+    }
+}
+function dutyCallbackSt(obj){
+    var username=$("#dutyDetailDiv .dutyInfoOfUserName").text();
+    var res=[{
+        "name":username,
+        "tel":$(obj).text(),
+        "type":"st"
+    }]
+    // console.log(res)
+    if(typeof(getDutyCallbackFunc)!="undefined"&&getDutyCallbackFunc != null){
+        getDutyCallbackFunc(res);
+    }
+}
+
 //***************************************************************************************************************************
+
+function searchDutyDetail(){
+    var name=$("#dutyNameInput").val();
+    if(typeof name=="undefined"){
+        return;
+    }
+    loadDutyDetailByName(name);
+}
+
 //***************************************************************************************************************************
 function DateToYMDH(str){
     var y=str.substr(0,4);

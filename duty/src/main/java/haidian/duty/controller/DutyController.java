@@ -26,7 +26,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @RestController
-public class ExtraController {
+public class DutyController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -43,6 +43,20 @@ public class ExtraController {
 
     @Autowired
     ThreadService threadService;
+
+    @RequestMapping("/getDutyByUserNameOrNum")
+    public Result getDutyByUserNameOrNum(@RequestBody JSONObject json) {
+        Result result = null;
+        try {
+            String nameOrNum=json.getString("name");
+            Duty duty= dutyService.getDtuyByUserNameOrNum(nameOrNum);
+            result = Result.ok(duty);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = Result.build(500, e.getMessage());
+        }
+        return result;
+    }
 
     @RequestMapping("/getDutyByUserId")
     public Result getDutyByUserId(@RequestBody JSONObject json) {

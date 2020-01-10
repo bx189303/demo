@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="haidian.audio.dao.db1.GroupRecordMapper" >
+  <resultMap id="BaseResultMap" type="haidian.audio.pojo.po.GroupRecord" >
+    <id column="log_id" property="logId" jdbcType="VARCHAR" />
+    <result column="queue_id" property="queueId" jdbcType="VARCHAR" />
+    <result column="record_file" property="recordFile" jdbcType="VARCHAR" />
+    <result column="record_start_time" property="recordStartTime" jdbcType="TIMESTAMP" />
+    <result column="record_end_time" property="recordEndTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    log_id, queue_id, record_file, record_start_time, record_end_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_log_group_voice_record
+    where log_id = #{logId,jdbcType=VARCHAR}
+  </select>
+  <select id="getGroupPerson" resultType="String">
+    select distinct info_extern from t_log_group_info
+    where info='加入会议' and queue_id=#{groupId}
+  </select>
+
+  <select id="getGroupAudio" resultMap="BaseResultMap">
+    select
+    r.queue_id queue_id, record_file, record_start_time, record_end_time
+    from t_log_group_voice_record r,t_log_group_info i
+    where r.queue_id=i.queue_id and i.info='加入会议' and i.info_extern = #{userId}
+    <if test="start != null" >
+          and record_start_time between #{start} and #{end}
+    </if>
+    order by record_start_time
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_log_group_voice_record
+    where log_id = #{logId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="haidian.audio.pojo.po.GroupRecord" >
+    insert into t_log_group_voice_record (log_id, queue_id, record_file, 
+      record_start_time, record_end_time)
+    values (#{logId,jdbcType=VARCHAR}, #{queueId,jdbcType=VARCHAR}, #{recordFile,jdbcType=VARCHAR}, 
+      #{recordStartTime,jdbcType=TIMESTAMP}, #{recordEndTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="haidian.audio.pojo.po.GroupRecord" >
+    insert into t_log_group_voice_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="logId != null" >
+        log_id,
+      </if>
+      <if test="queueId != null" >
+        queue_id,
+      </if>
+      <if test="recordFile != null" >
+        record_file,
+      </if>
+      <if test="recordStartTime != null" >
+        record_start_time,
+      </if>
+      <if test="recordEndTime != null" >
+        record_end_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="logId != null" >
+        #{logId,jdbcType=VARCHAR},
+      </if>
+      <if test="queueId != null" >
+        #{queueId,jdbcType=VARCHAR},
+      </if>
+      <if test="recordFile != null" >
+        #{recordFile,jdbcType=VARCHAR},
+      </if>
+      <if test="recordStartTime != null" >
+        #{recordStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recordEndTime != null" >
+        #{recordEndTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="haidian.audio.pojo.po.GroupRecord" >
+    update t_log_group_voice_record
+    <set >
+      <if test="queueId != null" >
+        queue_id = #{queueId,jdbcType=VARCHAR},
+      </if>
+      <if test="recordFile != null" >
+        record_file = #{recordFile,jdbcType=VARCHAR},
+      </if>
+      <if test="recordStartTime != null" >
+        record_start_time = #{recordStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recordEndTime != null" >
+        record_end_time = #{recordEndTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where log_id = #{logId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="haidian.audio.pojo.po.GroupRecord" >
+    update t_log_group_voice_record
+    set queue_id = #{queueId,jdbcType=VARCHAR},
+      record_file = #{recordFile,jdbcType=VARCHAR},
+      record_start_time = #{recordStartTime,jdbcType=TIMESTAMP},
+      record_end_time = #{recordEndTime,jdbcType=TIMESTAMP}
+    where log_id = #{logId,jdbcType=VARCHAR}
+  </update>
+</mapper>

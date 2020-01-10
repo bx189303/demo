@@ -1,5 +1,6 @@
 package haidian.chat.config;
 
+import haidian.chat.controller.PersonController;
 import haidian.chat.dao.PersonMapper;
 import haidian.chat.pojo.Person;
 import haidian.chat.redis.RedisUtil;
@@ -24,19 +25,14 @@ public class ApplicationPre implements CommandLineRunner {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Resource
-    PersonMapper personMapper;
+    @Autowired
+    PersonController personController;
 
     @Override
     public void run(String... args) throws Exception {
         redisUtil.keys("null");//提前加载一次redis
         //加载所有人员信息到redis
-        List<Person> persons = personMapper.getAll();
-        redisUtil.set("persons",persons);
-        for (Person person : persons) {
-            redisUtil.set(person.getsId(),person);
-        }
-        log.info("加载人员信息完毕");
+        personController.loadUserInfo();
         //移除所有在线状态
         Set<String> onKeys = redisUtil.keys("*on");
         if(onKeys.size()!=0){
@@ -47,7 +43,7 @@ public class ApplicationPre implements CommandLineRunner {
             }
         }
         log.info("移除所有在线状态");
-        log.info("============= chat项目启动完成 =========");
+        log.info("============= chat项目启动完成 =============");
 
     }
 }

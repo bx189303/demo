@@ -53,6 +53,17 @@
     background-size: 100% 100%;
 }
 
+#chatWindowName {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 90%;
+    display: inline-block;
+}
+#chatWindowCount{
+    overflow: hidden;
+    display: inline-block;
+}
 
 .windowTitle{
     display: block;
@@ -180,12 +191,28 @@ li:hover{
     width: 80%;
     float: left;
     margin-left: 3%;
+    overflow: hidden;
 }
 .liContentUser{
     height: 40%;
-    margin-top:2%;
+    width: 60%;
+    margin-top: 2%;
     font-size: 16px;
     font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+}
+.indexLiContentTime{
+    height: 35%;
+    width: 38%;
+    margin-top: 2%;
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
 }
 .liContentRecord{
     height: 40%;
@@ -205,6 +232,9 @@ li:hover{
     margin-top: 5%;
     font-size: 16px;
     font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /*聊天记录详情*/
@@ -229,6 +259,9 @@ li:hover{
 .talkUser{
     padding: 5px;
     font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .talkBubble{
     max-width: 80%;

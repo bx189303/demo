@@ -8,6 +8,9 @@ import java.util.List;
 @Mapper
 public interface PersonMapper {
 
+    //根据警号查人
+    Person getUserByPoliceNum(String policeNum);
+
     //根据单位名或姓名查人id
     List<String> searchByNameOrUnitnameOrPolicenum(String name);
 
@@ -27,4 +30,5 @@ public interface PersonMapper {
     int updateByPrimaryKeyWithBLOBs(Person record);
 
     int updateByPrimaryKey(Person record);
+
 }

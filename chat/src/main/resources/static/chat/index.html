@@ -402,7 +402,8 @@
                 //首页消息列表更新
                 // var name=$("#titleName").text();
                 var name=$("#chatWindowName").text();
-                indexMsgListUpdate(dst,name,type,content,"send");
+                var sentTime=result.data.receiveTime;
+                indexMsgListUpdate(dst,name,type,content,sentTime,"send");
                 //清空输入框
                 $("#talkInput").val("");
             },
@@ -490,7 +491,8 @@
                                 //首页消息列表更新
                                 // var name=$("#titleName").text();
                                 var name=$("#chatWindowName").text();
-                                indexMsgListUpdate(dst,name,type,"[文件]","send");
+                                var sentTime=result.data.receiveTime;
+                                indexMsgListUpdate(dst,name,type,"[文件]",sentTime,"send");
                             },
                             //请求失败，包含具体的错误信息
                             error : function(e){

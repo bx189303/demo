@@ -107,6 +107,7 @@ function showGroupList(n){
 //首页列表html
 function showIndexList(n){
     var html="";
+    var talkLastTime=n.lastTime;
     var indexListType=n.type;
     var notice=n.notice;
     var id="";
@@ -143,6 +144,7 @@ function showIndexList(n){
         '                            </div>\n' +
         '                            <div class="liContentRightDiv">\n' +
         '                                <div class="liContentUser liName">'+talkName+'</div>\n' +
+        '                                <div class="indexLiContentTime">'+talkLastTime+'</div>\n' +
         '                                <div class="liContentRecord">'+talkContent+'</div>\n' +
         '                            </div>\n' +
         '                        </div>\n' +
@@ -151,16 +153,19 @@ function showIndexList(n){
     return html;
 }
 //首页列表更新
-function indexMsgListUpdate(chatSrcId,chatSrcName,chatSrcType,chatContent,updateType){
+function indexMsgListUpdate(chatSrcId,chatSrcName,chatSrcType,chatContent,talkTime,updateType){
     //消息列表更新
     var indexNoExistence=true;//变量,默认首页不存在对话框
     //遍历后如果首页存在则更新对话框
     $("#msgListDiv li").each(function(i,n){
         var liId=$(this).attr("name");
         var liType=$(this).attr("type");
+        //找到首列表中本次对话的列
         if(liId==chatSrcId&&liType==chatSrcType){
             //列表显示最后一条消息
             $(this.getElementsByClassName("liContentRecord")[0]).text(chatContent);
+            //更新时间
+            $(this.getElementsByClassName("indexLiContentTime")[0]).text(talkTime);
             //如果不在聊天窗口，则notice显示并+1
             if(updateType=="receive"){
                 if(chatSrcId!=dst||chatSrcType!=type){
@@ -198,6 +203,7 @@ function indexMsgListUpdate(chatSrcId,chatSrcName,chatSrcType,chatContent,update
             '                            </div>\n' +
             '                            <div class="liContentRightDiv">\n' +
             '                                <div class="liContentUser liName">'+chatSrcName+'</div>\n' +
+            '                                <div class="indexLiContentTime">'+talkTime+'</div>\n'+
             '                                <div class="liContentRecord">'+chatContent+'</div>\n' +
             '                            </div>\n' +
             '                        </div>\n' +

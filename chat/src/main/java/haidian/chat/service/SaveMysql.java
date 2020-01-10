@@ -35,12 +35,6 @@ public class SaveMysql {
      * 监听redis RECEIVE
      */
     public void saveMsg(String msg){
-//        String type= JSON.parseObject(msg).getString("type");
-//        System.out.println("保存RECEIVE-"+type+" : "+msg);
-//        log.info("监听RECEIVE-"+type+" : "+msg);
-//        ExecutorService executorService = Executors.newFixedThreadPool(1);
-//        executorService.execute(new SaveMysqlThread(msg,messageMapper,notifyMapper,onOffMapper));
-
         String type= JSON.parseObject(msg).getString("type");
         if("msg".equalsIgnoreCase(type)){
             saveMsgInMysql(msg);
@@ -105,7 +99,7 @@ public class SaveMysql {
     }
 
     private void saveNotify(String msg) {
-        System.out.println("------------------------收到notify-------------------------");
+//        System.out.println("------------------------收到notify-------------------------");
         try {
             //获取参数
             JSONObject notify=JSON.parseObject(msg);

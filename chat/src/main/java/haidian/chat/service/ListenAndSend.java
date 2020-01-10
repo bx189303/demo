@@ -2,7 +2,7 @@ package haidian.chat.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import haidian.chat.controller.ExtraController;
+import haidian.chat.controller.FriendController;
 import haidian.chat.dao.GroupMapper;
 import haidian.chat.redis.RedisUtil;
 import haidian.chat.util.DateUtil;
@@ -47,11 +47,14 @@ public class ListenAndSend {
     private StringRedisTemplate template;
 
     @Autowired
-    ExtraController extraController;
+    FriendController friendController;
 
     @Resource
     GroupMapper groupMapper;
 
+    /**
+     *  监听RECEIVE的方法
+     */
     public void listenAndSend(String msg){
         String type=JSON.parseObject(msg).getString("type");
 //        System.out.println("监听RECEIVE-"+type+" : "+msg);
@@ -185,7 +188,7 @@ public class ListenAndSend {
                 key=srcId.compareTo(dstId)<0?srcId+"."+dstId:dstId+"."+srcId;
                 //如果没有记录则添加好友
                 if (r.lGet(key, 0, 1).size()==0){
-                    extraController.addFriend(key.replace(".",","));
+                    friendController.addFriend(key.replace(".",","));
                 }
             }else if("group".equalsIgnoreCase(type)){
                 dstId=data.getJSONObject("dst").getString("id");

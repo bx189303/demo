@@ -19,7 +19,7 @@
   </select>
   <select id="getByUserId" resultMap="BaseResultMap">
     select
-    g.id id, g.ownerId ownerId, g.name name
+    g.id id, g.ownerId ownerId, g.name name,g.isValid isValid
     from t_group g,t_group_user t
     where g.id=t.groupId and g.isValid=1 and t.isValid=1 and t.userId=#{userId}
   </select>

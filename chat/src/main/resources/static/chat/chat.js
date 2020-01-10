@@ -38,6 +38,7 @@ function openSocket() {
             if(msgType=="msg"){
                 var dataSrc=msg.data.src.sId;
                 var dataType=msg.data.type;
+                var talkTime=msg.receiveTime;
                 var dataGroup="";
                 if(dataType=="group"){
                     dataGroup=msg.data.group.id;
@@ -60,7 +61,7 @@ function openSocket() {
                         talkContent="[图片]";
                     }
                 }
-                indexMsgListUpdate(dataSrc,talkName,dataType,talkContent,"receive");
+                indexMsgListUpdate(dataSrc,talkName,dataType,talkContent,talkTime,"receive");
                 //聊天窗口显示消息
                 if((dst==dataSrc&&dataType=="single")||(dst==dataGroup&&dataType=="group")){//如果当前窗口打开则显示消息并发送已读
                     var html=showMsgInChatWindow(msg);
@@ -340,7 +341,7 @@ function reloadUserInfo(){
     $.ajax({
         type : "POST",
         contentType: "application/json;charset=UTF-8",
-        url : "/reloadUserInfo",
+        url : "/loadUserInfo",
         //请求成功
         success : function(result) {
             console.log("重新加载人员信息！")

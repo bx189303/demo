@@ -7,16 +7,14 @@ import haidian.chat.pojo.Message;
 import haidian.chat.redis.RedisUtil;
 import haidian.chat.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
-public class ExtraService {
+public class HisRecordService {
 
     @Resource
     MessageMapper messageMapper;
@@ -24,8 +22,6 @@ public class ExtraService {
     @Autowired
     RedisUtil r;
 
-    @Autowired
-    private StringRedisTemplate redisTemplate;
 
     public List<Object> getMessageByGroupUser(String groupId,String groupUser,int page,int size){
         List<Object> res=new ArrayList<>();
@@ -133,19 +129,5 @@ public class ExtraService {
         return res;
     }
 
-    public void sendGroupNotify(String type,String groupId,String userIds){
-        JSONObject groupNotify =new JSONObject();
-        groupNotify.put("type","groupNotify");
-        groupNotify.put("sendTime", DateUtil.getDateToStrings(new Date()));
-        groupNotify.put("isValid",1);
-        groupNotify.put("receiveTime", DateUtil.getDateToStrings(new Date()));
-        JSONObject data=new JSONObject();
-        data.put("type",type);
-        data.put("groupId",groupId);
-        if("addUser".equals(type)){
-            data.put("userIds",userIds);
-        }
-        groupNotify.put("data",data);
-        redisTemplate.convertAndSend("RECEIVE",JSON.toJSONString(groupNotify));
-    }
+
 }

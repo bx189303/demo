@@ -7,13 +7,19 @@
     "dst": {
       "sUnitname": "香山派出所",
       "sName": "用户一",
-      "sId": "0001"
+      "sId": "0001",
+      "sPolicenum": "800001",
+      "sDuty": "",
+      "sTel": ""
     },
     "readId": "",
     "src": {
       "sUnitname": "青龙桥派出所",
       "sName": "用户二",
-      "sId": "0002"
+      "sId": "0002",
+      "sPolicenum": "800002",
+      "sDuty": "",
+      "sTel": ""
     },
     "type": "single",
     "uuid": "efff2f40-84df-43f1-8951-2306dc405a75",

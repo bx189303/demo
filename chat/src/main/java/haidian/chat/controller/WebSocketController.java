@@ -25,9 +25,9 @@ public class WebSocketController {
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
     //新：使用map对象，便于根据userId来获取对应的WebSocket
-    private static ConcurrentHashMap<String, WebSocketController> websocketList=new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, WebSocketController> websocketList = new ConcurrentHashMap<>();
     //接收id
-    private String userId="";
+    private String userId = "";
 
     private static RedisUtil redisUtil;
 
@@ -37,43 +37,42 @@ public class WebSocketController {
      * 监听DISPATCH
      */
     public void sendMsg(String message) throws IOException {
-        JSONObject msg=JSON.parseObject(message);
-        String msgType=msg.getString("type");
-        JSONObject data=msg.getJSONObject("data");
-        log.info("监听DISPATCH-"+msgType+" : "+message);
-        String dstId="";
-        if(msgType.equals("msg")){
-            dstId=data.getJSONObject("dst").getString("sId");
-        }else if(msgType.equals("notify")||msgType.equals("groupNotify")){
-            dstId=data.getString("dst");
-        }else {
+        JSONObject msg = JSON.parseObject(message);
+        String msgType = msg.getString("type");
+        JSONObject data = msg.getJSONObject("data");
+        log.info("监听DISPATCH-" + msgType + " : " + message);
+        String dstId = "";
+        if (msgType.equals("msg")) {
+            dstId = data.getJSONObject("dst").getString("sId");
+        } else if (msgType.equals("notify") || msgType.equals("groupNotify")) {
+            dstId = data.getString("dst");
+        } else {
             log.info("未知类型消息");
             return;
         }
-        WebSocketController dstCli= websocketList.get(dstId);
-        if(dstCli!=null){
+        WebSocketController dstCli = websocketList.get(dstId);
+        if (dstCli != null) {
             dstCli.sendMessage(message);
         }
     }
 
     @OnOpen
-    public void onOpen(Session session,@PathParam("userId") String userId) throws IOException {
+    public void onOpen(Session session, @PathParam("userId") String userId) throws IOException {
         this.session = session;
         websocketList.put(userId, this);
-        this.userId=userId;
+        this.userId = userId;
         //发送上线事件给RECEIVE
-        JSONObject onoff=new JSONObject();
-        onoff.put("type","onoff");
+        JSONObject onoff = new JSONObject();
+        onoff.put("type", "onoff");
         onoff.put("sendTime", DateUtil.getDateToStrings(new Date()));
-        onoff.put("isValid",1);
+        onoff.put("isValid", 1);
         onoff.put("receiveTime", DateUtil.getDateToStrings(new Date()));
-        JSONObject data=new JSONObject();
-        data.put("type","on");
-        data.put("userId",userId);
-        onoff.put("data",data);
-        stringRedisTemplate.convertAndSend("RECEIVE",JSON.toJSONString(onoff));
+        JSONObject data = new JSONObject();
+        data.put("type", "on");
+        data.put("userId", userId);
+        onoff.put("data", data);
+        stringRedisTemplate.convertAndSend("RECEIVE", JSON.toJSONString(onoff));
     }
-
 
 
     /**
@@ -83,17 +82,16 @@ public class WebSocketController {
     public void onClose() {
 //        System.out.println(userId+"下线");
         //发送下线事件给RECEIVE
-        JSONObject onoff=new JSONObject();
-        onoff.put("type","onoff");
+        JSONObject onoff = new JSONObject();
+        onoff.put("type", "onoff");
         onoff.put("sendTime", DateUtil.getDateToStrings(new Date()));
-        onoff.put("isValid",1);
+        onoff.put("isValid", 1);
         onoff.put("receiveTime", DateUtil.getDateToStrings(new Date()));
-        JSONObject data=new JSONObject();
-        data.put("type","off");
-        data.put("userId",userId);
-        onoff.put("data",data);
-        stringRedisTemplate.convertAndSend("RECEIVE",JSON.toJSONString(onoff));
-
+        JSONObject data = new JSONObject();
+        data.put("type", "off");
+        data.put("userId", userId);
+        onoff.put("data", data);
+        stringRedisTemplate.convertAndSend("RECEIVE", JSON.toJSONString(onoff));
     }
 
 
@@ -114,6 +112,7 @@ public class WebSocketController {
     public static void setRedisUtil(RedisUtil redisUtil) {
         WebSocketController.redisUtil = redisUtil;
     }
+
     public static void setStringRedisTemplate(StringRedisTemplate stringRedisTemplate) {
         WebSocketController.stringRedisTemplate = stringRedisTemplate;
     }

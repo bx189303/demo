@@ -58,27 +58,32 @@
   </select>
   <select id="getAll" resultMap="ResultMapWithBLOBs">
     select
-    p.S_ID S_ID,p.S_NAME S_NAME,u.S_DESCRIPTION S_UNITNAME,p.S_DUTY S_DUTY,p.S_TEL S_TEL
+    p.S_ID S_ID,p.S_NAME S_NAME,u.S_DESCRIPTION S_UNITNAME,p.S_DUTY S_DUTY,p.S_TEL S_TEL,S_POLICENUM
     from hdyhtx.T_PERSON p,hdyhtx.T_UNIT u where p.S_UNIT=u.S_ID
     order by p.s_unit desc
   </select>
-    <select id="searchByNameOrUnitnameOrPolicenum" resultType="java.lang.String">
-      select
-      S_ID
-      FROM hdyhtx.T_PERSON
-      WHERE S_NAME LIKE #{name}
-      union
-      select
-      S_ID
-      FROM hdyhtx.T_PERSON
-      WHERE S_UNITNAME like #{name}
-      union
-      select
-      S_ID
-      FROM hdyhtx.T_PERSON
-      WHERE S_POLICENUM like #{name}
-    </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <select id="getUserByPoliceNum" resultMap="ResultMapWithBLOBs">
+    select
+    p.S_ID S_ID,p.S_NAME S_NAME,u.S_DESCRIPTION S_UNITNAME,p.S_DUTY S_DUTY,p.S_TEL S_TEL,S_POLICENUM
+    from hdyhtx.T_PERSON p,hdyhtx.T_UNIT u where p.S_UNIT=u.S_ID and p.S_POLICENUM=#{policeNum}
+  </select>
+  <select id="searchByNameOrUnitnameOrPolicenum" resultType="java.lang.String">
+    select
+    S_ID
+    FROM hdyhtx.T_PERSON
+    WHERE S_NAME LIKE #{name}
+    union
+    select
+    S_ID
+    FROM hdyhtx.T_PERSON
+    WHERE S_UNITNAME like #{name}
+    union
+    select
+    S_ID
+    FROM hdyhtx.T_PERSON
+    WHERE S_POLICENUM like #{name}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from T_PERSON
     where S_ID = #{sId,jdbcType=VARCHAR}
   </delete>

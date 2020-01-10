@@ -1,0 +1,244 @@
+/*树根节点隐藏加减号*/
+.ztree li span.button.switch.level0 {visibility:hidden; width:1px;}
+.ztree li ul.level0 {padding:0; background:none;}
+
+/* ztree滚动条 */
+.treeScroll::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 2px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+}
+.treeScroll::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px #f1f1f1;
+    background: #615f60;
+}
+.treeScroll::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 0px #fff;
+    border-radius: 10px;
+    background: #fff;
+}
+
+#dutyHtml{
+    color:#4a4a4a;
+    width: 600px;
+    height:420px;
+    border: 1px solid #000;
+    line-height: initial;
+    /*background-color: #f1f1f1;*/
+    position: absolute;
+    z-index: 11111;
+    top: 20%;
+    left: 30%;
+    margin: auto;
+}
+
+#duTyWindowTitle{
+    width: 100%;
+    background-color: #ccc;
+    border-bottom: 1px solid #000;
+    text-align: center;
+    /*border-radius: 5px 5px 0 0;*/
+    overflow: hidden;
+    /*display: none;*/
+    cursor: move;
+}
+#duTyWindowTitle h2{
+    margin: 0;
+    /*padding: 0;*/
+    /*font-size: 14px;*/
+    /*font-family: "Microsoft Yahei",sans-serif;*/
+    /*list-style: none;*/
+    font-size: 17px;
+    font-weight: bold;
+}
+.dutyTitleName{
+    width: 70%;
+    margin-left: 15%;
+    float: left;
+}
+.dutyRightTopBtn{
+    margin-right: 1%;
+    height: 19px;
+    width: 4%;
+    float: right;
+    font-weight: bold;
+    cursor: pointer;
+}
+#dutyWindowBody{
+    color: #4a4a4a;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    background-color: #f1f1f1;
+    /*background: url(../img/background.jpg) no-repeat;*/
+    /*background-size: 100% 100%;*/
+}
+.dutyDivShadow{
+    border: 1px solid #fff;
+    box-shadow: #000 0px 0px 2px 1px;
+    /*background: url(../img/border.png) no-repeat;*/
+    /*background-size: 100% 100%;*/
+    background-color: #fff;
+}
+#dutyUnitTree{
+    width: 87%;
+    height: 90%;
+    margin: 4.5% 0 2% 5%;
+    padding: 0% 5% 10% 6%;
+    overflow: scroll;
+}
+#zTree{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+#dutyLeftDiv{
+    width:30%;
+    height:100%;
+    float: left;
+}
+#dutyRightDiv{
+    width:69%;
+    height:100%;
+    float: left;
+    margin-left: 1%;
+}
+#dutyTitle{
+    margin: 1% 6.5% 0% 4%;
+    background-color: #33aba0;
+    color:#fff;
+    border-radius: 5px;
+    overflow: hidden;
+}
+#dutyUnitName{
+    font-size: 14px;
+    width:100%;
+    margin-left: 2%;
+    font-weight: bold;
+    overflow: hidden;/*对超出容器的部分强制截取，高度不确定则换行*/
+    text-overflow: ellipsis;/*显示省略符号来代表被修剪的文本。*/
+    white-space: nowrap;/*禁止换行*/
+    float: left;
+    text-align: center;
+}
+.dutyList{
+    color: #000;
+    width: 27%;
+    float: left;
+    text-align: center;
+    margin: 1% 0% 0% 4%;
+    border-radius: 5px;
+    border: 1px solid #000;
+    cursor: pointer;
+}
+.checkedDutyList .dutyType{
+    background-color: #33aba0;
+}
+.checkedDutyList .dutyName{
+    background-color: #71f2ea;
+}
+.dutyType{
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #cfcfcf;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.dutyName{
+    font-size: 12px;
+    background-color: #f1f1f1;
+    border-radius: 0 0 5px 5px;
+    /*margin-top: 1%;*/
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#mainDutyDiv{
+    width:96%;
+    /*height: 53%;*/
+    height: 45%;
+    margin: 1% 2% 1% 2%;
+}
+#mainDutyTypeDiv{
+    width:100%;
+    height: 86%;
+    overflow: scroll;
+}
+#dutyInputDiv{
+    width: 96%;
+    margin: 2% 2% 1% 2%;
+    height: 5.5%;
+    font-size: 14px;
+}
+#dutyInputDiv input{
+    /*background: url(../img/inputbackground.jpg) no-repeat;*/
+    /*background-size: 100% 100%;*/
+    color:#000;
+    border: 1px solid #9b9696;
+    padding: 0.5% 1%;
+    font-size:12px;
+}
+#dutyInputDiv .dutyInputTitleDiv{
+    float:left;
+    margin: 0.2% 1% 0 5%;
+}
+#dutyInfoSearchBtn{
+    float: right;
+    margin-right: 8%;
+    padding: 0.1% 2%;
+    background-color: #eee;
+    border-radius: 5px;
+    border: 1px solid #9b9696;
+    cursor: pointer;
+}
+
+#dutyDetailDiv{
+    width:96%;
+    height:40%;
+    margin: 1% 2% 1% 2%;
+    padding-top: 1%;
+}
+.dutyInfo{
+    width: 43%;
+    /* height: 14%; */
+    margin: 0% 0% 0% 3.5%;
+    padding: 1% 0 1% 1%;
+    color: #000;
+    font-size: 12px;
+    border: 1px solid #9b9696;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    float: left;
+}
+.dutyInfoName{
+    width:30%;
+    float: left;
+    text-align: center;
+    border-right: 1px solid #9b9696;
+    overflow: hidden;/*对超出容器的部分强制截取，高度不确定则换行*/
+    text-overflow: ellipsis;/*显示省略符号来代表被修剪的文本。*/
+    white-space: nowrap;/*禁止换行*/
+}
+.dutyInfoValue{
+    width: 65%;
+    float: left;
+    padding-left: 3%;
+    overflow: hidden;/*对超出容器的部分强制截取，高度不确定则换行*/
+    text-overflow: ellipsis;/*显示省略符号来代表被修剪的文本。*/
+    white-space: nowrap;/*禁止换行*/
+}
+.dutyInfoValue u {
+    cursor: pointer;
+}
+.dutyNotips{
+    text-align: center;
+    position: relative;
+    top: 50%;
+}
+.dutyFullHeight{
+    height:87.5% !important;
+}

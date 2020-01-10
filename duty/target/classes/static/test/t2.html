@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button onclick="f2()">测试</button>
+</body>
+<script>
+    function f2() {
+        if (window.opener != null){
+            window.opener.console.log("opener");
+            window.opener.f1();
+        } else{
+            window.opener.console.log(" ! opener");
+            window.parent.f1();
+        }
+
+    }
+
+</script>
+</html>

@@ -1,0 +1,151 @@
+
+#dutyHtml p,#dutyHtml h1,#dutyHtm h2,#dutyHtml h3,#dutyHtml h4,#dutyHtml h5,#dutyHtml h6,#dutyHtml dt,#dutyHtml dd,#dutyHtml textarea{
+    /* 默认有边距，都要清除 */
+    margin: 0;
+    padding: 0;
+    /*字体设置*/
+    font-size: 14px;
+    font-family: "Microsoft Yahei",sans-serif;
+    /*color: #ccc;*/
+    /* 去掉列表的原点 */
+    list-style: none;
+    /* 默认鼠标 */
+    /*cursor: default;*/
+}
+#dutyHtml ul,#dutyHtml  ol,#dutyHtml  dl,#dutyHtml li{
+    /*字体设置*/
+    font-size: 14px;
+    font-family: "Microsoft Yahei",sans-serif;
+    /*color: #ccc;*/
+    /* 去掉列表的原点 */
+    list-style: none;
+    /* 默认鼠标 */
+    /*cursor: default;*/
+}
+
+
+/*行内块元素*/
+#dutyHtml input,#dutyHtml img{
+    margin: 0;
+    padding: 0;
+    border: 0 none;
+    outline-style: none;
+    /*vertical-align: bottom;*/
+}
+
+/*行内元素*/
+#dutyHtml a,a:active,#dutyHtml a:visited{
+    /*下划线和颜色*/
+    text-decoration: none;
+    color: #ccc;
+}
+
+#dutyHtml a:hover{
+    color:#333;
+}
+
+#dutyHtml textarea{
+    /* 边框清零 */
+    border:none;
+    /* 轮廓线清零 */
+    outline: none;
+    /* 防止文本域被随意拖拽 */
+    resize: none;
+}
+
+#dutyHtml i{
+    /*文字样式*/
+    font-style: normal;
+}
+
+#dutyHtml table{
+    /*边框合并*/
+    border-collapse:collapse;
+    border-spacing:0;
+}
+
+
+/*可选*/
+/*单选框和复选框的配置，一般是分开的*/
+#dutyHtml input[type="radio"],#dutyHtml input[type="checkbox"]{
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    display: none;
+}
+
+#dutyHtml label{
+    display: inline-block;
+    cursor: pointer;
+}
+
+#dutyHtml label input[type="radio"]+span,#dutyHtml label input[type="checkbox"]+span{
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+#dutyHtml label input[type="radio"]:checked+span,#dutyHtml label input[type="checkbox"]:checked+span{
+    /*background: url("../images/check.png") no-repeat;*/
+}
+
+#dutyHtml label input[type="radio"]:checked~i,#dutyHtml label input[type="checkbox"]:checked~i{
+    color: #38d6ff;
+}
+
+/*可选*/
+/* 自定义数字框配置 */
+#dutyHtml input[type="number"]{
+    width: 76px;
+    height: 36px;
+    background-color: rgba(5,45,82,0.4);
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 20px;
+    padding: 0 10px;
+}
+
+#dutyHtml input[type="number"]::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+}
+
+#dutyHtml input[type="number"]+div{
+    width: 30px;
+    height: 40px;
+    padding-left: 2px;
+    cursor: pointer;
+}
+
+#dutyHtml input[type="number"]+div > .count_add{
+    display: block;
+    width: 28px;
+    height: 19px;
+    /*background: url("../images/count_add.png") no-repeat;*/
+    background-size: contain;
+    margin-bottom: 2px;
+}
+
+#dutyHtml input[type="number"]+div > .count_subtract{
+    display: block;
+    width: 28px;
+    height: 19px;
+    /*background: url("../images/count_subtract.png") no-repeat;*/
+    background-size: contain;
+}
+
+/*滚动条*/
+#dutyHtml .scrollDiv::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+}
+#dutyHtml .scrollDiv::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px #f1f1f1;
+    background: #f1f1f1;
+}
+#dutyHtml .scrollDiv::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 0px #fff;
+    border-radius: 10px;
+    background: #fff;
+}

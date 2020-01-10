@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>父页面</title>
+</head>
+<!--<script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>-->
+<body>
+<a href="t2.html" target="_blank">弹出1</a>
+<button onclick="window.open('http://localhost:23269/test/c.html')">open弹出</button>
+<!--<div style="width: 800px;height: 700px;background-color: burlywood"></div>-->
+<iframe id="iframe" src="http://localhost:23269/test/c.html"></iframe>
+<button onclick="sendson()">给子页面发送消息</button>
+<iframe id="windownametest" src="http://localhost:23269/test/c.html" onload="windownametest()"></iframe>
+<iframe id="dutyhtml" src="http://localhost:23268/duty/index.html" style="width:700px;height:470px"></iframe>
+</body>
+<script>
+    function f1(){
+        alert("测试方法");
+    }
+    window.addEventListener('message', function (e) {
+        console.log("D页面打印 ： "+e.data)  //e.data为传递过来的数据
+        console.log("D页面打印 ： "+e.origin)  //e.origin为调用 postMessage 时消息发送方窗口的 origin（域名、协议和端口）
+        // console.log("D页面打印 ： "+e.source)  //e.source为对发送消息的窗口对象的引用，可以使用此来在具有不同origin的两个窗口之间建立双向通信
+    })
+    function sendson(){
+        document.getElementById("iframe").contentWindow.postMessage("父页面来的消息","*");
+    }
+
+    var ifr = document.getElementById("windownametest");
+    ifr.style.display = 'none';
+    var flag = 0;
+    ifr.onload = function () {
+        if (flag == 1) {
+            console.log('跨域获取数据', ifr.contentWindow.name);
+            ifr.contentWindow.close();
+        } else if (flag == 0) {
+            flag = 1;
+            ifr.contentWindow.location = 'http://localhost:23268/test/proxy.html';
+        }
+    }
+
+    function myFunc(s){
+        console.log(s);
+    }
+    test("myFunc","abc");
+    test("myFunc");
+    function test(funcName,param){
+        if(typeof(eval(funcName)) == "function"){
+            eval(funcName+"(param);");
+        }
+        else{
+            // 函数不存在
+        }
+    }
+</script>
+</html>

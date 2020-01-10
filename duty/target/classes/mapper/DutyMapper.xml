@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="haidian.duty.dao.DutyMapper">
+    <resultMap id="BaseResultMap" type="haidian.duty.pojo.Duty">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="policeId" property="policeid" jdbcType="VARCHAR"/>
+        <result column="policeNum" property="policenum" jdbcType="VARCHAR"/>
+        <result column="policeName" property="policename" jdbcType="VARCHAR"/>
+        <result column="unitId" property="unitid" jdbcType="VARCHAR"/>
+        <result column="unitName" property="unitname" jdbcType="VARCHAR"/>
+        <result column="duty" property="duty" jdbcType="VARCHAR"/>
+        <result column="dutyType" property="dutytype" jdbcType="VARCHAR"/>
+        <result column="tel" property="tel" jdbcType="VARCHAR"/>
+        <result column="nx" property="nx" jdbcType="VARCHAR"/>
+        <result column="wx" property="wx" jdbcType="VARCHAR"/>
+        <result column="ydjw" property="ydjw" jdbcType="VARCHAR"/>
+        <result column="tel_800M" property="tel800m" jdbcType="VARCHAR"/>
+        <result column="carNum" property="carnum" jdbcType="VARCHAR"/>
+        <result column="idCard" property="idcard" jdbcType="VARCHAR"/>
+        <result column="startTime" property="starttime" jdbcType="TIMESTAMP"/>
+        <result column="endTime" property="endtime" jdbcType="TIMESTAMP"/>
+        <result column="isValid" property="isvalid" jdbcType="INTEGER"/>
+        <result column="createTime" property="createtime" jdbcType="TIMESTAMP"/>
+        <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, policeId, policeNum, policeName, unitId, unitName, duty,dutyType, tel, nx, wx, ydjw, tel_800M,
+    carNum, idCard, startTime, endTime, isValid, createTime, updateTime
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_duty
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="getDutyByUnitId" resultMap="BaseResultMap">
+      select policeId,policeNum,policeName,duty,dutyType
+      from t_duty
+      where isValid=1 and unitId=#{unitId} and
+      (#{time} between startTime and endTime )
+    </select>
+    <select id="getDutyInfoByUnitId" resultMap="BaseResultMap">
+        select
+        policeId, policeNum, policeName, unitId, unitName, duty,dutyType, tel, nx, wx, ydjw, tel_800M,
+        carNum, idCard, startTime, endTime
+        from t_duty
+        where isValid=1 and unitId=#{unitId} and
+        (#{time} between startTime and endTime )
+    </select>
+    <select id="getDutyByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_duty
+        where isValid=1 and policeNum=#{userId} and
+        (#{time} between startTime and endTime )
+    </select>
+    <select id="getDutyByUserNameOrNum" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_duty
+        where isValid=1 and (policeNum=#{nameOrNum} or policeName=#{nameOrNum}) and
+        (#{time} between startTime and endTime or to_days(startTime)=to_days(#{time}) or to_days(endTime)=to_days(#{time}))
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_duty
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="haidian.duty.pojo.Duty" useGeneratedKeys="true" keyProperty="id">
+    insert into t_duty (policeId, policeNum, policeName, 
+      unitId, unitName, duty, dutyType,
+      tel, nx, wx, ydjw, 
+      tel_800M, carNum, idCard, 
+      startTime, endTime, isValid, 
+      createTime, updateTime)
+    values (#{policeid,jdbcType=VARCHAR}, #{policenum,jdbcType=VARCHAR}, #{policename,jdbcType=VARCHAR}, 
+      #{unitid,jdbcType=VARCHAR}, #{unitname,jdbcType=VARCHAR}, #{duty,jdbcType=VARCHAR}, #{dutyType},
+      #{tel,jdbcType=VARCHAR}, #{nx,jdbcType=VARCHAR}, #{wx,jdbcType=VARCHAR}, #{ydjw,jdbcType=VARCHAR}, 
+      #{tel800m,jdbcType=VARCHAR}, #{carnum,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, 
+      #{starttime,jdbcType=TIMESTAMP}, #{endtime,jdbcType=TIMESTAMP}, #{isvalid,jdbcType=INTEGER}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="haidian.duty.pojo.Duty" useGeneratedKeys="true" keyProperty="id">
+        insert into t_duty
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="policeid != null">
+                policeId,
+            </if>
+            <if test="policenum != null">
+                policeNum,
+            </if>
+            <if test="policename != null">
+                policeName,
+            </if>
+            <if test="unitid != null">
+                unitId,
+            </if>
+            <if test="unitname != null">
+                unitName,
+            </if>
+            <if test="duty != null">
+                duty,
+            </if>
+            <if test="dutytype != null">
+                dutyType,
+            </if>
+            <if test="tel != null">
+                tel,
+            </if>
+            <if test="nx != null">
+                nx,
+            </if>
+            <if test="wx != null">
+                wx,
+            </if>
+            <if test="ydjw != null">
+                ydjw,
+            </if>
+            <if test="tel800m != null">
+                tel_800M,
+            </if>
+            <if test="carnum != null">
+                carNum,
+            </if>
+            <if test="idcard != null">
+                idCard,
+            </if>
+            <if test="starttime != null">
+                startTime,
+            </if>
+            <if test="endtime != null">
+                endTime,
+            </if>
+            <if test="isvalid != null">
+                isValid,
+            </if>
+            <if test="createtime != null">
+                createTime,
+            </if>
+            <if test="updatetime != null">
+                updateTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="policeid != null">
+                #{policeid,jdbcType=VARCHAR},
+            </if>
+            <if test="policenum != null">
+                #{policenum,jdbcType=VARCHAR},
+            </if>
+            <if test="policename != null">
+                #{policename,jdbcType=VARCHAR},
+            </if>
+            <if test="unitid != null">
+                #{unitid,jdbcType=VARCHAR},
+            </if>
+            <if test="unitname != null">
+                #{unitname,jdbcType=VARCHAR},
+            </if>
+            <if test="duty != null">
+                #{duty,jdbcType=VARCHAR},
+            </if>
+            <if test="dutytype != null">
+                #{dutytype,jdbcType=VARCHAR},
+            </if>
+            <if test="tel != null">
+                #{tel,jdbcType=VARCHAR},
+            </if>
+            <if test="nx != null">
+                #{nx,jdbcType=VARCHAR},
+            </if>
+            <if test="wx != null">
+                #{wx,jdbcType=VARCHAR},
+            </if>
+            <if test="ydjw != null">
+                #{ydjw,jdbcType=VARCHAR},
+            </if>
+            <if test="tel800m != null">
+                #{tel800m,jdbcType=VARCHAR},
+            </if>
+            <if test="carnum != null">
+                #{carnum,jdbcType=VARCHAR},
+            </if>
+            <if test="idcard != null">
+                #{idcard,jdbcType=VARCHAR},
+            </if>
+            <if test="starttime != null">
+                #{starttime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endtime != null">
+                #{endtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isvalid != null">
+                #{isvalid,jdbcType=INTEGER},
+            </if>
+            <if test="createtime != null">
+                #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatetime != null">
+                #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="haidian.duty.pojo.Duty">
+        update t_duty
+        <set>
+            <if test="policeid != null">
+                policeId = #{policeid,jdbcType=VARCHAR},
+            </if>
+            <if test="policenum != null">
+                policeNum = #{policenum,jdbcType=VARCHAR},
+            </if>
+            <if test="policename != null">
+                policeName = #{policename,jdbcType=VARCHAR},
+            </if>
+            <if test="unitid != null">
+                unitId = #{unitid,jdbcType=VARCHAR},
+            </if>
+            <if test="unitname != null">
+                unitName = #{unitname,jdbcType=VARCHAR},
+            </if>
+            <if test="duty != null">
+                duty = #{duty,jdbcType=VARCHAR},
+            </if>
+            <if test="dutytype != null">
+                dutyType = #{dutytype,jdbcType=VARCHAR},
+            </if>
+            <if test="tel != null">
+                tel = #{tel,jdbcType=VARCHAR},
+            </if>
+            <if test="nx != null">
+                nx = #{nx,jdbcType=VARCHAR},
+            </if>
+            <if test="wx != null">
+                wx = #{wx,jdbcType=VARCHAR},
+            </if>
+            <if test="ydjw != null">
+                ydjw = #{ydjw,jdbcType=VARCHAR},
+            </if>
+            <if test="tel800m != null">
+                tel_800M = #{tel800m,jdbcType=VARCHAR},
+            </if>
+            <if test="carnum != null">
+                carNum = #{carnum,jdbcType=VARCHAR},
+            </if>
+            <if test="idcard != null">
+                idCard = #{idcard,jdbcType=VARCHAR},
+            </if>
+            <if test="starttime != null">
+                startTime = #{starttime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endtime != null">
+                endTime = #{endtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isvalid != null">
+                isValid = #{isvalid,jdbcType=INTEGER},
+            </if>
+            <if test="createtime != null">
+                createTime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatetime != null">
+                updateTime = #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="haidian.duty.pojo.Duty">
+    update t_duty
+    set policeId = #{policeid,jdbcType=VARCHAR},
+      policeNum = #{policenum,jdbcType=VARCHAR},
+      policeName = #{policename,jdbcType=VARCHAR},
+      unitId = #{unitid,jdbcType=VARCHAR},
+      unitName = #{unitname,jdbcType=VARCHAR},
+      duty = #{duty,jdbcType=VARCHAR},
+      dutyType = #{dutytype,jdbcType=VARCHAR},
+      tel = #{tel,jdbcType=VARCHAR},
+      nx = #{nx,jdbcType=VARCHAR},
+      wx = #{wx,jdbcType=VARCHAR},
+      ydjw = #{ydjw,jdbcType=VARCHAR},
+      tel_800M = #{tel800m,jdbcType=VARCHAR},
+      carNum = #{carnum,jdbcType=VARCHAR},
+      idCard = #{idcard,jdbcType=VARCHAR},
+      startTime = #{starttime,jdbcType=TIMESTAMP},
+      endTime = #{endtime,jdbcType=TIMESTAMP},
+      isValid = #{isvalid,jdbcType=INTEGER},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="getDutyByUnitId2" resultMap="BaseResultMap">
+      select policeId,policeNum,policeName,duty,dutyType
+      from t_duty
+      where isValid=1 and unitId=#{unitId} and
+      (#{time} between startTime and endTime or to_days(startTime)=to_days(#{time}) or to_days(endTime)=to_days(#{time}))
+    </select>
+</mapper>

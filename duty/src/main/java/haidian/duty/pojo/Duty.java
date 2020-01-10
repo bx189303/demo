@@ -19,6 +19,8 @@ public class Duty {
 
     private String duty;
 
+    private String dutytype;
+
     private String tel;
 
     private String nx;
@@ -197,5 +199,11 @@ public class Duty {
         this.updatetime = updatetime;
     }
 
+    public String getDutytype() {
+        return dutytype;
+    }
 
+    public void setDutytype(String dutytype) {
+        this.dutytype = dutytype;
+    }
 }

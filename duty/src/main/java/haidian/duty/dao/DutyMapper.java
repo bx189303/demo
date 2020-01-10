@@ -8,6 +8,9 @@ import java.util.List;
 @Mapper
 public interface DutyMapper {
 
+    //根据单位id查所有职位详情
+    List<Duty> getDutyInfoByUnitId(String unitId,String time);
+
     //根据用户名或警号查职位
     Duty getDutyByUserNameOrNum(String nameOrNum, String time);
 

@@ -41,9 +41,10 @@ public class DutyController {
     @Autowired
     DutyService dutyService;
 
-    @Autowired
-    ThreadService threadService;
+//    @Autowired
+//    ThreadService threadService;
 
+    //根据姓名或警号查职务
     @RequestMapping("/getDutyByUserNameOrNum")
     public Result getDutyByUserNameOrNum(@RequestBody JSONObject json) {
         Result result = null;
@@ -58,6 +59,7 @@ public class DutyController {
         return result;
     }
 
+    //根据id查职务
     @RequestMapping("/getDutyByUserId")
     public Result getDutyByUserId(@RequestBody JSONObject json) {
         Result result = null;
@@ -72,6 +74,7 @@ public class DutyController {
         return result;
     }
 
+    //根据单位id查职务
     @RequestMapping("/getDutyByUnitId")
     public Result getDutyByUnitId(@RequestBody JSONObject json) {
         Result result = null;
@@ -86,6 +89,7 @@ public class DutyController {
         return result;
     }
 
+    //根据用户id查组织机构树
     @RequestMapping("/getUnitByUserId/{userId}")
     public Result getUnitByUserId(@PathVariable String userId) {
         Result result = null;
@@ -108,18 +112,18 @@ public class DutyController {
         return result;
     }
 
-    @RequestMapping("/jstest")
-    public Result jstest() {
-        Result result = null;
-        try {
-            String s=threadService.test();
-            result = Result.ok(s);
-        } catch (Exception e) {
-            e.printStackTrace();
-            result = Result.build(500, e.getMessage());
-        }
-        return result;
-    }
+//    @RequestMapping("/jstest")
+//    public Result jstest() {
+//        Result result = null;
+//        try {
+//            String s=threadService.test();
+//            result = Result.ok(s);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            result = Result.build(500, e.getMessage());
+//        }
+//        return result;
+//    }
 
 
 }

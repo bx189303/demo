@@ -1,6 +1,11 @@
-var dutyServerUrl="http://192.168.8.102:23268";//localhost
-// var dutyServerUrl="http://10.2.68.70:23268";//centos
+// var dutyServerUrl="http://localhost:23268";//localhost
+var dutyServerUrl="http://10.2.68.70:23268";//centos
 var dutyUserZtreeLevel='';
+
+function initDutyHtml(id){
+    loadUnit(id);
+    windowHtmlMove('dutyHtml','duTyWindowTitleName');
+}
 
 var dutyZtreeSetting = {
     view: {
@@ -9,7 +14,7 @@ var dutyZtreeSetting = {
         showLine: true,
         selectedMulti: false,
         showIcon:false,
-        fontCss:{'color':'#fff'},//字体样式函数
+        fontCss:{'color':'#4a4a4a'},//字体样式函数
     },
     data: {
         key:{
@@ -56,6 +61,7 @@ function loadUnit(userId){
         type : "POST",
         contentType: "application/json;charset=UTF-8",
         url : dutyServerUrl+"/getUnitByUserId/"+userId,
+        // url : "/getUnit",
         //请求成功
         success : function(result) {
             var zNodes=result.data;
@@ -180,8 +186,14 @@ function showDutyType(res){
     if(list.length!=0){
         $("#mainDutyDiv").removeClass("dutyFullHeight");
         $(list).each(function(i,n){
+            var duty="";
+            if(n.duty==n.dutytype){
+                duty=n.duty;
+            }else{
+                duty=n.duty+handleNull(n.dutytype);
+            }
             html+='            <div class="dutyList" name="'+n.policenum+'" onclick=loadDutyDetail("'+n.policenum+'")>\n' +
-                '                <div class="dutyType" title="'+n.duty+'">'+n.duty+'</div><div class="dutyName" title="'+n.policename+'">'+n.policename+'</div>\n' +
+                '                <div class="dutyType" title="'+duty+'">'+duty+'</div><div class="dutyName" title="'+n.policename+'">'+n.policename+'</div>\n' +
                 '            </div>'
         })
         $("#mainDutyTypeDiv").html(html);
@@ -195,7 +207,13 @@ function showDutyDetail(res){
     $("#dutyDetailDiv").show();
     // console.log(res);
     var n=res.data;
-    var html='<div class="dutyInfo"><div class="dutyInfoName">职位</div><div class="dutyInfoValue">'+n.duty+'</div></div>\n' +
+    var duty="";
+    if(n.duty==n.dutytype){
+        duty=n.duty;
+    }else{
+        duty=n.duty+handleNull(n.dutytype);
+    }
+    var html='<div class="dutyInfo"><div class="dutyInfoName">职位</div><div class="dutyInfoValue" title="'+duty+'">'+duty+'</div></div>\n' +
         '            <div class="dutyInfo"><div class="dutyInfoName">单位</div><div class="dutyInfoValue" title="'+handleNull(n.unitname)+'">'+handleNull(n.unitname)+'</div></div>\n' +
         '            <div class="dutyInfo"><div class="dutyInfoName">姓名</div><div class="dutyInfoValue dutyInfoOfUserName" title="'+handleNull(n.policename)+'">'+handleNull(n.policename)+'</div></div>\n' +
         '            <div class="dutyInfo"><div class="dutyInfoName">警号</div><div class="dutyInfoValue" title="'+handleNull(n.policenum)+'"><u onclick=dutyCallbackZh(this)>'+handleNull(n.policenum)+'</u></div></div>\n' +
@@ -287,8 +305,8 @@ function DateToYMDH(str){
     var m=str.substr(5,2);
     var d=str.substr(8,2);
     var h=str.substr(11,2);
-    return y+"年"+m+"月"+d+"日"+h+"时";
-
+    // return y+"年"+m+"月"+d+"日"+h+"时";
+    return y+"-"+m+"-"+d+" "+h+"时";
 }
 function closeDutyWindow(){
     $("#dutyHtml").remove();

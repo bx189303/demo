@@ -20,9 +20,9 @@
 </style>
 <body style="overflow: hidden;color: #fff;">
 
-<div id="dutyHtml">
+<div id="dutyHtml" >
     <div id="duTyWindowTitle">
-        <div class="dutyTitleName"><h2>战位信息</h2></div>
+        <div id="duTyWindowTitleName" class="dutyTitleName"><h2>战位信息</h2></div>
         <div class="dutyRightTopBtn" onclick="closeDutyWindow()">X</div>
     </div>
     <div id="dutyWindowBody">
@@ -60,8 +60,9 @@
             // userId='C3413364EDB0416094D5E44FC101DB8E';
             userId='039766';
         }
-        loadUnit(userId);
+        initDutyHtml(userId);
     });
+
 
 </script>
 </html>

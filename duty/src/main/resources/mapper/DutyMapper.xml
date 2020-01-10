@@ -9,6 +9,7 @@
         <result column="unitId" property="unitid" jdbcType="VARCHAR"/>
         <result column="unitName" property="unitname" jdbcType="VARCHAR"/>
         <result column="duty" property="duty" jdbcType="VARCHAR"/>
+        <result column="dutyType" property="dutytype" jdbcType="VARCHAR"/>
         <result column="tel" property="tel" jdbcType="VARCHAR"/>
         <result column="nx" property="nx" jdbcType="VARCHAR"/>
         <result column="wx" property="wx" jdbcType="VARCHAR"/>
@@ -23,7 +24,7 @@
         <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, policeId, policeNum, policeName, unitId, unitName, duty, tel, nx, wx, ydjw, tel_800M,
+    id, policeId, policeNum, policeName, unitId, unitName, duty,dutyType, tel, nx, wx, ydjw, tel_800M,
     carNum, idCard, startTime, endTime, isValid, createTime, updateTime
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
@@ -33,17 +34,25 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <select id="getDutyByUnitId" resultMap="BaseResultMap">
-      select policeId,policeNum,policeName,duty
+      select policeId,policeNum,policeName,duty,dutyType
       from t_duty
       where isValid=1 and unitId=#{unitId} and
-      (#{time} between startTime and endTime or to_days(startTime)=to_days(#{time}) or to_days(endTime)=to_days(#{time}))
+      (#{time} between startTime and endTime )
+    </select>
+    <select id="getDutyInfoByUnitId" resultMap="BaseResultMap">
+        select
+        policeId, policeNum, policeName, unitId, unitName, duty,dutyType, tel, nx, wx, ydjw, tel_800M,
+        carNum, idCard, startTime, endTime
+        from t_duty
+        where isValid=1 and unitId=#{unitId} and
+        (#{time} between startTime and endTime )
     </select>
     <select id="getDutyByUserId" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_duty
         where isValid=1 and policeNum=#{userId} and
-        (#{time} between startTime and endTime or to_days(startTime)=to_days(#{time}) or to_days(endTime)=to_days(#{time}))
+        (#{time} between startTime and endTime )
     </select>
     <select id="getDutyByUserNameOrNum" resultMap="BaseResultMap">
         select
@@ -58,13 +67,13 @@
   </delete>
     <insert id="insert" parameterType="haidian.duty.pojo.Duty" useGeneratedKeys="true" keyProperty="id">
     insert into t_duty (policeId, policeNum, policeName, 
-      unitId, unitName, duty, 
+      unitId, unitName, duty, dutyType,
       tel, nx, wx, ydjw, 
       tel_800M, carNum, idCard, 
       startTime, endTime, isValid, 
       createTime, updateTime)
     values (#{policeid,jdbcType=VARCHAR}, #{policenum,jdbcType=VARCHAR}, #{policename,jdbcType=VARCHAR}, 
-      #{unitid,jdbcType=VARCHAR}, #{unitname,jdbcType=VARCHAR}, #{duty,jdbcType=VARCHAR}, 
+      #{unitid,jdbcType=VARCHAR}, #{unitname,jdbcType=VARCHAR}, #{duty,jdbcType=VARCHAR}, #{dutyType},
       #{tel,jdbcType=VARCHAR}, #{nx,jdbcType=VARCHAR}, #{wx,jdbcType=VARCHAR}, #{ydjw,jdbcType=VARCHAR}, 
       #{tel800m,jdbcType=VARCHAR}, #{carnum,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, 
       #{starttime,jdbcType=TIMESTAMP}, #{endtime,jdbcType=TIMESTAMP}, #{isvalid,jdbcType=INTEGER}, 
@@ -90,6 +99,9 @@
             </if>
             <if test="duty != null">
                 duty,
+            </if>
+            <if test="dutytype != null">
+                dutyType,
             </if>
             <if test="tel != null">
                 tel,
@@ -146,6 +158,9 @@
             </if>
             <if test="duty != null">
                 #{duty,jdbcType=VARCHAR},
+            </if>
+            <if test="dutytype != null">
+                #{dutytype,jdbcType=VARCHAR},
             </if>
             <if test="tel != null">
                 #{tel,jdbcType=VARCHAR},
@@ -206,6 +221,9 @@
             <if test="duty != null">
                 duty = #{duty,jdbcType=VARCHAR},
             </if>
+            <if test="dutytype != null">
+                dutyType = #{dutytype,jdbcType=VARCHAR},
+            </if>
             <if test="tel != null">
                 tel = #{tel,jdbcType=VARCHAR},
             </if>
@@ -253,6 +271,7 @@
       unitId = #{unitid,jdbcType=VARCHAR},
       unitName = #{unitname,jdbcType=VARCHAR},
       duty = #{duty,jdbcType=VARCHAR},
+      dutyType = #{dutytype,jdbcType=VARCHAR},
       tel = #{tel,jdbcType=VARCHAR},
       nx = #{nx,jdbcType=VARCHAR},
       wx = #{wx,jdbcType=VARCHAR},
@@ -267,4 +286,11 @@
       updateTime = #{updatetime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+    <select id="getDutyByUnitId2" resultMap="BaseResultMap">
+      select policeId,policeNum,policeName,duty,dutyType
+      from t_duty
+      where isValid=1 and unitId=#{unitId} and
+      (#{time} between startTime and endTime or to_days(startTime)=to_days(#{time}) or to_days(endTime)=to_days(#{time}))
+    </select>
 </mapper>

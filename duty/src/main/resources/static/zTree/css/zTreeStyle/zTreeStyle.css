@@ -58,11 +58,14 @@ website:	http://code.google.com/p/jquerytree/
 
 .ztree li a.curSelectedNode {
     padding-top: 0px;
-    background-color: #102927;
-    color: black;
+    /*background-color: #102927;*/
+    /*color: black;*/
     height: 16px;
     border: 1px #FFB951 solid;
     opacity: 0.8;
+    background-color: #009688;
+    font-weight: bold;
+    color: #fff !important;
 }
 
 .ztree li a.curSelectedNode_Edit {

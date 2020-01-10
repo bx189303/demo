@@ -64,22 +64,48 @@
   </select>
   <select id="getAll" resultMap="ResultMapWithBLOBs">
     select
-    p.S_ID S_ID,p.S_NAME S_NAME,u.S_DESCRIPTION S_UNITNAME,p.S_DUTY S_DUTY,p.S_TEL S_TEL
+    p.S_ID S_ID,p.S_NAME S_NAME,u.S_DESCRIPTION S_UNITNAME,p.S_DUTY S_DUTY,p.S_TEL S_TEL,p.S_POLICENUM S_POLICENUM,
+    p.S_UNIT S_UNIT
     from hdyhtx.T_PERSON p,hdyhtx.T_UNIT u where p.S_UNIT=u.S_ID
     order by p.s_unit desc
   </select>
-    <select id="searchByNameOrUnitname" resultType="java.lang.String">
-      select
-      S_ID
-      FROM hdyhtx.T_PERSON
-      WHERE S_NAME LIKE #{name}
-      union
-      select
-      S_ID
-      FROM hdyhtx.T_PERSON
-      WHERE S_UNITNAME like #{name}
-    </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <select id="searchByNameOrUnitname" resultType="java.lang.String">
+    select
+    S_ID
+    FROM hdyhtx.T_PERSON
+    WHERE S_NAME LIKE #{name}
+    union
+    select
+    S_ID
+    FROM hdyhtx.T_PERSON
+    WHERE S_UNITNAME like #{name}
+  </select>
+
+  <select id="getPersonByNums" resultMap="ResultMapWithBLOBs" parameterType="java.util.List">
+    select
+    p.S_ID S_ID,p.S_NAME S_NAME,u.S_DESCRIPTION S_UNITNAME,p.S_DUTY S_DUTY,p.S_TEL S_TEL,p.S_POLICENUM S_POLICENUM
+    from hdyhtx.T_PERSON p,hdyhtx.T_UNIT u
+    where p.S_UNIT=u.S_ID and  p.S_POLICENUM in
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <select id="getPersonByUnitAndNameOrNum" resultMap="ResultMapWithBLOBs">
+    select
+    p.S_ID S_ID,p.S_NAME S_NAME,u.S_DESCRIPTION S_UNITNAME,p.S_DUTY S_DUTY,p.S_TEL S_TEL,p.S_POLICENUM S_POLICENUM
+    from hdyhtx.T_PERSON p,hdyhtx.T_UNIT u
+    where p.S_UNIT=u.S_ID and (p.S_NAME like #{input} or p.S_POLICENUM like #{input})
+    <if test="unit != null" >
+      and p.S_UNIT=#{unit}
+    </if>
+  </select>
+  <select id="getPersonByUnitId" resultMap="ResultMapWithBLOBs">
+    select  <include refid="Base_Column_List" />
+    from hdyhtx.T_PERSON
+    where S_UNIT=#{unitId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from T_PERSON
     where S_ID = #{sId,jdbcType=VARCHAR}
   </delete>

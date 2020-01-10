@@ -1,14 +1,14 @@
 logging:
-  config: classpath:log4j2_dev.xml
-#  config: classpath:log4j2_prod.xml
+#  config: classpath:log4j2_dev.xml
+  config: classpath:log4j2_prod.xml
 #  level:
-#    haidian.chat.dao: debug
+#    haidian.duty.dao: debug
 server:
   port: "${serverPort}"
 spring:
   profiles:
-    include: config_dev
-#    include: config_prod
+#    include: config_dev
+    include: config_prod
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver

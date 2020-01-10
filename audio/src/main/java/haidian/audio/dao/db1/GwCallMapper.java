@@ -1,6 +1,6 @@
 package haidian.audio.dao.db1;
 
-import haidian.audio.pojo.GwCall;
+import haidian.audio.pojo.po.GwCall;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

@@ -7,8 +7,8 @@ server:
   port: "${serverPort}"
 spring:
   profiles:
-    include: config_dev
-#    include: config_prod
+#    include: config_dev
+    include: config_prod
   datasource:
     db1:
       type: com.zaxxer.hikari.HikariDataSource

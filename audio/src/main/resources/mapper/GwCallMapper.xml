@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="haidian.audio.dao.db1.GwCallMapper" >
-  <resultMap id="BaseResultMap" type="haidian.audio.pojo.GwCall" >
+  <resultMap id="BaseResultMap" type="haidian.audio.pojo.po.GwCall" >
     <id column="call_id" property="callId" jdbcType="VARCHAR" />
     <result column="gw_name" property="gwName" jdbcType="VARCHAR" />
     <result column="line_id" property="lineId" jdbcType="INTEGER" />
@@ -32,15 +32,17 @@
           c.call_id call_id, gw_name, line_id, line_name, call_type, calling_nbr, called_nbr, connect_flag,
           end_code, call_start_time, talk_start_time, talk_end_time, is_readed,file_name
       from t_srvdata_gw_call_log c,t_srvdata_gw_record_log r
-      where c.call_id=r.call_id and (c.calling_nbr = #{userId} or c.called_nbr= #{userId}) and
-            (talk_start_time between #{start} and #{end}) and c.called_nbr not like '900%'
+      where c.call_id=r.call_id and (c.calling_nbr = #{userId} or c.called_nbr= #{userId})  and c.called_nbr not like '900%'
+      <if test="start != null" >
+        and (talk_start_time between #{start} and #{end})
+      </if>
       order by talk_start_time
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from t_srvdata_gw_call_log
     where call_id = #{callId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="haidian.audio.pojo.GwCall" >
+  <insert id="insert" parameterType="haidian.audio.pojo.po.GwCall" >
     insert into t_srvdata_gw_call_log (call_id, gw_name, line_id, 
       line_name, call_type, calling_nbr, 
       called_nbr, connect_flag, end_code, 
@@ -52,7 +54,7 @@
       #{callStartTime,jdbcType=TIMESTAMP}, #{talkStartTime,jdbcType=TIMESTAMP}, #{talkEndTime,jdbcType=TIMESTAMP}, 
       #{isReaded,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="haidian.audio.pojo.GwCall" >
+  <insert id="insertSelective" parameterType="haidian.audio.pojo.po.GwCall" >
     insert into t_srvdata_gw_call_log
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="callId != null" >
@@ -137,7 +139,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="haidian.audio.pojo.GwCall" >
+  <update id="updateByPrimaryKeySelective" parameterType="haidian.audio.pojo.po.GwCall" >
     update t_srvdata_gw_call_log
     <set >
       <if test="gwName != null" >
@@ -179,7 +181,7 @@
     </set>
     where call_id = #{callId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="haidian.audio.pojo.GwCall" >
+  <update id="updateByPrimaryKey" parameterType="haidian.audio.pojo.po.GwCall" >
     update t_srvdata_gw_call_log
     set gw_name = #{gwName,jdbcType=VARCHAR},
       line_id = #{lineId,jdbcType=INTEGER},

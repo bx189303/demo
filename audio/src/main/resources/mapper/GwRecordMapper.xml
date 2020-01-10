@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="haidian.audio.dao.db1.GwRecordMapper" >
-  <resultMap id="BaseResultMap" type="haidian.audio.pojo.GwRecord" >
+  <resultMap id="BaseResultMap" type="haidian.audio.pojo.po.GwRecord" >
     <id column="call_id" property="callId" jdbcType="VARCHAR" />
     <result column="file_name" property="fileName" jdbcType="VARCHAR" />
     <result column="file_type" property="fileType" jdbcType="INTEGER" />
@@ -19,13 +19,13 @@
     delete from t_srvdata_gw_record_log
     where call_id = #{callId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="haidian.audio.pojo.GwRecord" >
+  <insert id="insert" parameterType="haidian.audio.pojo.po.GwRecord" >
     insert into t_srvdata_gw_record_log (call_id, file_name, file_type
       )
     values (#{callId,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{fileType,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="haidian.audio.pojo.GwRecord" >
+  <insert id="insertSelective" parameterType="haidian.audio.pojo.po.GwRecord" >
     insert into t_srvdata_gw_record_log
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="callId != null" >
@@ -50,7 +50,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="haidian.audio.pojo.GwRecord" >
+  <update id="updateByPrimaryKeySelective" parameterType="haidian.audio.pojo.po.GwRecord" >
     update t_srvdata_gw_record_log
     <set >
       <if test="fileName != null" >
@@ -62,7 +62,7 @@
     </set>
     where call_id = #{callId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="haidian.audio.pojo.GwRecord" >
+  <update id="updateByPrimaryKey" parameterType="haidian.audio.pojo.po.GwRecord" >
     update t_srvdata_gw_record_log
     set file_name = #{fileName,jdbcType=VARCHAR},
       file_type = #{fileType,jdbcType=INTEGER}

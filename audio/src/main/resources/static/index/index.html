@@ -19,7 +19,7 @@
 
 <div id="audioHtml">
     <div id="audioWindowTitle">
-        <div class="audioTitleName"><h2>录音查询</h2></div>
+        <div id="audioWindowTitleName" class="audioTitleName"><h2>录音查询</h2></div>
         <div class="audioRightTopBtn" onclick="closeAudioWindow()">X</div>
     </div>
     <div id="audioCheckDiv">
@@ -29,9 +29,11 @@
         </div>
         <div id="audioDateDiv">
             <span>时间范围:</span>
-            <input id="audioStartDateInput" class="btn">
+<!--            <input id="audioStartDateInput" class="btn">-->
+            <input id="audioStartDateInput" type="date" class="btn">
             <span>至</span>
-            <input id="audioEndDateInput" class="btn">
+<!--            <input id="audioEndDateInput" class="btn">-->
+            <input id="audioEndDateInput" type="date" class="btn">
         </div>
         <div id="downloadAudioBtn" class="audioCheckBtn" onclick=downloadAudios()>下载</div>
         <div id="searchAudioBtn" class="audioCheckBtn" onclick=queryAudio()>查询</div>
@@ -58,9 +60,8 @@
 <script>
 
     $(function(){
-        initDate();
-        audioUserId=GetUrlParam("id");
-        loadSingleAudio(audioUserId,getNowFormatDate(),getNextFormatDate());
+        var id=GetUrlParam("id");
+        initAudioHtml(id);
     });
 
 

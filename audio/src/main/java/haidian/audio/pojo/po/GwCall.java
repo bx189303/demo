@@ -1,6 +1,5 @@
-package haidian.audio.pojo;
+package haidian.audio.pojo.po;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;

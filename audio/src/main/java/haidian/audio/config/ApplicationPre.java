@@ -1,7 +1,7 @@
 package haidian.audio.config;
 
 import haidian.audio.dao.db2.PersonMapper;
-import haidian.audio.pojo.Person;
+import haidian.audio.pojo.po.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;

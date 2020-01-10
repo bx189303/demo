@@ -5,7 +5,7 @@ import haidian.audio.MainApplication;
 import haidian.audio.dao.db1.GroupRecordMapper;
 import haidian.audio.dao.db1.GwCallMapper;
 import haidian.audio.dao.db2.PersonMapper;
-import haidian.audio.pojo.Person;
+import haidian.audio.pojo.po.Person;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

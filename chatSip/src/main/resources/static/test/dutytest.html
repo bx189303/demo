@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>战位JS测试</title>
+<!--    <link rel="stylesheet" type="text/css" href="../css/base.css">-->
+</head>
+<script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="../js/layui.js"></script>
+<script type="text/javascript" src="http://192.168.8.102:23268/duty/getDuty.js"></script>
+<script type="text/javascript" src="http://192.168.8.102:23270/index/audioRecord.js"></script>
+
+<body>
+<button onclick=openblank()>打开空白页面</button>
+<button onclick=getDutyInfo('039766',callbackshow)>打开战位子页面</button>
+<!--<button onclick="postToChild('父页面发送的消息')">给子页面发送消息</button>-->
+<!--<button onclick=runChildFunc('childtest','test')>调用子页面的方法</button>-->
+<button onclick=getAudioRecord('800008')>打开录音子页面</button>
+<button onclick="f1.al()">闭包方法</button>
+<div style="width:900px;height: 500px;background-color: yellow"></div>
+
+</body>
+<script>
+    function callbackshow(s){
+        console.log(s)
+    }
+
+   // (function () {
+   //     console.log("测试页面加载完的方法");
+   // })()
+   //  window.onload=function () {
+   //      console.log("测试页面加载完的方法");
+   //      // window.f1.al();
+   //  };
+
+    var f1={
+         al(){
+            alert("f1");
+        }
+    }
+    function f2(s){
+        console.log("f2方法 : "+s);
+        // f3(arguments)
+    }
+    function f3(s,y){
+        // for(var i=0; i<arguments.length; i++){
+        //     console.log(arguments[i]);
+        // }
+        console.log("f3方法 : "+s+" "+y);
+    }
+
+    function test(){
+        // console.log("开始打开")
+        getDuty_iframe('6DFEB2D364DA4CD3A4A1EB12A1F462B1');
+        // getDuty_iframe();
+    }
+
+    function openblank(){
+        var html='<iframe id="b" src="http://192.168.8.102:23268/duty/t.html" style="width:700px;height:470px;position:fixed;top:0;left:0;right:0;bottom:0;margin:auto;z-index: 1111;"/>';
+        $('body').append(html);
+        // document.getElementById("dutyIframe").setAttribute("src","http://192.168.8.102:23268/duty/index.html");
+    }
+</script>
+</html>

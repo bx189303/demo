@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="haidian.chat.dao.PersonMapper" >
+  <resultMap id="BaseResultMap" type="haidian.chat.pojo.Person" >
+    <id column="S_ID" property="sId" jdbcType="VARCHAR" />
+    <result column="S_NAME" property="sName" jdbcType="VARCHAR" />
+    <result column="S_PASSWORD" property="sPassword" jdbcType="VARCHAR" />
+    <result column="S_UNIT" property="sUnit" jdbcType="VARCHAR" />
+    <result column="S_UNITNAME" property="sUnitname" jdbcType="VARCHAR" />
+    <result column="S_DESCRIPTION" property="sDescription" jdbcType="VARCHAR" />
+    <result column="S_SEX" property="sSex" jdbcType="VARCHAR" />
+    <result column="N_SEQUENCE" property="nSequence" jdbcType="DECIMAL" />
+    <result column="S_IDENTIFICATION" property="sIdentification" jdbcType="VARCHAR" />
+    <result column="S_DUTY" property="sDuty" jdbcType="VARCHAR" />
+    <result column="S_TEL" property="sTel" jdbcType="VARCHAR" />
+    <result column="S_PHONE" property="sPhone" jdbcType="VARCHAR" />
+    <result column="S_EMAIL" property="sEmail" jdbcType="VARCHAR" />
+    <result column="S_FAX" property="sFax" jdbcType="VARCHAR" />
+    <result column="S_ST" property="sSt" jdbcType="VARCHAR" />
+    <result column="S_JWT" property="sJwt" jdbcType="VARCHAR" />
+    <result column="S_POLICENUM" property="sPolicenum" jdbcType="VARCHAR" />
+    <result column="S_DTEL" property="sDtel" jdbcType="VARCHAR" />
+    <result column="N_DISUSE" property="nDisuse" jdbcType="INTEGER" />
+    <result column="S_GROUP" property="sGroup" jdbcType="VARCHAR" />
+    <result column="S_CATEGORY" property="sCategory" jdbcType="VARCHAR" />
+    <result column="S_ASSIGNMENT" property="sAssignment" jdbcType="VARCHAR" />
+    <result column="N_STATUS" property="nStatus" jdbcType="DECIMAL" />
+    <result column="N_NORMAL" property="nNormal" jdbcType="DECIMAL" />
+    <result column="D_CREATETIME" property="dCreatetime" jdbcType="TIMESTAMP" />
+    <result column="D_UPDATETIME" property="dUpdatetime" jdbcType="TIMESTAMP" />
+    <result column="S_REMARKS" property="sRemarks" jdbcType="VARCHAR" />
+    <result column="S_REMARKSTWO" property="sRemarkstwo" jdbcType="VARCHAR" />
+    <result column="S_REMARKSTHREE" property="sRemarksthree" jdbcType="VARCHAR" />
+    <result column="S_DEVICEID" property="sDeviceid" jdbcType="VARCHAR" />
+    <result column="N_ISDELETE" property="nIsdelete" jdbcType="DECIMAL" />
+    <result column="N_VERSION" property="nVersion" jdbcType="DECIMAL" />
+    <result column="S_IP" property="sIp" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="haidian.chat.pojo.Person" extends="BaseResultMap" >
+    <result column="S_PHOTO" property="sPhoto" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    S_ID, S_NAME, S_PASSWORD, S_UNIT, S_UNITNAME, S_DESCRIPTION, S_SEX, N_SEQUENCE, S_IDENTIFICATION, 
+    S_DUTY, S_TEL, S_PHONE, S_EMAIL, S_FAX, S_ST, S_JWT, S_POLICENUM, S_DTEL, N_DISUSE, 
+    S_GROUP, S_CATEGORY, S_ASSIGNMENT, N_STATUS, N_NORMAL, D_CREATETIME, D_UPDATETIME, 
+    S_REMARKS, S_REMARKSTWO, S_REMARKSTHREE, S_DEVICEID, N_ISDELETE, N_VERSION, S_IP
+  </sql>
+  <sql id="Blob_Column_List" >
+    S_PHOTO
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from T_PERSON
+    where S_ID = #{sId,jdbcType=VARCHAR}
+  </select>
+  <select id="getAll" resultMap="ResultMapWithBLOBs">
+    select
+    p.S_ID S_ID,p.S_NAME S_NAME,u.S_DESCRIPTION S_UNITNAME,p.S_DUTY S_DUTY,p.S_TEL S_TEL,S_POLICENUM
+    from hdyhtx.T_PERSON p,hdyhtx.T_UNIT u where p.S_UNIT=u.S_ID
+    order by p.s_unit desc
+  </select>
+  <select id="getUserByPoliceNum" resultMap="ResultMapWithBLOBs">
+    select
+    p.S_ID S_ID,p.S_NAME S_NAME,u.S_DESCRIPTION S_UNITNAME,p.S_DUTY S_DUTY,p.S_TEL S_TEL,S_POLICENUM
+    from hdyhtx.T_PERSON p,hdyhtx.T_UNIT u where p.S_UNIT=u.S_ID and p.S_POLICENUM=#{policeNum}
+  </select>
+  <select id="searchByNameOrUnitnameOrPolicenum" resultType="java.lang.String">
+    select
+    S_ID
+    FROM hdyhtx.T_PERSON
+    WHERE S_NAME LIKE #{name}
+    union
+    select
+    S_ID
+    FROM hdyhtx.T_PERSON
+    WHERE S_UNITNAME like #{name}
+    union
+    select
+    S_ID
+    FROM hdyhtx.T_PERSON
+    WHERE S_POLICENUM like #{name}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from T_PERSON
+    where S_ID = #{sId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="haidian.chat.pojo.Person" useGeneratedKeys="true" keyProperty="sId" >
+    insert into T_PERSON (S_NAME, S_PASSWORD, S_UNIT, 
+      S_UNITNAME, S_DESCRIPTION, S_SEX, 
+      N_SEQUENCE, S_IDENTIFICATION, S_DUTY, 
+      S_TEL, S_PHONE, S_EMAIL, 
+      S_FAX, S_ST, S_JWT, S_POLICENUM, 
+      S_DTEL, N_DISUSE, S_GROUP, 
+      S_CATEGORY, S_ASSIGNMENT, N_STATUS, 
+      N_NORMAL, D_CREATETIME, D_UPDATETIME, 
+      S_REMARKS, S_REMARKSTWO, S_REMARKSTHREE, 
+      S_DEVICEID, N_ISDELETE, N_VERSION, 
+      S_IP, S_PHOTO)
+    values (#{sName,jdbcType=VARCHAR}, #{sPassword,jdbcType=VARCHAR}, #{sUnit,jdbcType=VARCHAR}, 
+      #{sUnitname,jdbcType=VARCHAR}, #{sDescription,jdbcType=VARCHAR}, #{sSex,jdbcType=VARCHAR}, 
+      #{nSequence,jdbcType=DECIMAL}, #{sIdentification,jdbcType=VARCHAR}, #{sDuty,jdbcType=VARCHAR}, 
+      #{sTel,jdbcType=VARCHAR}, #{sPhone,jdbcType=VARCHAR}, #{sEmail,jdbcType=VARCHAR}, 
+      #{sFax,jdbcType=VARCHAR}, #{sSt,jdbcType=VARCHAR}, #{sJwt,jdbcType=VARCHAR}, #{sPolicenum,jdbcType=VARCHAR}, 
+      #{sDtel,jdbcType=VARCHAR}, #{nDisuse,jdbcType=INTEGER}, #{sGroup,jdbcType=VARCHAR}, 
+      #{sCategory,jdbcType=VARCHAR}, #{sAssignment,jdbcType=VARCHAR}, #{nStatus,jdbcType=DECIMAL}, 
+      #{nNormal,jdbcType=DECIMAL}, #{dCreatetime,jdbcType=TIMESTAMP}, #{dUpdatetime,jdbcType=TIMESTAMP}, 
+      #{sRemarks,jdbcType=VARCHAR}, #{sRemarkstwo,jdbcType=VARCHAR}, #{sRemarksthree,jdbcType=VARCHAR}, 
+      #{sDeviceid,jdbcType=VARCHAR}, #{nIsdelete,jdbcType=DECIMAL}, #{nVersion,jdbcType=DECIMAL}, 
+      #{sIp,jdbcType=VARCHAR}, #{sPhoto,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="haidian.chat.pojo.Person" useGeneratedKeys="true" keyProperty="sId" >
+    insert into T_PERSON
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sName != null" >
+        S_NAME,
+      </if>
+      <if test="sPassword != null" >
+        S_PASSWORD,
+      </if>
+      <if test="sUnit != null" >
+        S_UNIT,
+      </if>
+      <if test="sUnitname != null" >
+        S_UNITNAME,
+      </if>
+      <if test="sDescription != null" >
+        S_DESCRIPTION,
+      </if>
+      <if test="sSex != null" >
+        S_SEX,
+      </if>
+      <if test="nSequence != null" >
+        N_SEQUENCE,
+      </if>
+      <if test="sIdentification != null" >
+        S_IDENTIFICATION,
+      </if>
+      <if test="sDuty != null" >
+        S_DUTY,
+      </if>
+      <if test="sTel != null" >
+        S_TEL,
+      </if>
+      <if test="sPhone != null" >
+        S_PHONE,
+      </if>
+      <if test="sEmail != null" >
+        S_EMAIL,
+      </if>
+      <if test="sFax != null" >
+        S_FAX,
+      </if>
+      <if test="sSt != null" >
+        S_ST,
+      </if>
+      <if test="sJwt != null" >
+        S_JWT,
+      </if>
+      <if test="sPolicenum != null" >
+        S_POLICENUM,
+      </if>
+      <if test="sDtel != null" >
+        S_DTEL,
+      </if>
+      <if test="nDisuse != null" >
+        N_DISUSE,
+      </if>
+      <if test="sGroup != null" >
+        S_GROUP,
+      </if>
+      <if test="sCategory != null" >
+        S_CATEGORY,
+      </if>
+      <if test="sAssignment != null" >
+        S_ASSIGNMENT,
+      </if>
+      <if test="nStatus != null" >
+        N_STATUS,
+      </if>
+      <if test="nNormal != null" >
+        N_NORMAL,
+      </if>
+      <if test="dCreatetime != null" >
+        D_CREATETIME,
+      </if>
+      <if test="dUpdatetime != null" >
+        D_UPDATETIME,
+      </if>
+      <if test="sRemarks != null" >
+        S_REMARKS,
+      </if>
+      <if test="sRemarkstwo != null" >
+        S_REMARKSTWO,
+      </if>
+      <if test="sRemarksthree != null" >
+        S_REMARKSTHREE,
+      </if>
+      <if test="sDeviceid != null" >
+        S_DEVICEID,
+      </if>
+      <if test="nIsdelete != null" >
+        N_ISDELETE,
+      </if>
+      <if test="nVersion != null" >
+        N_VERSION,
+      </if>
+      <if test="sIp != null" >
+        S_IP,
+      </if>
+      <if test="sPhoto != null" >
+        S_PHOTO,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sName != null" >
+        #{sName,jdbcType=VARCHAR},
+      </if>
+      <if test="sPassword != null" >
+        #{sPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="sUnit != null" >
+        #{sUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="sUnitname != null" >
+        #{sUnitname,jdbcType=VARCHAR},
+      </if>
+      <if test="sDescription != null" >
+        #{sDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="sSex != null" >
+        #{sSex,jdbcType=VARCHAR},
+      </if>
+      <if test="nSequence != null" >
+        #{nSequence,jdbcType=DECIMAL},
+      </if>
+      <if test="sIdentification != null" >
+        #{sIdentification,jdbcType=VARCHAR},
+      </if>
+      <if test="sDuty != null" >
+        #{sDuty,jdbcType=VARCHAR},
+      </if>
+      <if test="sTel != null" >
+        #{sTel,jdbcType=VARCHAR},
+      </if>
+      <if test="sPhone != null" >
+        #{sPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="sEmail != null" >
+        #{sEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="sFax != null" >
+        #{sFax,jdbcType=VARCHAR},
+      </if>
+      <if test="sSt != null" >
+        #{sSt,jdbcType=VARCHAR},
+      </if>
+      <if test="sJwt != null" >
+        #{sJwt,jdbcType=VARCHAR},
+      </if>
+      <if test="sPolicenum != null" >
+        #{sPolicenum,jdbcType=VARCHAR},
+      </if>
+      <if test="sDtel != null" >
+        #{sDtel,jdbcType=VARCHAR},
+      </if>
+      <if test="nDisuse != null" >
+        #{nDisuse,jdbcType=INTEGER},
+      </if>
+      <if test="sGroup != null" >
+        #{sGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="sCategory != null" >
+        #{sCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="sAssignment != null" >
+        #{sAssignment,jdbcType=VARCHAR},
+      </if>
+      <if test="nStatus != null" >
+        #{nStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="nNormal != null" >
+        #{nNormal,jdbcType=DECIMAL},
+      </if>
+      <if test="dCreatetime != null" >
+        #{dCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dUpdatetime != null" >
+        #{dUpdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sRemarks != null" >
+        #{sRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="sRemarkstwo != null" >
+        #{sRemarkstwo,jdbcType=VARCHAR},
+      </if>
+      <if test="sRemarksthree != null" >
+        #{sRemarksthree,jdbcType=VARCHAR},
+      </if>
+      <if test="sDeviceid != null" >
+        #{sDeviceid,jdbcType=VARCHAR},
+      </if>
+      <if test="nIsdelete != null" >
+        #{nIsdelete,jdbcType=DECIMAL},
+      </if>
+      <if test="nVersion != null" >
+        #{nVersion,jdbcType=DECIMAL},
+      </if>
+      <if test="sIp != null" >
+        #{sIp,jdbcType=VARCHAR},
+      </if>
+      <if test="sPhoto != null" >
+        #{sPhoto,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="haidian.chat.pojo.Person" >
+    update T_PERSON
+    <set >
+      <if test="sName != null" >
+        S_NAME = #{sName,jdbcType=VARCHAR},
+      </if>
+      <if test="sPassword != null" >
+        S_PASSWORD = #{sPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="sUnit != null" >
+        S_UNIT = #{sUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="sUnitname != null" >
+        S_UNITNAME = #{sUnitname,jdbcType=VARCHAR},
+      </if>
+      <if test="sDescription != null" >
+        S_DESCRIPTION = #{sDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="sSex != null" >
+        S_SEX = #{sSex,jdbcType=VARCHAR},
+      </if>
+      <if test="nSequence != null" >
+        N_SEQUENCE = #{nSequence,jdbcType=DECIMAL},
+      </if>
+      <if test="sIdentification != null" >
+        S_IDENTIFICATION = #{sIdentification,jdbcType=VARCHAR},
+      </if>
+      <if test="sDuty != null" >
+        S_DUTY = #{sDuty,jdbcType=VARCHAR},
+      </if>
+      <if test="sTel != null" >
+        S_TEL = #{sTel,jdbcType=VARCHAR},
+      </if>
+      <if test="sPhone != null" >
+        S_PHONE = #{sPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="sEmail != null" >
+        S_EMAIL = #{sEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="sFax != null" >
+        S_FAX = #{sFax,jdbcType=VARCHAR},
+      </if>
+      <if test="sSt != null" >
+        S_ST = #{sSt,jdbcType=VARCHAR},
+      </if>
+      <if test="sJwt != null" >
+        S_JWT = #{sJwt,jdbcType=VARCHAR},
+      </if>
+      <if test="sPolicenum != null" >
+        S_POLICENUM = #{sPolicenum,jdbcType=VARCHAR},
+      </if>
+      <if test="sDtel != null" >
+        S_DTEL = #{sDtel,jdbcType=VARCHAR},
+      </if>
+      <if test="nDisuse != null" >
+        N_DISUSE = #{nDisuse,jdbcType=INTEGER},
+      </if>
+      <if test="sGroup != null" >
+        S_GROUP = #{sGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="sCategory != null" >
+        S_CATEGORY = #{sCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="sAssignment != null" >
+        S_ASSIGNMENT = #{sAssignment,jdbcType=VARCHAR},
+      </if>
+      <if test="nStatus != null" >
+        N_STATUS = #{nStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="nNormal != null" >
+        N_NORMAL = #{nNormal,jdbcType=DECIMAL},
+      </if>
+      <if test="dCreatetime != null" >
+        D_CREATETIME = #{dCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dUpdatetime != null" >
+        D_UPDATETIME = #{dUpdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sRemarks != null" >
+        S_REMARKS = #{sRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="sRemarkstwo != null" >
+        S_REMARKSTWO = #{sRemarkstwo,jdbcType=VARCHAR},
+      </if>
+      <if test="sRemarksthree != null" >
+        S_REMARKSTHREE = #{sRemarksthree,jdbcType=VARCHAR},
+      </if>
+      <if test="sDeviceid != null" >
+        S_DEVICEID = #{sDeviceid,jdbcType=VARCHAR},
+      </if>
+      <if test="nIsdelete != null" >
+        N_ISDELETE = #{nIsdelete,jdbcType=DECIMAL},
+      </if>
+      <if test="nVersion != null" >
+        N_VERSION = #{nVersion,jdbcType=DECIMAL},
+      </if>
+      <if test="sIp != null" >
+        S_IP = #{sIp,jdbcType=VARCHAR},
+      </if>
+      <if test="sPhoto != null" >
+        S_PHOTO = #{sPhoto,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where S_ID = #{sId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="haidian.chat.pojo.Person" >
+    update T_PERSON
+    set S_NAME = #{sName,jdbcType=VARCHAR},
+      S_PASSWORD = #{sPassword,jdbcType=VARCHAR},
+      S_UNIT = #{sUnit,jdbcType=VARCHAR},
+      S_UNITNAME = #{sUnitname,jdbcType=VARCHAR},
+      S_DESCRIPTION = #{sDescription,jdbcType=VARCHAR},
+      S_SEX = #{sSex,jdbcType=VARCHAR},
+      N_SEQUENCE = #{nSequence,jdbcType=DECIMAL},
+      S_IDENTIFICATION = #{sIdentification,jdbcType=VARCHAR},
+      S_DUTY = #{sDuty,jdbcType=VARCHAR},
+      S_TEL = #{sTel,jdbcType=VARCHAR},
+      S_PHONE = #{sPhone,jdbcType=VARCHAR},
+      S_EMAIL = #{sEmail,jdbcType=VARCHAR},
+      S_FAX = #{sFax,jdbcType=VARCHAR},
+      S_ST = #{sSt,jdbcType=VARCHAR},
+      S_JWT = #{sJwt,jdbcType=VARCHAR},
+      S_POLICENUM = #{sPolicenum,jdbcType=VARCHAR},
+      S_DTEL = #{sDtel,jdbcType=VARCHAR},
+      N_DISUSE = #{nDisuse,jdbcType=INTEGER},
+      S_GROUP = #{sGroup,jdbcType=VARCHAR},
+      S_CATEGORY = #{sCategory,jdbcType=VARCHAR},
+      S_ASSIGNMENT = #{sAssignment,jdbcType=VARCHAR},
+      N_STATUS = #{nStatus,jdbcType=DECIMAL},
+      N_NORMAL = #{nNormal,jdbcType=DECIMAL},
+      D_CREATETIME = #{dCreatetime,jdbcType=TIMESTAMP},
+      D_UPDATETIME = #{dUpdatetime,jdbcType=TIMESTAMP},
+      S_REMARKS = #{sRemarks,jdbcType=VARCHAR},
+      S_REMARKSTWO = #{sRemarkstwo,jdbcType=VARCHAR},
+      S_REMARKSTHREE = #{sRemarksthree,jdbcType=VARCHAR},
+      S_DEVICEID = #{sDeviceid,jdbcType=VARCHAR},
+      N_ISDELETE = #{nIsdelete,jdbcType=DECIMAL},
+      N_VERSION = #{nVersion,jdbcType=DECIMAL},
+      S_IP = #{sIp,jdbcType=VARCHAR},
+      S_PHOTO = #{sPhoto,jdbcType=LONGVARCHAR}
+    where S_ID = #{sId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="haidian.chat.pojo.Person" >
+    update T_PERSON
+    set S_NAME = #{sName,jdbcType=VARCHAR},
+      S_PASSWORD = #{sPassword,jdbcType=VARCHAR},
+      S_UNIT = #{sUnit,jdbcType=VARCHAR},
+      S_UNITNAME = #{sUnitname,jdbcType=VARCHAR},
+      S_DESCRIPTION = #{sDescription,jdbcType=VARCHAR},
+      S_SEX = #{sSex,jdbcType=VARCHAR},
+      N_SEQUENCE = #{nSequence,jdbcType=DECIMAL},
+      S_IDENTIFICATION = #{sIdentification,jdbcType=VARCHAR},
+      S_DUTY = #{sDuty,jdbcType=VARCHAR},
+      S_TEL = #{sTel,jdbcType=VARCHAR},
+      S_PHONE = #{sPhone,jdbcType=VARCHAR},
+      S_EMAIL = #{sEmail,jdbcType=VARCHAR},
+      S_FAX = #{sFax,jdbcType=VARCHAR},
+      S_ST = #{sSt,jdbcType=VARCHAR},
+      S_JWT = #{sJwt,jdbcType=VARCHAR},
+      S_POLICENUM = #{sPolicenum,jdbcType=VARCHAR},
+      S_DTEL = #{sDtel,jdbcType=VARCHAR},
+      N_DISUSE = #{nDisuse,jdbcType=INTEGER},
+      S_GROUP = #{sGroup,jdbcType=VARCHAR},
+      S_CATEGORY = #{sCategory,jdbcType=VARCHAR},
+      S_ASSIGNMENT = #{sAssignment,jdbcType=VARCHAR},
+      N_STATUS = #{nStatus,jdbcType=DECIMAL},
+      N_NORMAL = #{nNormal,jdbcType=DECIMAL},
+      D_CREATETIME = #{dCreatetime,jdbcType=TIMESTAMP},
+      D_UPDATETIME = #{dUpdatetime,jdbcType=TIMESTAMP},
+      S_REMARKS = #{sRemarks,jdbcType=VARCHAR},
+      S_REMARKSTWO = #{sRemarkstwo,jdbcType=VARCHAR},
+      S_REMARKSTHREE = #{sRemarksthree,jdbcType=VARCHAR},
+      S_DEVICEID = #{sDeviceid,jdbcType=VARCHAR},
+      N_ISDELETE = #{nIsdelete,jdbcType=DECIMAL},
+      N_VERSION = #{nVersion,jdbcType=DECIMAL},
+      S_IP = #{sIp,jdbcType=VARCHAR}
+    where S_ID = #{sId,jdbcType=VARCHAR}
+  </update>
+</mapper>

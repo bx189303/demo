@@ -1,19 +1,12 @@
 package haidian.chat.config;
 
 import haidian.chat.controller.PersonController;
-import haidian.chat.dao.PersonMapper;
-import haidian.chat.pojo.Person;
-import haidian.chat.redis.RedisUtil;
+import haidian.chat.redis.util.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 /**
  * 项目启动后开始执行
@@ -34,14 +27,7 @@ public class ApplicationPre implements CommandLineRunner {
         //加载所有人员信息到redis
         personController.loadUserInfo();
         //移除所有在线状态
-        Set<String> onKeys = redisUtil.keys("*on");
-        if(onKeys.size()!=0){
-            Iterator<String> it = onKeys.iterator();
-            while (it.hasNext()) {
-                String onId = it.next();
-                redisUtil.del(onId);
-            }
-        }
+        redisUtil.del("websocketon");
         log.info("移除所有在线状态");
         log.info("============= chat项目启动完成 =============");
 

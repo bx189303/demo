@@ -1,0 +1,17 @@
+{
+  "type": "msg",
+  "sendTime": "消息发送时间",
+  "data": {
+    "type": "group/single",
+    "src": "A",
+    "dst": "G2",
+    "content": {
+      "type": "file",
+      "content": {
+        "type": "img",
+        "name": "test.png",
+        "content": "/user/local/3_9782"
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "type": "onoff",
+  "sendTime": "消息发送时间",
+  "data": {
+    "type": "on/off",
+    "userId": "用户id"
+  }
+}

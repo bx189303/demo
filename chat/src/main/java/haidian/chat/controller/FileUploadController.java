@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import haidian.chat.util.Result;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -70,11 +69,15 @@ public class FileUploadController {
         }
     }
 
-    @RequestMapping(value = "download/{fileUrl}/{fileName}", produces = "application/json;charset=UTF-8")
-    public void downloadFile( HttpServletResponse response, @PathVariable String fileUrl, @PathVariable String fileName){
+    @RequestMapping(value = "/download", produces = "application/json;charset=UTF-8")
+    public void downloadFile( HttpServletResponse response, HttpServletRequest request){
         InputStream fin = null;
         ServletOutputStream out = null;
+        String fileUrl="";
+        String fileName="";
         try {
+            fileUrl=request.getParameter("fileUrl");
+            fileName=request.getParameter("fileName");
             String encodeName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
             fin = new FileInputStream(new File(filePath+fileUrl));
             BufferedInputStream bis = new BufferedInputStream(fin);
@@ -102,6 +105,39 @@ public class FileUploadController {
             }
         }
     }
+
+//    @RequestMapping(value = "download/{fileUrl}/{fileName}", produces = "application/json;charset=UTF-8")
+//    public void downloadFile( HttpServletResponse response, @PathVariable String fileUrl, @PathVariable String fileName){
+//        InputStream fin = null;
+//        ServletOutputStream out = null;
+//        try {
+//            String encodeName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
+//            fin = new FileInputStream(new File(filePath+fileUrl));
+//            BufferedInputStream bis = new BufferedInputStream(fin);
+//            out = response.getOutputStream();
+//            response.setCharacterEncoding("utf-8");
+//            response.setContentType("application/force-download");
+//            response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");//设置允许跨域的key
+//            response.setHeader("Content-Disposition", "attachment;fileName=" + encodeName);
+//            byte[] buffer = new byte[1024];
+//            int i = bis.read(buffer);
+//            while (i != -1) {
+//                out.write(buffer, 0, i);
+//                i = bis.read(buffer);
+//            }
+//            out.flush();
+//            response.flushBuffer();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                if(fin != null) fin.close();
+//                if(out != null) out.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     @RequestMapping("/test")
     public String test() {

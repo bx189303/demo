@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script src="../js/vue.js"></script>
+<!--<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>-->
+<body>
+<h2>测试测试测试qweqwe</h2>
+<div id="vuetest">
+    <div id="vue_det" v-if="titleshow">
+        <h1>site : {{site}}</h1>
+        <h1>url : {{url}}</h1>
+        <h1>{{details()}}</h1>
+    </div>
+    <div id="each-div">
+        <div v-for="(p,index) in ps">{{p.name}}--{{index}}<button @click=deltest(index)>删除-{{index}}</button></div>
+    </div>
+    <div @click=testfunc("参数")>
+        点击事件
+    </div>
+
+    <div id="v2">
+        <runoob></runoob>
+        <ul>
+            <litest v-for="(p,index) in ps" v-bind:data="p" v-bind:index="index" :key="index"></litest>
+        </ul>
+        <div>{{ps.length}}</div>
+        <div>{{testinput}}</div>
+        <input type="text" v-model="testinput">
+        <input v-model="testinput" placeholder="编辑我……">
+
+    </div>
+
+</div>
+<script type="text/javascript">
+
+    Vue.component('runoob', {
+        template: '<h1>自定义组件!</h1>'
+    })
+
+    Vue.component('litest',{
+        props:['data','index'],
+        template: '<li><span>{{data.name}}  </span><button @click=delLitest>删除-{{index}}</button></li>',
+        methods:{
+            delLitest:function(){
+                console.log('delLitest方法')
+            }
+        }
+    })
+
+    function delLitest(index){
+        console.log(index)
+    }
+
+    var v2=new Vue({
+        el:"#v2",
+        data:{
+            testinput:"输入框文字",
+            text: "vm.site",
+            ps:[{name:'用户一'},{name:'用户二'}]
+        },
+        methods:{
+            delLitest:function(index){
+                console.log(index)
+            }
+        }
+    })
+
+    $(function(){
+        console.log(v2.text);
+        console.log(vm.site);
+        console.log(v2.ps.length);
+        // vm.$options.methods.testfunc('外部调用测试');
+    })
+
+
+    var vm = new Vue({
+        el: '#vuetest',
+        data: {
+            titleshow:false,
+            site: "菜鸟教程",
+            url: "www.runoob.com",
+            alexa: "10000",
+            ps:[{name:'用户一'},{name:'用户二'}]
+        },
+        methods: {
+            details: function() {
+                return  this.site + " - 学的不仅是技术，更是梦想！";
+            },
+            testfunc:function(p){
+                alert(p);
+            },
+            deltest(i){
+                this.ps.splice(i,1);
+            }
+        }
+    })
+</script>
+</body>
+</html>

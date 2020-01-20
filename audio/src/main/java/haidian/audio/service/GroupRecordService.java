@@ -26,4 +26,13 @@ public class GroupRecordService {
         return groupRecords;
     }
 
+    public List<GroupRecord> getGroupAudioByName(String jqId) {
+        List<GroupRecord> groupRecords=groupRecordMapper.getGroupAudioByName(jqId);
+        for (GroupRecord groupRecord : groupRecords) {
+            String oldFileName=groupRecord.getRecordFile();
+            groupRecord.setRecordFile(oldFileName.replace("\\","/"));
+        }
+        groupRecords= ListUtil.noDuplicate(groupRecords);
+        return groupRecords;
+    }
 }

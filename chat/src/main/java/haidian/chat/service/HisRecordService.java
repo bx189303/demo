@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import haidian.chat.dao.MessageMapper;
 import haidian.chat.pojo.Message;
-import haidian.chat.redis.RedisUtil;
+import haidian.chat.redis.util.RedisUtil;
 import haidian.chat.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +56,7 @@ public class HisRecordService {
                 msg.put("src",r.get(message.getSrc()));
                 msg.put("src",r.get(message.getSrc()));
                 msg.put("sendtime", DateUtil.getDateTimeToString(message.getSendtime()));
+                msg.put("receivetime",DateUtil.getDateTimeToString(message.getReceivetime()));
                 res.add(msg);
             }
         }

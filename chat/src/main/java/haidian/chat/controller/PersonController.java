@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import haidian.chat.dao.GroupMapper;
 import haidian.chat.dao.PersonMapper;
 import haidian.chat.pojo.Person;
-import haidian.chat.redis.RedisUtil;
+import haidian.chat.redis.util.RedisUtil;
 import haidian.chat.util.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +42,7 @@ public class PersonController {
             for (Person person : persons) {
                 r.set(person.getsId(),person);
                 r.lSet("personList",person);
+                r.hset("personMapOfIdNum",person.getsId(),person.getsPolicenum());
             }
             log.info("加载人员信息完毕");
             result = Result.ok();

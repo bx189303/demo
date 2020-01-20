@@ -1,0 +1,13 @@
+{
+  "type": "single",
+  "dst": {
+    "uuid": "xxx",
+    "name": ""
+  },
+  "content": {
+    "type": "text",
+    "content": "最后一条文字内容"
+  },
+  "lastTime": "最后一条消息时间",
+  "notice": 10
+}

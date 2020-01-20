@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import haidian.chat.dao.GroupMapper;
 import haidian.chat.pojo.Group;
 import haidian.chat.pojo.Person;
-import haidian.chat.redis.RedisUtil;
+import haidian.chat.redis.util.RedisUtil;
 import haidian.chat.util.DateUtil;
 import haidian.chat.util.Result;
 import org.slf4j.Logger;
@@ -37,20 +37,25 @@ public class MainController {
     @RequestMapping("/send")
     public Result service(@RequestBody JSONObject json){
         Result result=null;
-        String type=json.getString("type");
-        if("msg".equals(type)){
-            result=sendMsg(json);
-        }else if("notify".equals(type)){
-            result=sendNotify(json);
-        }else if("onoff".equals(type)){
-            result=onoff(json);
-        }else{
-            return Result.build(500,"未知type");
+        try{
+            String type=json.getString("type");
+            if("msg".equals(type)){
+                result=sendMsg(json);
+            }else if("notify".equals(type)){
+                result=sendNotify(json);
+            }else if("onoff".equals(type)){
+                result=onoff(json);
+            }else{
+                return Result.build(500,"未知type");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return result;
     }
 
-    public Result sendMsg(JSONObject msg){
+    public Result sendMsg(JSONObject msg) throws Exception {
         //添加字段 uuid ,readCount ,isValid,receiveTime
         msg.put("isValid",1);
         String receiveTime=DateUtil.getDateToStrings(new Date());
@@ -75,13 +80,8 @@ public class MainController {
 //        System.out.println("添加字段后msg："+msg);
 
         //发送kafka  r_msg
-//        redisOnKafka(msg);//模拟已经监听到kafka消息
         template.convertAndSend("RECEIVE",JSON.toJSONString(msg));
 
-//        //返回uuid和接受时间
-//        JSONObject dataJson=new JSONObject();
-//        dataJson.put("uuid",uuid);
-//        dataJson.put("receiveTime",receiveTime);
         return Result.ok(msg);
     }
 

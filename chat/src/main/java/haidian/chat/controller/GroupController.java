@@ -6,7 +6,7 @@ import haidian.chat.dao.GroupUserMapper;
 import haidian.chat.pojo.Group;
 import haidian.chat.pojo.GroupUser;
 import haidian.chat.pojo.Person;
-import haidian.chat.redis.RedisUtil;
+import haidian.chat.redis.util.RedisUtil;
 import haidian.chat.service.GroupService;
 import haidian.chat.util.Result;
 import org.slf4j.Logger;

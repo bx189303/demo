@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>微信</title>
+    <link rel="stylesheet" type="text/css" href="../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../css/chat.css">
+</head>
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script src="../layer/layer.js"></script>
+<script src="../js/util.js"></script>
+<style>
+
+</style>
+<body style="overflow-y: hidden">
+    <!-- 头部 -->
+    <div style="width:100%;height: 5%;background-color: #EDEDED">
+        <div style="width:8%;height:100%;float:left;margin-right: 3%;">
+            <img id="topOutIcon" class="btnIcon" src="../img/back.png" height="100%" width="100%">
+            <img id="topBackIcon" class="btnIcon" src="../img/back.png" height="100%" width="100%">
+        </div>
+        <div style="vertical-align:middle;height: 100%;width:64%;float: left">
+            <h2 id="titleName" style="display:block;position: relative;top:50%;transform:translateY(-50%);left:52%;width: 20%;">用户A</h2>
+            <h2 id="titleChatDetail" style="display:block;position: relative;top:50%;transform:translateY(-50%);left:52%;width: 20%;display: none">对话详情</h2>
+        </div>
+        <div style="width:8%;height:100%;float:right;margin-right: 3%;">
+            <img id="topPointIcon" class="btnIcon" src="../img/point.png" height="100%" width="100%">
+        </div>
+    </div>
+
+    <!-- 聊天详情 -->
+    <div id="chatDetailDiv" style="width:100%;height: 95%;display: none">
+        <div style="width:100%;overflow: hidden">
+            <div class="chatPersonDiv">
+                <img src="../img/head.png" >
+                用户A
+            </div>
+            <div class="chatPersonDiv">
+                <img src="../img/head.png" >
+                用户B
+            </div>
+            <div class="chatPersonDiv">
+                <img src="../img/head.png" >
+                用户C
+            </div>
+            <div class="chatPersonDiv">
+                <img src="../img/head.png" >
+                用户D
+            </div>
+            <div class="chatPersonDiv">
+                <img src="../img/head.png" >
+                用户E
+            </div>
+            <div id="chatPersonAddIcon" class="btnIcon chatPersonDiv">
+                <img src="../img/jia.png" >
+            </div>
+        </div>
+        <div id="groupDetail" style="width:100%;padding:3%;display:none">
+            <span>群聊名称</span>
+            <input type="text" placeholder="xx讨论群" style="margin-left: 3%;">
+            <input type="button" class="btnIcon" value="确认修改" style="float: right;margin-right: 6%;width: 16%;">
+        </div>
+
+    </div>
+    <!--中部-->
+    <div id="chatMainDiv" style="width:100%;height: 95%;">
+        <!-- 聊天记录 -->
+        <div id="chatWindow" class="scrollDiv" style="overflow-y:scroll;width:100%;height: 80%;background-color: #F6F6F6">
+            <div class="leftTalk">
+                <div class="leftTalkImgDiv talkImgDiv">
+                    <img src="../img/head.png">
+                </div>
+                <div class="leftTalkContent">
+                    <div class="talkUser">用户A</div>
+                    <div class="talkBubble">今天星期几</div>
+                </div>
+            </div>
+
+            <div class="leftTalk">
+                <div class="leftTalkImgDiv talkImgDiv">
+                    <img src="../img/head.png">
+                </div>
+                <div class="leftTalkContent">
+                    <div class="talkUser">用户A</div>
+                    <div class="talkBubble">今天星期几</div>
+                </div>
+            </div>
+            <div class="leftTalk">
+                <div class="leftTalkImgDiv talkImgDiv">
+                    <img src="../img/head.png">
+                </div>
+                <div class="leftTalkContent">
+                    <div class="talkUser">用户A</div>
+                    <div class="talkBubble">今天星期几</div>
+                </div>
+            </div><div class="leftTalk">
+            <div class="leftTalkImgDiv talkImgDiv">
+                <img src="../img/head.png">
+            </div>
+            <div class="leftTalkContent">
+                <div class="talkUser">用户A</div>
+                <div class="talkBubble">今天星期几</div>
+            </div>
+        </div>
+            <div class="leftTalk">
+                <div class="leftTalkImgDiv talkImgDiv">
+                    <img src="../img/head.png">
+                </div>
+                <div class="leftTalkContent">
+                    <div class="talkUser">用户A</div>
+                    <div class="talkBubble">今天星期几</div>
+                </div>
+            </div>
+            <div class="leftTalk">
+                <div class="leftTalkImgDiv talkImgDiv">
+                    <img src="../img/head.png">
+                </div>
+                <div class="leftTalkContent">
+                    <div class="talkUser">用户A</div>
+                    <div class="talkBubble">今天星期几</div>
+                </div>
+            </div>
+            <div class="leftTalk">
+                <div class="leftTalkImgDiv talkImgDiv">
+                    <img src="../img/head.png">
+                </div>
+                <div class="leftTalkContent">
+                    <div class="talkUser">用户A</div>
+                    <div class="talkBubble">今天星期几</div>
+                </div>
+            </div>
+            <div class="leftTalk">
+                <div class="leftTalkImgDiv talkImgDiv">
+                    <img src="../img/head.png">
+                </div>
+                <div class="leftTalkContent">
+                    <div class="talkUser">用户A</div>
+                    <div class="talkBubble">今天星期几</div>
+                </div>
+            </div>
+
+
+            <div class="RightTalk">
+                <div class="rightTalkImgDiv talkImgDiv">
+                    <img src="../img/head.png">
+                </div>
+                <div class="rightTalkContent">
+                    <div class="talkUser">我</div>
+                    <div class="rightTalkBubble">不知道</div>
+                </div>
+            </div>
+
+
+        </div>
+        <!-- 底部 -->
+        <div style="width:100%;height: 20%;">
+            <textarea id="talkInput" class="scrollDiv" style="width: 93%;height: 55%;margin: 3%;"></textarea>
+            <input type="button" id="talksub" value="发送" style="width: 15%;height: 20%;float: right;margin-right: 3%;">
+        </div>
+    </div>
+</body>
+<script>
+    var src="";
+    var dst="";
+    var type="";
+
+    $(function(){
+        src=GetUrlParam("src");
+        dst=GetUrlParam("dst");
+        type=GetUrlParam("type");
+        console.log(src+" "+dst+" "+type);
+        if(type=="group"){
+            $("#groupDetail").show();
+        }
+
+        scrollChatWindow();
+        openSocket();
+    });
+
+    function openSocket() {
+        if(typeof(WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        }else{
+            console.log("您的浏览器支持WebSocket");
+            var socketUrl="http://localhost:8080/ws/"+src;
+            socketUrl=socketUrl.replace("https","ws").replace("http","ws");
+            console.log(socketUrl);
+            socket = new WebSocket(socketUrl);
+            //打开事件
+            socket.onopen = function() {
+                console.log(src+" : 聊天页面websocket已打开");
+            };
+            //关闭事件
+            socket.onclose = function() {
+                console.log("websocket已关闭");
+            };
+            //发生了错误事件
+            socket.onerror = function() {
+                console.log("websocket发生了错误");
+            }
+            //获得消息事件
+            socket.onmessage = function(msg) {
+                console.log("chat页面 ： "+msg.data.type);
+
+
+
+
+
+
+            };
+
+        }
+    }
+
+    //发送消息
+    $("#talksub").on("click",function(){
+        //获取内容
+        var content=$("#talkInput").val();
+        //发送
+        var param={
+            "type":"msg",
+            "sendTime":getMyDate(Date.now()),
+            "data":{
+                "type": type,
+                "src": src,
+                "dst": dst,
+                "content": {
+                    "type": "text",
+                    "content": content
+                }
+            }
+        };
+        var data=JSON.stringify(param);
+        var url="/send";
+        $.ajax({
+            type : "POST",
+            contentType: "application/json;charset=UTF-8",
+            url : url,
+            data : data,
+            //请求成功
+            success : function(result) {
+                var uuid=result.data.uuid;
+                //显示
+                showTalk(content,uuid);
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        })
+        //清空输入框
+        $("#talkInput").val("");
+    })
+
+    //显示发送消息
+    function showTalk(data,uuid){
+        var html='<div id="'+uuid+'" class="RightTalk">\n' +
+            '                <div class="rightTalkImgDiv talkImgDiv">\n' +
+            '                    <img src="../img/head.png">\n' +
+            '                </div>\n' +
+            '                <div class="rightTalkContent">\n' +
+            '                    <div class="talkUser">我</div>\n' +
+            '                    <div class="rightTalkBubble">'+data+'</div>\n' +
+            '                </div>\n' +
+            '            </div>'
+        $("#chatWindow").append(html);
+        scrollChatWindow();
+    }
+
+    //对话窗口滚动条默认最下方
+    function scrollChatWindow(){
+        $('#chatWindow').scrollTop( $('#chatWindow')[0].scrollHeight);
+    }
+
+    //左上角撤销按钮-关闭窗口
+    $("#topOutIcon").on("click",function(){
+        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+        parent.layer.close(index); //再执行关闭
+    })
+
+    //右上角按钮-查看对话详情
+    $("#topPointIcon").on("click",function(){
+        //切换显示
+        $("#topPointIcon").hide();
+        $("#titleName").hide();
+        $("#titleChatDetail").show();
+        $("#chatMainDiv").hide();
+        $("#topBackIcon").show();
+        $("#topOutIcon").hide();
+        $("#chatDetailDiv").show();
+
+    })
+    $("#topBackIcon").on("click",function(){
+        //切换显示
+        $("#topPointIcon").show();
+        $("#titleName").show();
+        $("#titleChatDetail").hide();
+        $("#chatMainDiv").show();
+        $("#topBackIcon").hide();
+        $("#topOutIcon").show();
+        $("#chatDetailDiv").hide();
+    })
+    
+</script>
+</html>

@@ -1,0 +1,156 @@
+#audioHtml{
+    border: 1px solid #000;
+    width:560px;
+    height:245px;
+    position: absolute;
+    /*top: 0%;*/
+    /*left: 0px;*/
+    /*right: 0px;*/
+    /*bottom: 0px;*/
+    /*margin: auto;*/
+    /*top: 20%;*/
+    /*left: 30%;*/
+    z-index: 11111;
+    box-sizing: inherit;
+    color: #4a4a4a;
+    background-color: #fff;
+    font-weight: 400;
+    line-height: 1.5;
+}
+#audioWindowTitle{
+    width: 100%;
+    background-color:  #f1f1f1;
+    text-align: center;
+    /*border-radius: 5px 5px 0 0;*/
+    overflow: hidden;
+    /*display: none;*/
+    cursor: move;
+}
+#audioHtml .audioTitleName{
+    width: 70%;
+    margin-left: 15%;
+    float: left;
+}
+#audioHtml .audioTitleName h2{
+    font-size: 17px;
+    font-weight: bold;
+    margin: 0;
+}
+#audioHtml .audioRightTopBtn{
+    margin-right: 1%;
+    height: 19px;
+    width: 4%;
+    float: right;
+    cursor: pointer;
+    font-weight: bold;
+}
+#audioCheckDiv{
+    overflow: hidden;
+    height: 25px;
+}
+#AudioSpaceAfterCheck{
+    background-color: #3674D7;
+    width:100%;
+    height:1px;
+}
+#audioTabs{
+    margin-bottom: 0 !important;
+    float: left;
+    height:100%;
+}
+#audioHtml .audioTab{
+    float: left;
+    height: 100%;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    cursor: pointer;
+    /*font-weight: bold;*/
+    padding: 0 3px;
+    font-size: 14px;
+}
+#audioHtml .audioTabChecked{
+    background-color: #009688;
+    font-weight: bold;
+    color: #fff;
+}
+
+#audioDateDiv{
+    float: left;
+    height: 100%;
+    margin-left: 10px;
+    padding: 0 5px;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    overflow: hidden;
+    font-size:13px;
+}
+#audioDateDiv span{
+    font-size:13px;
+}
+
+#audioDateDiv input{
+    height: 100%;
+    width: 125px;
+    color: #4a4a4a;
+}
+#audioHtml .audioCheckBtn{
+    float: right;
+    height: 100%;
+    width:50px;
+    text-align: center;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+}
+#searchAudioBtn{
+    float: left!important;
+}
+
+#recordAudio{
+    width:100%;
+}
+#audioHtml .table th, #audioHtml .table td{
+    text-align: center;
+    border: 1px solid #dbdbdb;
+    font-size:13px;
+    /*padding: 0.25em 0.5em;*/
+}
+#audioHtml .table tbody tr:hover{
+    background-color: #f1f1f1;
+}
+#audioHtml .table tbody tr td:last-child{
+    font-weight: bold;
+    cursor: pointer;
+    vertical-align: middle;
+}
+#audioHtml .table thead tr{
+    background-color: #F1F1F1;
+    display: block;
+}
+#audioTable tbody{
+    height:170px;
+    overflow-y: scroll;
+    display: block;
+    font-size:13px;
+}
+
+#audioHtml .audioCheckBoxTd input{
+    vertical-align: middle;
+}
+#audioHtml .audioCheckBoxTd{
+    width:25px;
+}
+#audioHtml .audioTd1{
+    width:45px;
+}
+#audioHtml .audioTd2{
+    width:125px;
+}
+#audioHtml .audioTdDate{
+    width:155px;
+}
+#audioHtml .audioTdBtn{
+    width:50px;
+}

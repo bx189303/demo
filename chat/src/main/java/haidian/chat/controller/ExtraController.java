@@ -2,8 +2,7 @@ package haidian.chat.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import haidian.chat.dao.*;
-import haidian.chat.pojo.*;
-import haidian.chat.redis.RedisUtil;
+import haidian.chat.redis.util.RedisUtil;
 import haidian.chat.util.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.*;
 
 @RestController
 public class ExtraController {

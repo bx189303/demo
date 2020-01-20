@@ -8,6 +8,8 @@ import java.util.Objects;
 public class GroupRecord {
     private String logId;
 
+    private String groupName;
+
     private String queueId;
 
     private String recordFile;
@@ -56,6 +58,14 @@ public class GroupRecord {
 
     public void setRecordEndTime(Date recordEndTime) {
         this.recordEndTime = recordEndTime;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     @Override

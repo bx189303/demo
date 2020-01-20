@@ -1,0 +1,61 @@
+logging:
+  config: classpath:log4j2_dev.xml
+#  config: classpath:log4j2_prod.xml
+#  level:
+#    haidian.chat.dao: debug
+server:
+  port: "${serverPort}"
+spring:
+  profiles:
+    include: config_dev
+#    include: config_prod
+  redis:
+    # Redis数据库索引（默认为0）
+    database: 0
+    # Redis服务器地址
+    host: "${redisIp}"
+    # Redis服务器连接端口
+    port: "${redisPort}"
+    # Redis服务器连接密码（默认为空）
+    password:
+    jedis:
+      pool:
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 200
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1
+        # 连接池中的最大空闲连接
+        max-idle: 10
+        # 连接池中的最小空闲连接
+        min-idle: 0
+    # 连接超时时间（毫秒）
+    timeout: 10000
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "${mysqlUrl}"
+    username: "${mysqlUsername}"
+    password: "${mysqlPassword}"
+    hikari:
+      minimum-idle: 5
+      idle-timeout: 600000
+      maximum-pool-size: 10
+      auto-commit: true
+      pool-name: MyHikariCP
+      max-lifetime: 180000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
+  #返回值空字段不显示
+  jackson:
+    default-property-inclusion: non_null
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: haidian.base.pojo
+  configuration:
+    lazy-loading-enabled: true

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="haidian.sipApi.dao.db1.SipUserMapper" >
+
+  <insert id="addSipUser" statementType="CALLABLE" parameterType="java.util.HashMap">
+    {call pr_co_personnel_info_add_all(#{personnel_id,mode=OUT,jdbcType=VARCHAR},#{co_id,mode=IN},#{co_per_id,mode=IN},
+    #{personnel_pwd,mode=IN},#{is_actived,mode=IN},#{personnel_type,mode=IN},#{personnel_name,mode=IN},#{personnel_email,mode=IN},
+    #{Personnel_business,mode=IN},#{personnel_sex,mode=IN},#{personnel_birth,mode=IN},#{Personnel_addr,mode=IN},#{personnel_info,mode=IN},
+    #{msn_number,mode=IN},#{qq_number,mode=IN},#{personnel_popedom,mode=IN},#{call_popedom,mode=IN})}
+  </insert>
+
+  <delete id="delSipUser" statementType="CALLABLE" parameterType="java.util.HashMap">
+    {call pr_personnel_info_del(#{personnel_id,mode=IN})}
+  </delete>
+
+  <select id="getIdByName" resultType="string">
+    select personnel_id from t_personnel_info where personnel_name=#{name}
+  </select>
+
+  <delete id="protest" statementType="CALLABLE" parameterType="java.util.HashMap">
+    {call addSipUser(#{res,mode=OUT,jdbcType=VARCHAR},#{id,mode=IN},#{type,mode=IN})}
+  </delete>
+
+</mapper>

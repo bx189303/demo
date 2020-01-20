@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer" />
+    <title>历史记录</title>
+    <link rel="stylesheet" type="text/css" href="../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../css/recordHis.css">
+</head>
+<script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="../layer/layer.js"></script>
+<!--<script type="text/javascript" src="../laydate/laydate.js"></script>-->
+<script type="text/javascript" src="../js/util.js"></script>
+<!--<script type="text/javascript" src="../chat/chat.js"></script>-->
+<style>
+
+
+</style>
+<body style="overflow: hidden;color: #fff;background-color:#001770;">
+    <div id="indexDiv" style="width:100%;height: 100%">
+        <!-- 头部 -->
+        <div style="width:100%;height: 5%;background-color: #101144;">
+            <div class="lefttopBtn">
+                <img id="closeBtn" onclick="closeLayer()" class="btnIcon" src="../img/back.png" height="100%" width="100%">
+                <img id="topBackIndexBtn" class="btnIcon hide" src="../img/back.png" onclick="backIndex()" height="100%" width="100%">
+            </div>
+            <div style="vertical-align:middle;height: 100%;width:80%;float: left;margin-left:10%;">
+                <h2 id="title" class="windowTitle">历史记录</h2>
+            </div>
+        </div>
+        <!-- 消息 -->
+        <div id="chatListDiv" class="listDiv scrollDiv centerDiv">
+            <div class="container" style="width:100%;height: 6%;">
+                <form onsubmit="return false" class="parent" style="width:100%;height: 100%;">
+                    <input id="chatLiInput" type="text" class="search" placeholder="" >
+                    <input type="button" id="cleanChatSearchBtn" onclick="cleanIndexSearch(this)" class="searchCleanBtn">
+                    <input type="button" id="chatSearchBtn" onclick="searchIndexList()" class="searchBtn">
+                </form>
+            </div>
+            <!--  搜索分类    -->
+            <div style="height:25%;width:80%;margin:10% 3% 3% 3%;padding:7%">
+                <div class="searchTypeDiv">
+                    <span id="dateSpan" onclick="checkDate()" class="searchTypeSpan">日期</span>
+                </div>
+                <div class="searchTypeDiv">
+                    <span onclick="getRecordByImg()" class="searchTypeSpan">图片</span>
+                </div>
+                <div class="searchTypeDiv">
+                    <span onclick="getRecordByfile()" class="searchTypeSpan">文件</span>
+                </div>
+                <div id="searchGroupUser" class="searchTypeDiv hide">
+                    <span class="searchTypeSpan" onclick="showUserByGroup()">群成员</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 好友 friendDiv-->
+        <div id="friendDiv" class="listDiv scrollDiv centerDiv checkType">
+            <div class="container" style="width:100%;height: 6%;background-color: #101144">
+                <form action="" onsubmit="return false;" class="parent" style="width:100%;height: 100%;">
+                    <input id="friendUlInput" type="text" class="search" placeholder="" >
+                    <input type="button" id="cleanFriendSearchBtn" onclick="cleanFriendSearch(this)" class="searchCleanBtn">
+                    <input type="button" id="friendSearchBtn" onclick="searchUserInGroup()" class="searchBtn">
+                </form>
+            </div>
+
+            <div id="friendListDiv" style="margin-top: 1%;">
+                <ul id="friendUl" class="chatUl friendUl">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="chatDiv" style="width:100%;height: 100%;display: none">
+        <!-- 头部 -->
+        <div style="width:100%;height: 5%;background-color:#101144;">
+            <div class="lefttopBtn">
+                <img id="topOutIcon" onclick="outChatWindow()" class="btnIcon" src="../img/back.png" height="100%" width="100%">
+            </div>
+            <div style="vertical-align:middle;height: 100%;width:80%;float: left;margin-left:10%;">
+                <h2 id="titleName" class="windowTitle">历史记录</h2>
+            </div>
+        </div>
+
+        <!--中部-->
+        <div id="chatMainDiv" style="width:100%;height: 94%;">
+            <!-- 聊天记录 -->
+            <div id="chatWindow" onscroll="chatWindowScroll(this)" class="scrollDiv"></div>
+        </div>
+    </div>
+</body>
+<script>
+    //全局变量
+    var src="";
+    var dst="";
+    var type="";
+    var topNoMoreRecord=false;
+    var bottomNoMoreRecord=false;
+    var topPage=1;
+    var bottomPage=1;
+    var size=20;
+    var getRecordFunction="";
+    var groupUserId="";
+    var date="";
+    //系统参数
+    var imgUrlPre="";
+    var serverUrl="";
+
+    $(function(){
+        src=GetUrlParam("src");
+        dst=GetUrlParam("dst");
+        type=GetUrlParam("type");
+        console.log("src:"+src+" | dst:"+dst+" | type:"+type);
+        getParam();
+        if(type=="group"){
+            $("#searchGroupUser").removeClass("hide");
+        }
+    });
+    //读取系统参数后开始加载
+    function getParam(){
+        $.ajax({
+            type : "POST",
+            contentType: "application/json;charset=UTF-8",
+            url : "/getHtmlparam",
+            //请求成功
+            success : function(result) {
+                imgUrlPre=result.data.nginxUrl+"/";
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        })
+    }
+
+    //关闭页面方法
+    function closeLayer(){
+        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+        parent.layer.close(index); //再执行关闭
+    }
+
+    //根据时间查记录
+    function getRecordByDate(){
+        jumpChatWindow();
+        getRecordFunction="loadRecordByDate";
+        loadRecordByDate();
+    }
+    function loadRecordByDateLeft(){
+        var data={
+            "type": type,
+            "src": src,
+            "dst": dst,
+            "date":date,
+            "size":size,
+            "page":topPage
+        };
+        var url = "/getRecordByDateLeft";
+        loadRecord(url,data);
+    }
+
+    function loadRecordByDate(){
+        var data={
+            "type": type,
+            "src": src,
+            "dst": dst,
+            "date":date,
+            "size":size,
+            "page":bottomPage
+        };
+        $.ajax({
+            type : "POST",
+            contentType: "application/json;charset=UTF-8",
+            url : "/getRecordByDate",
+            data: JSON.stringify(data),
+            //请求成功
+            success : function(result) {
+                var record=result.data;
+                var html='';
+                if(record.length==0){
+                    bottomNoMoreRecord=true;
+                    return;
+                }
+                $(record).each(function(i,n){
+                    var recordSendTime=n.sendtime;
+                    var recordType=n.dsttype;
+                    var recordSrc=n.src.sId;
+                    var readId=n.readid;
+                    var recordDst=n.dst;
+                    var content="";
+                    if(n.contenttype=="text"){
+                        content=n.content;
+                    }else{
+                        var fileUrl=n.content;
+                        var fileName=n.filename;
+                        var fileType=n.contenttype;
+                        if(fileType=="img"){
+                            var imgsrc=imgUrlPre+fileUrl;
+                            content='<div name="'+fileUrl+'" filename="'+fileName+'" class="imgShowDiv" onclick="download(this)"><img src="'+imgsrc+'"></div>';
+                        }else if(fileType=="file"){
+                            content='<div name="'+fileUrl+'" filename="'+fileName+'" class="fileShowDiv" onclick="download(this)"><img src="/img/file.png"><span class="fileShowSpan">'+fileName+'</span></div>';
+                        }
+                    }
+                    // console.log("加载record ： "+recordSrc+" "+recordDst+" "+recordType);
+                    if(recordSrc==src){//如果记录来源为自己，则显示在右边
+                        html+='<div name="'+n.id+'" class="RightTalk chatMsg">\n' +
+                            '                    <div class="rightTalkImgDiv talkImgDiv">\n' +
+                            '                        <img src="../img/head.png">\n' +
+                            '                    </div>\n' +
+                            '                    <div class="rightTalkContent">\n' +
+                            '                        <div class="talkUser">'+recordSendTime+'&nbsp;&nbsp;&nbsp;我</div>\n' +
+                            '                        <div class="rightTalkNotify">\n' +
+                            '                            <div class="rightTalkBubble">'+content+'</div>\n' +
+                            '                        </div>\n' +
+                            '                    </div>\n' +
+                            '                </div>';
+                    }else {//除了自己以外，则显示在左侧
+                        html+='<div name="'+n.id+'" class="leftTalk chatMsg">\n' +
+                            '                    <div class="leftTalkImgDiv talkImgDiv">\n' +
+                            '                        <img src="../img/head.png">\n' +
+                            '                    </div>\n' +
+                            '                    <div class="leftTalkContent">\n' +
+                            '                        <div class="talkUser">'+n.src.sName+'&nbsp;&nbsp;&nbsp;'+recordSendTime+'</div>\n' +
+                            '                        <div class="talkBubble">'+content+'</div>\n' +
+                            '                    </div>\n' +
+                            '                </div>';
+                    }
+                })
+                var oldChatHtml=$("#chatWindow").html();
+                $("#chatWindow").html(oldChatHtml+html);
+            },
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        })
+    }
+
+    //跳转对话窗口
+    function jumpChatWindow(){
+        $("#indexDiv").hide();
+        $("#chatDiv").show();
+        $("#title").text("历史记录");
+    }
+
+    //根据群成员查记录
+    function getRecordByGroupUser(obj){
+        jumpChatWindow();
+        groupUserId=$(obj).attr("name");
+        getRecordFunction="loadRecordByGroupUser";
+        loadRecordByGroupUser();
+    }
+    function loadRecordByGroupUser(){
+        var data={
+            "groupId":dst,
+            "groupUserId":groupUserId,
+            "type":type,
+            "size":size,
+            "page":topPage
+        };
+        var url="/getRecordByGroupUser";
+        loadRecord(url,data);
+    }
+
+    //查图片记录的点击事件
+    function getRecordByfile(){
+        jumpChatWindow();
+        getRecordFunction="loadRecordByfile";
+        loadRecordByfile();
+    }
+    //加载图片记录
+    function loadRecordByfile(){
+        loadRecordByFileType("file");
+    }
+
+    //查文件记录的点击事件
+    function getRecordByImg(){
+        jumpChatWindow();
+        getRecordFunction="loadRecordByImg";
+        loadRecordByImg();
+    }
+    //加载文件记录
+    function loadRecordByImg(){
+        loadRecordByFileType("img");
+    }
+
+    //加载文件记录的方法
+    function loadRecordByFileType(fileType){
+        var data={
+            "src":src,
+            "dst":dst,
+            "type":type,
+            "page":topPage,
+            "size":size,
+            "fileType":fileType
+        };
+        var url="/getRecordByFile";
+        loadRecord(url,data);
+    }
+
+    //发送ajax请求并显示
+    function loadRecord(url,data){
+        $.ajax({
+            type : "POST",
+            contentType: "application/json;charset=UTF-8",
+            url : url,
+            data: JSON.stringify(data),
+            //请求成功
+            success : function(result) {
+                var record=result.data;
+                var html='';
+                if(record.length==0){
+                    topNoMoreRecord=true;
+                    return;
+                }
+                $(record).each(function(i,n){
+                    var recordSendTime=n.sendtime;
+                    var recordType=n.dsttype;
+                    var recordSrc=n.src.sId;
+                    var readId=n.readid;
+                    var recordDst=n.dst;
+                    var content="";
+                    if(n.contenttype=="text"){
+                        content=n.content;
+                    }else{
+                        var fileUrl=n.content;
+                        var fileName=n.filename;
+                        var fileType=n.contenttype;
+                        if(fileType=="img"){
+                            var imgsrc=imgUrlPre+fileUrl;
+                            content='<div name="'+fileUrl+'" filename="'+fileName+'" class="imgShowDiv" onclick="download(this)"><img src="'+imgsrc+'"></div>';
+                        }else if(fileType=="file"){
+                            content='<div name="'+fileUrl+'" filename="'+fileName+'" class="fileShowDiv" onclick="download(this)"><img src="/img/file.png"><span class="fileShowSpan">'+fileName+'</span></div>';
+                        }
+                    }
+                    if(recordSrc==src){//如果记录来源为自己，则显示在右边
+                        html='<div name="'+n.id+'" class="RightTalk chatMsg">\n' +
+                            '                    <div class="rightTalkImgDiv talkImgDiv">\n' +
+                            '                        <img src="../img/head.png">\n' +
+                            '                    </div>\n' +
+                            '                    <div class="rightTalkContent">\n' +
+                            '                        <div class="talkUser">'+recordSendTime+'&nbsp;&nbsp;&nbsp;我</div>\n' +
+                            '                        <div class="rightTalkNotify">\n' +
+                            '                            <div class="rightTalkBubble">'+content+'</div>\n' +
+                            '                        </div>\n' +
+                            '                    </div>\n' +
+                            '                </div>'+html;
+                    }else {//除了自己以外，则显示在左侧
+                        html='<div name="'+n.id+'" class="leftTalk chatMsg">\n' +
+                            '                    <div class="leftTalkImgDiv talkImgDiv">\n' +
+                            '                        <img src="../img/head.png">\n' +
+                            '                    </div>\n' +
+                            '                    <div class="leftTalkContent">\n' +
+                            '                        <div class="talkUser">'+n.src.sName+'&nbsp;&nbsp;&nbsp;'+recordSendTime+'</div>\n' +
+                            '                        <div class="talkBubble">'+content+'</div>\n' +
+                            '                    </div>\n' +
+                            '                </div>'+html;
+                    }
+                })
+                var oldChatHtml=$("#chatWindow").html();
+                var oldHeight=$("#chatWindow")[0].scrollHeight;
+                $("#chatWindow").html(html+oldChatHtml);
+                var newHeight=$("#chatWindow")[0].scrollHeight;
+                // scrollChatWindow();
+                $('#chatWindow').scrollTop(newHeight-oldHeight);
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        })
+    }
+
+    //加载群成员列表
+    function loadUserByGroup(){
+        $.ajax({
+            type : "POST",
+            contentType: "application/json;charset=UTF-8",
+            url : "/getUserByGroup/"+dst,
+            //请求成功
+            success : function(result) {
+                var friends=result.data;
+                var html='';
+                $(friends).each(function(i,n){
+                    // if(n.sId==src){
+                    //     return true;//遍历到自己则不显示
+                    // }
+                    html+='<li name="'+n.sId+'" class="" type="single" onclick="getRecordByGroupUser(this)">\n' +
+                        '                        <div class="liContentDiv scrollDiv">\n' +
+                        '                            <div class="liContentImgDiv">\n' +
+                        '                                <img src="../img/head.png">\n' +
+                        '                            </div>\n' +
+                        '                            <div class="liContentRightDiv">\n' +
+                        '                                <div class="liFriendUser liName">'+n.sUnitname+' '+n.sName+'</div>\n' +
+                        '                            </div>\n' +
+                        '                        </div>\n' +
+                        '                        <div class="liSpace"/>\n' +
+                        '                    </li>';
+                })
+                $("#friendUl").html(html);
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        })
+    }
+
+    //群成员搜索框方法
+    function searchUserInGroup(){
+        var searchName=$("#friendUlInput").val();
+        if(searchName==""||searchName==null||searchName=="undefined"){
+            console.log("输入框为空");
+            return;
+        }
+        $("#cleanFriendSearchBtn").show();
+        $("#friendUl li").hide();
+        $("#friendUl li").each(function(i,n){
+            var name=$(this.getElementsByClassName("liName")[0]).text();
+            if(name.indexOf(searchName)!=-1){
+                $(this).show();
+            }
+        })
+    }
+    //群成员搜索框回车事件
+    $('#friendUlInput').on("keydown",function(event){
+        if(event.keyCode==13){
+            searchUserInGroup();
+        }
+    })
+
+
+    //动态调用方法
+    function call(functionName){
+        eval("this."+functionName+"()");
+    }
+
+    //弹出日期框
+    function checkDate(){
+        layer.open({
+            title: false,
+            content: '<input type="date" id="dateInput">',
+            yes: function(index, layero){
+                //do something
+                var inputDate=$("#dateInput").val();
+                date=inputDate;
+                console.log(date);
+                getRecordByDate();
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+            }
+        });
+        // 给input  date设置默认值
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+        $('#dateInput').val(today);
+    }
+
+    //清空好友搜索
+    function cleanFriendSearch(obj){
+        $("#friendUlInput").val("");
+        $("#friendUl li").show();
+        $(obj).hide();
+    }
+    /*内容搜索框*/
+    function searchIndexList(){
+        var searchName=$("#chatLiInput").val();
+        if(searchName==""||searchName==null||searchName=="undefined"){
+            console.log("输入框为空");
+            return;
+        }
+        jumpChatWindow();
+        getRecordFunction="loadRecordByContent";
+        loadRecordByContent();
+    }
+    function loadRecordByContent(){
+        var content=$("#chatLiInput").val();
+        var data={
+            "src":src,
+            "dst":dst,
+            "type":type,
+            "page":topPage,
+            "size":size,
+            "content":content
+        };
+        var url="/getRecordByContent";
+        loadRecord(url,data);
+    }
+    $("#chatLiInput").on("keydown",function(event){
+        if(event.keyCode==13){
+            searchIndexList();
+        }
+    })
+
+    //对话窗口左上角撤销按钮-关闭对话窗口，返回历史记录首页的选择页面
+    function outChatWindow(){
+        //删除对话窗口在重新添加，防止滚动事件干扰
+        $("#chatWindow").remove();
+        var chatWindowHtml='<div id="chatWindow" onscroll="chatWindowScroll(this)" class="scrollDiv"></div>';
+        $("#chatMainDiv").html(chatWindowHtml);
+        //切换窗口显示
+        $("#indexDiv").show();
+        $("#chatDiv").hide();
+        $("#chatListDiv").removeClass("hide");
+        $("#chatLiInput").val("");
+        //初始化全局参数
+        reloadParam();
+    }
+    //初始化全局参数
+    function reloadParam(){
+        topPage=1;
+        bottomPage=1;
+        topNoMoreRecord=false;
+        bottomNoMoreRecord=false;
+        getRecordFunction="";
+    }
+
+    //监听对话窗口滚动
+    function chatWindowScroll(obj){
+        var divScrollTop = obj.scrollTop;
+        var divClientHeight = obj.clientHeight;
+        var divScrollHeight = obj.scrollHeight;
+        // console.log(divScrollTop+" , "+divClientHeight+" , "+ (divScrollTop+divClientHeight)+" , "+divScrollHeight);
+        if(divScrollTop + divClientHeight+0.61 >= divScrollHeight){
+            // console.log('到底部了');
+            scollBottom();
+        }
+        if(divScrollTop == 0){
+            // console.log('到顶部了');
+            scollTop();
+        }
+    }
+    function scollTop(){
+        if(topNoMoreRecord){
+            return;
+        }
+        topPage=topPage+1;
+        if(getRecordFunction=="loadRecordByDate"){
+            call("loadRecordByDateLeft");
+            return;
+        }
+        call(getRecordFunction);
+
+    }
+    function scollBottom(){
+        if(bottomNoMoreRecord){
+            return;
+        }
+        if(getRecordFunction=="loadRecordByDate"){
+            bottomPage=bottomPage+1;
+            call(getRecordFunction);
+        }
+    }
+
+    //从选择成员页放回首页方法
+    function backIndex(){
+        $("#chatListDiv").removeClass("hide");
+        $("#topBackIndexBtn").addClass("hide");
+        $(".checkType").addClass("hide");
+        $("#title").text("历史记录");
+    }
+
+    //选择群成员
+    function showUserByGroup(){
+        $("#friendDiv").removeClass("hide");
+        $("#chatListDiv").addClass("hide");
+        $("#topBackIndexBtn").removeClass("hide");
+        $("#title").text("请选择成员");
+        loadUserByGroup();
+    }
+
+    //下载文件
+    function download(obj){
+        var fileUrl=$(obj).attr("name");
+        var fileName=$(obj).attr("filename");
+        console.log(fileUrl+","+fileName);
+        window.location.href="/download/"+fileUrl+"/"+fileName;
+    }
+</script>
+</html>

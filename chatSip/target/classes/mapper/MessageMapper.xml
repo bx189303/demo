@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="haidian.chatSip.dao.MessageMapper" >
+  <resultMap id="BaseResultMap" type="haidian.chatSip.pojo.Message" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="src" property="src" jdbcType="VARCHAR" />
+    <result column="dst" property="dst" jdbcType="VARCHAR" />
+    <result column="dstType" property="dsttype" jdbcType="VARCHAR" />
+    <result column="readId" property="readid" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="contentType" property="contenttype" jdbcType="VARCHAR" />
+    <result column="fileName" property="filename" jdbcType="VARCHAR" />
+    <result column="fileSize" property="filesize" jdbcType="INTEGER" />
+    <result column="fileDuration" property="fileduration" jdbcType="INTEGER" />
+    <result column="isValid" property="isvalid" jdbcType="INTEGER" />
+    <result column="sendTime" property="sendtime" jdbcType="TIMESTAMP" />
+    <result column="receiveTime" property="receivetime" jdbcType="TIMESTAMP" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, src, dst, dstType, readId, content, contentType, fileName, fileSize, fileDuration, 
+    isValid, sendTime, receiveTime, createTime, updateTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_message
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="getReadIdById" resultType="java.lang.String">
+    select readId
+    from t_message
+    where isValid=1 and id=#{id}
+  </select>
+  <select id="getMessageByGroupUser" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_message
+    where isValid=1 and src=#{groupUserId} and dst=#{groupId} and dstType="group"
+    order by sendTime desc
+    limit #{start},#{end}
+  </select>
+  <select id="getSingleMessageByFile" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from (    select
+    <include refid="Base_Column_List" />
+    from t_message
+    where isValid=1 and src=#{src} and dst=#{dst} and dstType="single" and contentType=#{fileType}
+    union all
+    select
+    <include refid="Base_Column_List" />
+    from t_message
+    where isValid=1 and src=#{dst} and dst=#{src} and dstType="single" and contentType=#{fileType}) t
+    order by sendTime desc
+    limit #{start},#{end}
+  </select>
+  <select id="getGroupMessageByFile" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_message
+    where isValid=1 and dst=#{dst} and dstType="group" and contentType=#{fileType}
+    order by sendTime desc
+    limit #{start},#{end}
+  </select>
+  <select id="getSingleMessageByDate" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from (    select
+    <include refid="Base_Column_List" />
+    from t_message
+    where isValid=1 and src=#{src} and dst=#{dst} and dstType="single" and sendTime>=#{date}
+    union all
+    select
+    <include refid="Base_Column_List" />
+    from t_message
+    where isValid=1 and src=#{dst} and dst=#{src} and dstType="single" and sendTime>=#{date}) t
+    order by sendTime
+    limit #{start},#{end}
+  </select>
+  <select id="getGroupMessageByDate" resultType="haidian.chatSip.pojo.Message">
+    select
+    <include refid="Base_Column_List" />
+    from t_message
+    where isValid=1 and dst=#{dst} and dstType="group" and sendTime>=#{date}
+    order by sendTime
+    limit #{start},#{end}
+  </select>
+  <select id="getSingleMessageByDateLeft" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from (    select
+    <include refid="Base_Column_List" />
+    from t_message
+    where isValid=1 and src=#{src} and dst=#{dst} and dstType="single" and sendTime>=#{date}
+    union all
+    select
+    <include refid="Base_Column_List" />
+    from t_message
+    where isValid=1 and src=#{dst} and dst=#{src} and dstType="single" and sendTime&lt;=#{date}) t
+    order by sendTime desc
+    limit #{start},#{end}
+  </select>
+  <select id="getGroupMessageByDateLeft" resultType="haidian.chatSip.pojo.Message">
+    select
+    <include refid="Base_Column_List" />
+    from t_message
+    where isValid=1 and dst=#{dst} and dstType="group" and sendTime&lt;=#{date}
+    order by sendTime desc
+    limit #{start},#{end}
+  </select>
+  <select id="getSingleMessageByContent" resultType="haidian.chatSip.pojo.Message">
+    select
+    <include refid="Base_Column_List" />
+    from (    select
+    <include refid="Base_Column_List" />
+    from t_message
+    where isValid=1 and src=#{src} and dst=#{dst} and dstType="single" and content like #{content}
+    union all
+    select
+    <include refid="Base_Column_List" />
+    from t_message
+    where isValid=1 and src=#{dst} and dst=#{src} and dstType="single" and fileName like #{content}) t
+    order by sendTime desc
+    limit #{start},#{end}
+  </select>
+  <select id="getGroupMessageByContent" resultType="haidian.chatSip.pojo.Message">
+    select
+    <include refid="Base_Column_List" />
+    from (    select
+    <include refid="Base_Column_List" />
+    from t_message
+    where isValid=1 and dst=#{dst} and dstType="group" and content like #{content}
+    union all
+    select
+    <include refid="Base_Column_List" />
+    from t_message
+    where isValid=1 and dst=#{dst} and dstType="group" and fileName like #{content}) t
+    order by sendTime desc
+    limit #{start},#{end}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  delete from t_message
+  where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="haidian.chatSip.pojo.Message" useGeneratedKeys="true" keyProperty="id" >
+    insert into t_message (src, dst, dstType, 
+      readId, content, contentType, 
+      fileName, fileSize, fileDuration, 
+      isValid, sendTime, receiveTime, 
+      createTime, updateTime)
+    values (#{src,jdbcType=VARCHAR}, #{dst,jdbcType=VARCHAR}, #{dsttype,jdbcType=VARCHAR}, 
+      #{readid,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{contenttype,jdbcType=VARCHAR}, 
+      #{filename,jdbcType=VARCHAR}, #{filesize,jdbcType=INTEGER}, #{fileduration,jdbcType=INTEGER}, 
+      #{isvalid,jdbcType=INTEGER}, #{sendtime,jdbcType=TIMESTAMP}, #{receivetime,jdbcType=TIMESTAMP}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="haidian.chatSip.pojo.Message" useGeneratedKeys="true" keyProperty="id" >
+    insert into t_message
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="src != null" >
+        src,
+      </if>
+      <if test="dst != null" >
+        dst,
+      </if>
+      <if test="dsttype != null" >
+        dstType,
+      </if>
+      <if test="readid != null" >
+        readId,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="contenttype != null" >
+        contentType,
+      </if>
+      <if test="filename != null" >
+        fileName,
+      </if>
+      <if test="filesize != null" >
+        fileSize,
+      </if>
+      <if test="fileduration != null" >
+        fileDuration,
+      </if>
+      <if test="isvalid != null" >
+        isValid,
+      </if>
+      <if test="sendtime != null" >
+        sendTime,
+      </if>
+      <if test="receivetime != null" >
+        receiveTime,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="updatetime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="src != null" >
+        #{src,jdbcType=VARCHAR},
+      </if>
+      <if test="dst != null" >
+        #{dst,jdbcType=VARCHAR},
+      </if>
+      <if test="dsttype != null" >
+        #{dsttype,jdbcType=VARCHAR},
+      </if>
+      <if test="readid != null" >
+        #{readid,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="contenttype != null" >
+        #{contenttype,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null" >
+        #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="filesize != null" >
+        #{filesize,jdbcType=INTEGER},
+      </if>
+      <if test="fileduration != null" >
+        #{fileduration,jdbcType=INTEGER},
+      </if>
+      <if test="isvalid != null" >
+        #{isvalid,jdbcType=INTEGER},
+      </if>
+      <if test="sendtime != null" >
+        #{sendtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="receivetime != null" >
+        #{receivetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="haidian.chatSip.pojo.Message" >
+    update t_message
+    <set >
+      <if test="src != null" >
+        src = #{src,jdbcType=VARCHAR},
+      </if>
+      <if test="dst != null" >
+        dst = #{dst,jdbcType=VARCHAR},
+      </if>
+      <if test="dsttype != null" >
+        dstType = #{dsttype,jdbcType=VARCHAR},
+      </if>
+      <if test="readid != null" >
+        readId = #{readid,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="contenttype != null" >
+        contentType = #{contenttype,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null" >
+        fileName = #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="filesize != null" >
+        fileSize = #{filesize,jdbcType=INTEGER},
+      </if>
+      <if test="fileduration != null" >
+        fileDuration = #{fileduration,jdbcType=INTEGER},
+      </if>
+      <if test="isvalid != null" >
+        isValid = #{isvalid,jdbcType=INTEGER},
+      </if>
+      <if test="sendtime != null" >
+        sendTime = #{sendtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="receivetime != null" >
+        receiveTime = #{receivetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="haidian.chatSip.pojo.Message" >
+    update t_message
+    set src = #{src,jdbcType=VARCHAR},
+      dst = #{dst,jdbcType=VARCHAR},
+      dstType = #{dsttype,jdbcType=VARCHAR},
+      readId = #{readid,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      contentType = #{contenttype,jdbcType=VARCHAR},
+      fileName = #{filename,jdbcType=VARCHAR},
+      fileSize = #{filesize,jdbcType=INTEGER},
+      fileDuration = #{fileduration,jdbcType=INTEGER},
+      isValid = #{isvalid,jdbcType=INTEGER},
+      sendTime = #{sendtime,jdbcType=TIMESTAMP},
+      receiveTime = #{receivetime,jdbcType=TIMESTAMP},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

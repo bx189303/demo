@@ -38,6 +38,19 @@ public class RecordController {
     @Value("${audioHost}")
     String audioHost;
 
+    @RequestMapping("/getAudioByJqId/{jqId}")
+    public Result getAudioByJqId(@PathVariable String jqId){
+        Result result = null;
+        try {
+            List<GroupRecord> audios = groupRecordService.getGroupAudioByName(jqId);
+            result = Result.ok(audios);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = Result.build(500, e.getMessage());
+        }
+        return result;
+    }
+
     @RequestMapping("/getAudioByCall/{tel}")
     public Result getAudioByTel(@PathVariable String tel){
         Result result = null;

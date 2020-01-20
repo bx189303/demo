@@ -2,14 +2,19 @@ package haidian.chat.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import haidian.chat.redis.RedisUtil;
+import haidian.chat.redis.util.RedisUtil;
+import haidian.chat.service.ZxFileService;
 import haidian.chat.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.websocket.*;
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -33,26 +38,34 @@ public class WebSocketController {
 
     private static StringRedisTemplate stringRedisTemplate;
 
+    @Autowired
+    ZxFileService zxFileService;
+
     /**
-     * 监听DISPATCH
+     * 监听DISPATCH,如果websocket在线则发送
      */
-    public void sendMsg(String message) throws IOException {
-        JSONObject msg = JSON.parseObject(message);
-        String msgType = msg.getString("type");
-        JSONObject data = msg.getJSONObject("data");
-        log.info("监听DISPATCH-" + msgType + " : " + message);
-        String dstId = "";
-        if (msgType.equals("msg")) {
-            dstId = data.getJSONObject("dst").getString("sId");
-        } else if (msgType.equals("notify") || msgType.equals("groupNotify")) {
-            dstId = data.getString("dst");
-        } else {
-            log.info("未知类型消息");
-            return;
-        }
-        WebSocketController dstCli = websocketList.get(dstId);
-        if (dstCli != null) {
-            dstCli.sendMessage(message);
+    public void sendMsg(String message){
+        try{
+            JSONObject msg = JSON.parseObject(message);
+            String msgType = msg.getString("type");
+            JSONObject data = msg.getJSONObject("data");
+            log.info("监听DISPATCH-" + msgType + " : " + message);
+            String dstId = "";
+            if (msgType.equals("msg")) {
+                dstId = data.getJSONObject("dst").getString("sId");
+            } else if (msgType.equals("notify") || msgType.equals("groupNotify")) {
+                dstId = data.getString("dst");
+            } else {
+                log.info("未知类型消息");
+                return;
+            }
+            if(redisUtil.hHasKey("websocketon",dstId)){
+                WebSocketController dstCli = websocketList.get(dstId);
+                dstCli.sendMessage(message);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
@@ -105,7 +118,9 @@ public class WebSocketController {
      * 实现服务器主动推送
      */
     public void sendMessage(String message) throws IOException {
-        this.session.getBasicRemote().sendText(message);
+        synchronized (session){
+            session.getBasicRemote().sendText(message);
+        }
     }
 
     // 静态方法、在SpringBoot启动时被调用，注入bean

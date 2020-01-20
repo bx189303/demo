@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer"/>
+    <title>录音播放</title>
+    <link rel="stylesheet" type="text/css" href="../css/audio-base.css">
+    <link rel="stylesheet" type="text/css" href="../css/audioList.css">
+</head>
+<script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="/laydate/laydate.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="./audio.js"></script>
+<style>
+
+
+</style>
+<body style="overflow: hidden;">
+
+<div id="audioHtml">
+    <div id="audioWindowTitle">
+        <div id="audioWindowTitleName" class="audioTitleName"><h2>录音查询</h2></div>
+        <div class="audioRightTopBtn" onclick="closeAudioWindow()">X</div>
+    </div>
+    <div id="audioCheckDiv">
+        <div id="audioTabs" class="tabs is-toggle">
+            <div id="singleLi" class="audioTab audioTabChecked" onclick=showSingleHis(this)>单呼</div>
+            <div id="groupLi" class="audioTab" onclick=showGroupHis(this)>会议</div>
+        </div>
+        <div id="audioDateDiv">
+            <span>时间范围:</span>
+            <input id="audioStartDateInput" type="date" class="btn">
+            <span>至</span>
+            <input id="audioEndDateInput" type="date" class="btn">
+        </div>
+        <div id="downloadAudioBtn" class="audioCheckBtn" onclick=downloadAudios()>下载</div>
+        <div id="searchAudioBtn" class="audioCheckBtn" onclick=queryAudio()>查询</div>
+    </div>
+    <div id="audioTable">
+        <table class="table is-hoverable is-bordered is-narrow">
+            <thead>
+                <tr>
+                    <th class="audioCheckBoxTd"><input type="checkbox" class="audioTdCheckBox" onchange=audioTdSelectAll(this)></th>
+                    <th class="audioTd1">序号</th>
+                    <th class="audioTd2">通话人</th>
+                    <th class="audioTdDate audioTdStartDate">开始时间</th>
+                    <th class="audioTdDate audioTdEndDate">结束时间</th>
+                    <th class="audioTdBtn">操作</th>
+                </tr>
+            </thead>
+            <tbody class="scrollDiv">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+<script>
+
+    $(function(){
+        var id=GetUrlParam("id");
+        initAudioHtml(id);
+    });
+
+
+</script>
+</html>

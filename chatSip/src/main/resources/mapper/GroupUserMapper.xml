@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="haidian.chatSip.dao.GroupUserMapper">
+  <resultMap id="BaseResultMap" type="haidian.chatSip.pojo.GroupUser">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="groupId" jdbcType="VARCHAR" property="groupid" />
+    <result column="userId" jdbcType="VARCHAR" property="userid" />
+    <result column="isValid" jdbcType="INTEGER" property="isvalid" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, groupId, userId, isValid, createTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_group_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_group_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyProperty="id" parameterType="haidian.chatSip.pojo.GroupUser" useGeneratedKeys="true">
+    insert into t_group_user (groupId, userId, isValid, 
+      createTime)
+    values (#{groupid,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{isvalid,jdbcType=INTEGER}, 
+      #{createtime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyProperty="id" parameterType="haidian.chatSip.pojo.GroupUser" useGeneratedKeys="true">
+    insert into t_group_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="groupid != null">
+        groupId,
+      </if>
+      <if test="userid != null">
+        userId,
+      </if>
+      <if test="isvalid != null">
+        isValid,
+      </if>
+      <if test="createtime != null">
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="groupid != null">
+        #{groupid,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="isvalid != null">
+        #{isvalid,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="haidian.chatSip.pojo.GroupUser">
+    update t_group_user
+    <set>
+      <if test="groupid != null">
+        groupId = #{groupid,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="isvalid != null">
+        isValid = #{isvalid,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="haidian.chatSip.pojo.GroupUser">
+    update t_group_user
+    set groupId = #{groupid,jdbcType=VARCHAR},
+      userId = #{userid,jdbcType=VARCHAR},
+      isValid = #{isvalid,jdbcType=INTEGER},
+      createTime = #{createtime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="outByGroupIdAndUserId">
+    update t_group_user
+    set isValid=0
+    where groupId=#{groupId} and userId=#{userId}
+  </update>
+</mapper>

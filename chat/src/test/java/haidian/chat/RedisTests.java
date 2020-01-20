@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import haidian.chat.dao.GroupMapper;
 import haidian.chat.pojo.Group;
-import haidian.chat.redis.RedisUtil;
+import haidian.chat.redis.util.RedisUtil;
 import haidian.chat.util.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,10 @@ class RedisTests {
 
     @Test
     public void hashtest(){
-
+        System.out.println(r.hHasKey("m","id"));
+        r.hset("m","age",11);
+        r.hset("mm","age",11);
+        r.del("mm");
     }
 
     @Test

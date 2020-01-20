@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>子页面</title>
+</head>
+<body>
+<button onclick="crotest()">给父页面发送消息</button>
+<button onclick="crotest2()">给open父页面发送消息</button>
+</body>
+<script>
+    window.name="c窗口的name";
+    function crotest(){
+        window.parent.postMessage("ifarme 我是C发送的消息","*");
+    }
+    function crotest2(){
+        // window.opener.postMessage("open 我是C发送的消息","*");
+    }
+    window.addEventListener('message', function (e) {
+        console.log("C页面打印 ： "+e.data)  //e.data为传递过来的数据
+        console.log("C页面打印 ： "+e.origin)  //e.origin为调用 postMessage 时消息发送方窗口的 origin（域名、协议和端口）
+        // console.log("C页面打印 ： "+e.source)  //e.source为对发送消息的窗口对象的引用，可以使用此来在具有不同origin的两个窗口之间建立双向通信
+
+    })
+</script>
+</html>

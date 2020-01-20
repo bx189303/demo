@@ -1,5 +1,7 @@
 package haidian.chat.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class Message {
@@ -25,12 +27,16 @@ public class Message {
 
     private Integer isvalid;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date sendtime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date receivetime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatetime;
 
     public String getId() {

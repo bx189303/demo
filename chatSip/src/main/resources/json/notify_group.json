@@ -1,0 +1,11 @@
+{
+  "type": "notify",
+  "sendTime": "消息发送时间",
+  "data": {
+    "type": "group",
+    "uuid": "消息id",
+    "src": "0002",
+    "dst": "0001",
+    "groupId": "0001g"
+  }
+}

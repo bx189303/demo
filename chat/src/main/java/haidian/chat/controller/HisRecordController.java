@@ -1,7 +1,7 @@
 package haidian.chat.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import haidian.chat.redis.RedisUtil;
+import haidian.chat.redis.util.RedisUtil;
 import haidian.chat.service.HisRecordService;
 import haidian.chat.util.Result;
 import org.slf4j.Logger;

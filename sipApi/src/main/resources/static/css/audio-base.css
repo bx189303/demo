@@ -1,0 +1,131 @@
+#audioHtml body,#audioHtml p,#audioHtml h1,#audioHtml h3,#audioHtml ul,#audioHtml ol,
+#audioHtml dl,#audioHtml li,#audioHtml dt,#audioHtml dd,#audioHtml textarea{
+    /* 默认有边距，都要清除 */
+    margin: 0;
+    padding: 0;
+    /*字体设置*/
+    font-size: 14px;
+    font-family: "Microsoft Yahei",sans-serif;
+    /*color: #ccc;*/
+    /* 去掉列表的原点 */
+    list-style: none;
+    /* 默认鼠标 */
+    /*cursor: default;*/
+}
+
+/*可选*/
+#audioHtml html,#audioHtml body{
+    width: 100%;
+    height: 100%;
+    /*font-size: 100px!important;*/
+}
+
+/*行内块元素*/
+#audioHtml input,#audioHtml img{
+    margin: 0;
+    padding: 0;
+    border: 0 none;
+    outline-style: none;
+    /*vertical-align: bottom;*/
+}
+
+#audioHtml textarea{
+    /* 边框清零 */
+    border:none;
+    /* 轮廓线清零 */
+    outline: none;
+    /* 防止文本域被随意拖拽 */
+    resize: none;
+}
+
+#audioHtml table{
+    /*边框合并*/
+    border-collapse:collapse;
+    border-spacing:0;
+}
+
+/*可选*/
+/*单选框和复选框的配置，一般是分开的*/
+#audioHtml input[type="radio"],#audioHtml input[type="checkbox"]{
+    /*appearance: none;*/
+    /*-webkit-appearance: none;*/
+    /*outline: none;*/
+    /*display: none;*/
+}
+
+#audioHtml label{
+    display: inline-block;
+    cursor: pointer;
+}
+
+#audioHtml label input[type="radio"]+span,#audioHtml label input[type="checkbox"]+span{
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    /*background: url("../images/nocheck.png") no-repeat;*/
+}
+
+#audioHtml label input[type="radio"]:checked~i,#audioHtml label input[type="checkbox"]:checked~i{
+    color: #38d6ff;
+}
+
+/*可选*/
+/* 自定义数字框配置 */
+#audioHtml input[type="number"]{
+    width: 76px;
+    height: 36px;
+    background-color: rgba(5,45,82,0.4);
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 20px;
+    padding: 0 10px;
+}
+
+#audioHtml input[type="number"]::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+}
+
+#audioHtml input[type="number"]+div{
+    width: 30px;
+    height: 40px;
+    padding-left: 2px;
+    cursor: pointer;
+}
+
+#audioHtml input[type="number"]+div > .count_add{
+    display: block;
+    width: 28px;
+    height: 19px;
+    /*background: url("../images/count_add.png") no-repeat;*/
+    background-size: contain;
+    margin-bottom: 2px;
+}
+
+#audioHtml input[type="number"]+div > .count_subtract{
+    display: block;
+    width: 28px;
+    height: 19px;
+    /*background: url("../images/count_subtract.png") no-repeat;*/
+    background-size: contain;
+}
+
+/*滚动条*/
+.scrollDiv::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 1px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+}
+.scrollDiv::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: #535353;
+}
+.scrollDiv::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.btn{
+    cursor: pointer;
+}

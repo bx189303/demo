@@ -3,7 +3,7 @@ package haidian.chat.controller;
 import haidian.chat.dao.FriendMapper;
 import haidian.chat.pojo.Friend;
 import haidian.chat.pojo.Person;
-import haidian.chat.redis.RedisUtil;
+import haidian.chat.redis.util.RedisUtil;
 import haidian.chat.util.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

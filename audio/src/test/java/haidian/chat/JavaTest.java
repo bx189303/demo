@@ -3,17 +3,24 @@ package haidian.chat;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import haidian.audio.pojo.po.GroupRecord;
 import haidian.audio.util.DateUtil;
+import haidian.audio.util.Result;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class JavaTest {
     public static void main(String[] args) {
-        Map<String,String> m=new HashMap<>();
-        m.put("a","");
-        m.put("b","");
-        System.out.println(DateUtil.getDateToGaplessString(new Date()));
+        List<GroupRecord> audios = new ArrayList<>();
+        GroupRecord g=new GroupRecord();
+        g.setGroupName("警情id");
+        g.setRecordFile("录音地址");
+        g.setRecordStartTime(new Date());
+        g.setRecordEndTime(new Date());
+        audios.add(g);
+        Result r=Result.ok(audios);
+        System.out.println(JSON.toJSONString(r));
     }
 
     private static void listyouxuquchong() {

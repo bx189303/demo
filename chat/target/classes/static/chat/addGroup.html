@@ -42,20 +42,20 @@
 
         <div id="friendListDiv" style="margin-top: 1%;">
             <ul id="friendUl" class="chatUl">
-                <li class="singleFriend">
-                    <div class="liContentDiv scrollDiv">
-                        <div class="addGroupLiCheckBox">
-                            <div name="0001" class="checkBoxDiv"></div>
-                        </div>
-                        <div class="liContentImgDiv">
-                            <img src="../img/head.png">
-                        </div>
-                        <div class="addGroupLiContentRightDiv">
-                            <div class="liFriendUser">用户A</div>
-                        </div>
-                    </div>
-                    <div class="liSpace"/>
-                </li>
+<!--                <li class="singleFriend">-->
+<!--                    <div class="liContentDiv scrollDiv">-->
+<!--                        <div class="addGroupLiCheckBox">-->
+<!--                            <div name="0001" class="checkBoxDiv"></div>-->
+<!--                        </div>-->
+<!--                        <div class="liContentImgDiv">-->
+<!--                            <img src="../img/head.png">-->
+<!--                        </div>-->
+<!--                        <div class="addGroupLiContentRightDiv">-->
+<!--                            <div class="liFriendUser">用户A</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="liSpace"/>-->
+<!--                </li>-->
             </ul>
         </div>
     </div>
@@ -258,11 +258,14 @@
             url : "/createGroup/"+ids,
             //请求成功
             success : function(result) {
+                if(srcType=="single"){
+                    window.parent.outChatWindow();
+                }
                 var groupId=result.data.uuid;
-                window.parent.loadGroups(groupId);//更新群列表并跳转新建的群
+                //更新群列表并跳转新建的群
+                window.parent.loadGroups(groupId);
                 layer.msg(result.msg);
                 setTimeout(function(){
-                    // window.parent.$("#groupUl li[name='"+groupId+"']").click();//跳转新建的群
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index); //再执行关闭
                 },1000);

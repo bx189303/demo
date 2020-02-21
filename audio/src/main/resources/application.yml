@@ -1,6 +1,6 @@
 logging:
-#  config: classpath:log4j2_dev.xml
-  config: classpath:log4j2_prod.xml
+  config: classpath:log4j2_dev.xml
+#  config: classpath:log4j2_prod.xml
 #  level:
 #    haidian.audio.dao: debug
 server:

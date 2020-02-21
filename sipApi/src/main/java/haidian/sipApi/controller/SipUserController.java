@@ -28,6 +28,9 @@ public class SipUserController {
         try {
             String[] usernameArray = usernames.split(",");
             for (String name : usernameArray) {
+                if("admin".equalsIgnoreCase(name)){
+                    break;
+                }
                 sipUserService.addSipUser(name);
             }
             result = Result.ok();
@@ -44,6 +47,9 @@ public class SipUserController {
         try {
             String[] usernameArray = usernames.split(",");
             for (String name : usernameArray) {
+                if("admin".equalsIgnoreCase(name)){
+                    break;
+                }
                 sipUserService.delSipUser(name);
             }
             result = Result.ok();

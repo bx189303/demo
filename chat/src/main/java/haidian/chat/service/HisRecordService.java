@@ -79,6 +79,7 @@ public class HisRecordService {
                 msg.put("src",r.get(message.getSrc()));
                 msg.put("src",r.get(message.getSrc()));
                 msg.put("sendtime", DateUtil.getDateTimeToString(message.getSendtime()));
+                msg.put("receivetime",DateUtil.getDateTimeToString(message.getReceivetime()));
                 res.add(msg);
             }
         }

@@ -63,7 +63,8 @@ public class ListenAndSend {
                 String userIds=data.getString("userIds");
                 String[] idArray = userIds.split(",");
                 for (String id : idArray) {
-                    if (r.get(id+"on")!=null){ //如果在线则发送群通知
+                    //如果在线则发送群通知
+                    if(r.hHasKey("websocketon",id)){
                         JSONObject toGroupNotify=groupNotify;
                         JSONObject toGroupNotifyData=data;
                         toGroupNotifyData.remove("userIds");
@@ -75,7 +76,7 @@ public class ListenAndSend {
             }else if("updateGroup".equals(groupNotifyType)){
                 List<String> userIds = groupMapper.getUserByGroupId(groupId);
                 for (String id : userIds) {
-                    if (r.get(id+"on")!=null) { //如果在线则发送群通知
+                    if(r.hHasKey("websocketon",id)){ //如果在线则发送群通知
                         JSONObject toGroupNotify = groupNotify;
                         JSONObject toGroupNotifyData = data;
                         toGroupNotifyData.put("dst", id);
@@ -142,10 +143,8 @@ public class ListenAndSend {
                     break;
                 }
             }
-            //2.如果在线则发送DISPATCH，通知已读
-            if(r.get(dstId)!=null){
-                template.convertAndSend("DISPATCH",JSON.toJSONString(msg));
-            }
+            //2. 发送DISPATCH，通知已读
+            template.convertAndSend("DISPATCH",JSON.toJSONString(msg));
         }catch (Exception e){
             e.printStackTrace();
         }

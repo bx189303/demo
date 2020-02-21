@@ -1,20 +1,12 @@
 package haidian.audio.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import haidian.audio.config.ApplicationPre;
 import haidian.audio.pojo.po.Person;
 import haidian.audio.util.DateUtil;
-import haidian.audio.util.Result;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +17,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -33,9 +27,6 @@ import java.util.zip.ZipOutputStream;
 public class FileUploadController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-    @Value("${filePath}")
-    String filePath;
 
     /**
      * 对外暴露方法
@@ -244,154 +235,5 @@ public class FileUploadController {
             ex.printStackTrace();
         }
     }
-//
-//    /**
-//     *  下载网络文件
-//     */
-//    @RequestMapping(value = "audioDownload", produces = "application/json;charset=UTF-8")
-//    public void downloadNetFile( HttpServletResponse response,HttpServletRequest request){
-//        //处理参数-文件名
-//        String fileUrlAndName=request.getParameter("fileUrlAndName");
-//        String[] fileUrlAndNameArray = fileUrlAndName.split(",");
-//        String fileUrl=fileUrlAndNameArray[0];
-//        String fileName=fileUrlAndNameArray[1];
-////        System.out.println(fileUrl+"  "+fileName);
-//        String[] fileNameArray = fileName.split("\\.");
-//        String fileSuffix=fileNameArray[1];
-//        String fileNameOld=fileNameArray[0];
-//        String[] fileNameOldArray = fileNameOld.split("_");
-//        String userId=fileNameOldArray[0];
-//        Person user=ApplicationPre.personMap.get(userId);
-//        String userName=user==null?userId:user.getsName();
-//        String callId=fileNameOldArray[1];
-//        String callDate=fileNameOldArray[2];
-//        callDate=callDate.replace(" ","").replace("-","").replace(":","");
-//        String fileNameNew=userName+"_"+callId+"_"+callDate+"."+fileSuffix;
-////        System.out.println("文件名改为："+fileNameNew);
-//        //下载文件
-//        int HttpResult; // 服务器返回的状态
-//        InputStream fin = null;
-//        ServletOutputStream out = null;
-//        try {
-//            String encodeName = URLEncoder.encode(fileNameNew, StandardCharsets.UTF_8.toString());
-//            URL url =new URL(fileUrl); // 创建URL
-//            URLConnection urlconn = url.openConnection(); // 试图连接并取得返回状态码
-//            urlconn.connect();
-//            HttpURLConnection httpconn =(HttpURLConnection)urlconn;
-//            HttpResult = httpconn.getResponseCode();
-//            if(HttpResult != HttpURLConnection.HTTP_OK) {
-//                log.info("下载网络文件时，无法连接到 "+fileUrl);
-//                return;
-//            }
-////            int filesize = urlconn.getContentLength(); // 取数据长度
-////            System.out.println("取数据长度===="+filesize);
-//            urlconn.getInputStream();
-//            fin = urlconn.getInputStream();
-//            BufferedInputStream bis = new BufferedInputStream(fin);
-//            out = response.getOutputStream();
-//            response.setCharacterEncoding("utf-8");
-//            response.setContentType("application/force-download");
-//            response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");//设置允许跨域的key
-//            response.setHeader("Content-Disposition", "attachment;fileName=" + encodeName);
-//            byte[] buffer = new byte[1024];
-//            int i = bis.read(buffer);
-//            while (i != -1) {
-//                out.write(buffer, 0, i);
-//                i = bis.read(buffer);
-//            }
-//            out.flush();
-//            response.flushBuffer();
-//        } catch (Exception e) {
-//            log.info("下载文件异常 ： "+ e.getMessage());
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                if(fin != null) fin.close();
-//                if(out != null) out.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
-//    /**
-//     * 上传文件
-//     */
-//    @RequestMapping(value = "/upload", consumes = "multipart/form-data", method = RequestMethod.POST)
-//    public Result upload(HttpServletRequest request) {
-//        try {
-//            String type="file";
-//            List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("files");
-//            if (files == null || files.size() == 0) {
-//                return Result.build(500,"上传文件为空！");
-//            }
-//            String uuid= UUID.randomUUID()+"";
-//            String fileSaveName="";
-//            for (MultipartFile file : files) {
-//                //保存文件到指定目录下
-////                File dest = new File("file/" + file.getOriginalFilename());
-//                String fileName=file.getOriginalFilename();
-//                //if(suffix=="BMP"||suffix=="JPG"||suffix=="JPEG"||suffix=="PNG"||suffix=="GIF"){
-//                String fileSuffix=fileName.substring(fileName.lastIndexOf(".")+1);
-//                if("BMP".equalsIgnoreCase(fileSuffix)||"JPG".equalsIgnoreCase(fileSuffix)||"JPEG".equalsIgnoreCase(fileSuffix)||"PNG".equalsIgnoreCase(fileSuffix)||"GIF".equalsIgnoreCase(fileSuffix)){
-//                    type="img";
-//                }
-//                fileSaveName=uuid+"."+fileSuffix;
-//                File dest = new File(filePath + fileSaveName);
-//                if (!dest.getParentFile().exists()) {
-//                    dest.getParentFile().mkdir();//如果路径不存在，需要提前创建，否则异常
-//                }
-//                FileOutputStream fos = new FileOutputStream(dest, false);
-//                //注意这里引用的包是org.apache.commons.io.IOUtils
-//                IOUtils.copy(file.getInputStream(), fos);
-//                fos.close();
-//                System.out.println(file.getOriginalFilename() + " ---->>>> " + dest.getAbsolutePath());
-////                System.out.println(request.getParameter("name"));
-//            }
-//            JSONObject json=new JSONObject();
-//            json.put("uuid",fileSaveName);
-//            json.put("type",type);
-//            return Result.build(200,"file upload success",json) ;
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            return Result.build(500,ex.getMessage());
-//        }
-//    }
-//
-//    /**
-//     *  下载本地文件
-//     */
-//    @RequestMapping(value = "download/{fileUrl}/{fileName}", produces = "application/json;charset=UTF-8")
-//    public void downloadFile( HttpServletResponse response, @PathVariable String fileUrl, @PathVariable String fileName){
-//        InputStream fin = null;
-//        ServletOutputStream out = null;
-//        try {
-//            String encodeName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
-//            fin = new FileInputStream(new File(filePath+fileUrl));
-//            BufferedInputStream bis = new BufferedInputStream(fin);
-//            out = response.getOutputStream();
-//            response.setCharacterEncoding("utf-8");
-//            response.setContentType("application/force-download");
-//            response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");//设置允许跨域的key
-//            response.setHeader("Content-Disposition", "attachment;fileName=" + encodeName);
-//            byte[] buffer = new byte[1024];
-//            int i = bis.read(buffer);
-//            while (i != -1) {
-//                out.write(buffer, 0, i);
-//                i = bis.read(buffer);
-//            }
-//            out.flush();
-//            response.flushBuffer();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                if(fin != null) fin.close();
-//                if(out != null) out.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 
 }

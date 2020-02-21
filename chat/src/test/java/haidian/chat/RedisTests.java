@@ -27,6 +27,11 @@ class RedisTests {
     GroupMapper groupMapper;
 
     @Test
+    public void deltest(){
+        r.del("aaa");
+    }
+
+    @Test
     public void hashtest(){
         System.out.println(r.hHasKey("m","id"));
         r.hset("m","age",11);

@@ -90,7 +90,8 @@ function showFriendList(src, n){
 //群组列表html
 function showGroupList(n){
     var html="";
-    html='<li name="'+n.id+'" type="group" onclick=jumpChat("'+n.id+'","group","'+n.name+'")>\n' +
+    // html='<li name="'+n.id+'" type="group" onclick=jumpChat("'+n.id+'","group","'+n.name+'")>\n' +
+    html='<li name="'+n.id+'" type="group" onclick=showGroupInfo("'+n.id+'","group")>\n' +
         '                        <div class="liContentDiv scrollDiv">\n' +
         '                            <div class="liContentImgDiv">\n' +
         '                                <img src="../img/grouphead.png">\n' +
@@ -263,11 +264,62 @@ function showUserInfo(id, type){
                     '    <div id="openChatBtn" class="userInfoBtn">发送消息</div>'
             })
             $("#openChatBtn").on("click",function(){
-                var name=p.sUnitname+"_"+p.sName;
-                jumpChat(id,type,name);
+                if(dst!=id){ //如果当前不在对话窗口则进行跳转
+                    var name=p.sUnitname+"_"+p.sName;
+                    jumpChat(id,type,name);
+                }
                 layer.close(index);
             })
 
+        },
+        //请求失败，包含具体的错误信息
+        error : function(e){
+            console.log(e.status);
+            console.log(e.responseText);
+        }
+    })
+}
+//弹出群聊名片
+function showGroupInfo(id, type , isOpen){
+    if(id==src){
+        layer.msg("这是自己",{
+            time:1000
+        });
+        return;
+    }
+    $.ajax({
+        type : "POST",
+        contentType: "application/json;charset=UTF-8",
+        url : "/getGroupByGroupId/"+id,
+        //请求成功
+        success : function(result) {
+            // console.log("getUser : "+result.data);
+            var p=result.data;
+            // 不显示名片直接进入对话窗口
+            if(isOpen==true){
+                outChatWindow();
+                if(dst!=id){ //如果当前不在对话窗口则进行跳转
+                    var name=p.name;
+                    jumpChat(id,type,name);
+                }
+                return;
+            }
+            var index=layer.open({
+                title:false,
+                skin:"blueBackground",
+                btn:false,
+                content:'    <div id="userInfoImg"><img src="../img/grouphead.png"></div>\n' +
+                    '    <div id="userInfoName" class="userInfoDiv">群名&nbsp;:&nbsp;<span>'+handleNull(p.name)+'</span></div>\n' +
+                    '    <div id="userInfoUnit" class="userInfoDiv">创建时间&nbsp;:&nbsp;<span>'+getYmdDate(p.createTime)+'</span></div>\n' +
+                    '    <div id="openChatBtn" class="userInfoBtn">发送消息</div>'
+            })
+            $("#openChatBtn").on("click",function(){
+                if(dst!=id){ //如果当前不在对话窗口则进行跳转
+                    var name=p.name;
+                    jumpChat(id,type,name);
+                }
+                layer.close(index);
+            })
         },
         //请求失败，包含具体的错误信息
         error : function(e){

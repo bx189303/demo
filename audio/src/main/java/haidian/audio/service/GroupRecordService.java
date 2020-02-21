@@ -3,6 +3,7 @@ package haidian.audio.service;
 import haidian.audio.dao.db1.GroupRecordMapper;
 import haidian.audio.pojo.po.GroupRecord;
 import haidian.audio.util.ListUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -10,6 +11,9 @@ import java.util.List;
 
 @Service
 public class GroupRecordService {
+
+    @Value("${audioHost}")
+    String audioHost;
 
     @Resource
     GroupRecordMapper groupRecordMapper;
@@ -30,7 +34,7 @@ public class GroupRecordService {
         List<GroupRecord> groupRecords=groupRecordMapper.getGroupAudioByName(jqId);
         for (GroupRecord groupRecord : groupRecords) {
             String oldFileName=groupRecord.getRecordFile();
-            groupRecord.setRecordFile(oldFileName.replace("\\","/"));
+            groupRecord.setRecordFile(audioHost+oldFileName.replace("\\","/"));
         }
         groupRecords= ListUtil.noDuplicate(groupRecords);
         return groupRecords;

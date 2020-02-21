@@ -39,10 +39,16 @@ public class PersonController {
         try {
             List<Person> persons = personMapper.getAll();
 //            r.set("persons",persons);
+            r.del("personList");
             for (Person person : persons) {
+                // id - 人员信息
                 r.set(person.getsId(),person);
+                // list - 人员信息
                 r.lSet("personList",person);
+                //redis hash ： id - policenum
                 r.hset("personMapOfIdNum",person.getsId(),person.getsPolicenum());
+                //redis hash ： policenum - id
+                r.hset("personMapOfNumId",person.getsPolicenum(),person.getsId());
             }
             log.info("加载人员信息完毕");
             result = Result.ok();

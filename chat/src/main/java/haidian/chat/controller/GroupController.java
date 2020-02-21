@@ -39,7 +39,18 @@ public class GroupController {
     @Autowired
     RedisUtil r;
 
-
+    @RequestMapping("/getGroupByGroupId/{id}")
+    public Result getGroupByGroupId(@PathVariable String id) {
+        Result result = null;
+        try {
+            Group group = groupMapper.selectByPrimaryKey(id);
+            result = Result.ok(group);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = Result.build(500, e.getMessage());
+        }
+        return result;
+    }
 
     @RequestMapping("/outGroup")
     public Result outGroup(@RequestBody JSONObject json) {
@@ -153,10 +164,10 @@ public class GroupController {
             addJson.put("groupId",uuid);
             addJson.put("userIds",userIds);
             addGroup(addJson);
-            //返回群id
-            JSONObject uuidJson = new JSONObject();
-            uuidJson.put("uuid", uuid);
-            result = Result.build(200,"创建群成功!",uuidJson);
+            //返回群信息
+            JSONObject groupJson = new JSONObject();
+            groupJson.put("uuid", uuid);
+            result = Result.build(200,"创建群成功!",groupJson);
         } catch (Exception e) {
             e.printStackTrace();
             result = Result.build(500, e.getMessage());

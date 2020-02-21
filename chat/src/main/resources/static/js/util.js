@@ -20,6 +20,18 @@ function getMyDate(str) {
         oTime = oYear + '-' + getzf(oMonth) + '-' + getzf(oDay) + ' ' + getzf(oHour) + ':' + getzf(oMin) + ':' + getzf(oSen);//最后拼接时间
     return oTime;
 };
+//获取日期 yyyy-MM-dd
+function getYmdDate(str) {
+    if (str == null || str == "") {
+        return '';
+    }
+    var oDate = new Date(str),
+        oYear = oDate.getFullYear(),
+        oMonth = oDate.getMonth() + 1,
+        oDay = oDate.getDate(),
+        oTime = oYear + '-' + getzf(oMonth) + '-' + getzf(oDay);//最后拼接时间
+    return oTime;
+};
 function getzf(num) {
     if (parseInt(num) < 10) {
         num = '0' + num;

@@ -32,7 +32,7 @@ function openSocket() {
         }
         //获得消息事件
         socket.onmessage = function(msg) {
-            // console.log("index页面收到msg ： "+msg.data);
+            console.log("index页面收到msg ： "+msg.data);
             msg=JSON.parse(msg.data);
             msgType=msg.type;
             if(msgType=="msg"){
@@ -123,15 +123,15 @@ function openSocket() {
                 if(groupNotifyType=="updateGroup"){
                     var groupId=msg.data.groupId;
                     //如果在对话窗口，更新标题名
+                    loadGroups();
                     if(type=="group"&&dst==groupId){
-                        loadGroups(groupId);
-                    }else{
-                        loadGroups();
+                        showGroupInfo(groupId,"group",true);
                     }
-                    //如果是群更新，更新首页列表的名字
+                    //如果是群更新，更新首页列表的名字和点击事件
                     setTimeout(function(){
-                        var groupName=$('#groupUl li[name="'+groupId+'"] .liName').text();
-                        $('#chatUl li[name="'+groupId+'"] .liName').text(groupName);
+                        // var groupName=$('#groupUl li[name="'+groupId+'"] .liName').text();
+                        // $('#chatUl li[name="'+groupId+'"] .liName').text(groupName);
+                        loadIndex();
                     },500)
                 }else if(groupNotifyType=="addUser"){
                     loadGroups();
@@ -143,7 +143,27 @@ function openSocket() {
     }
 }
 
-
+//打开后直接跳转到对话窗口
+function openChatAfterInit(){
+    var jumpId=GetUrlParam("dstid");
+    if( jumpId==null || typeof jumpId=="undefined"){
+        return;
+    }
+    //获取url中的中文参数
+    var params = getUrlVars();
+    var jumpName=decodeURI(params.dstname);
+    jumpChat(jumpId, "single", jumpName);
+}
+function getUrlVars() {
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
 
 //加载好友列表
 function loadFriends(){
@@ -180,14 +200,19 @@ function loadGroups(id){
         success : function(result) {
             // console.log("loadGroups : "+result.data);
             var groups=result.data;
-            var html='';
+            //初始显示添加群组的按钮
+            var html='<li>\n' +
+                '                        <div onclick="layAddGroup()" style="text-align:center;margin-top: 1.5%;margin-bottom: 1%;">创建群组</div>\n' +
+                '                        <div class="liSpace"/>\n' +
+                '                    </li>';
             $(groups).each(function(i,n){
                 html+=showGroupList(n);
                 // groups.push(n.id);
             })
             $("#groupUl").html(html);
             if(typeof(id)!="undefined"){
-                $('#groupUl li[name="'+id+'"]').click();
+                // $('#groupUl li[name="'+id+'"]').click();
+                showGroupInfo(id,"group",true);
             }
         },
         //请求失败，包含具体的错误信息
@@ -204,12 +229,11 @@ function jumpChat(id, idType, name){
     type=idType;
     console.log("跳转窗口 ： "+src+"  "+dst+"  "+type);
     //清空对话窗口
-    $("#chatWindow").html("");
+    // $("#chatWindow").html("");
     //加载对话记录
     loadChatMsg();
     //加载对话窗口信息
     $("#chatWindowCount").text("");
-    // $("#titleName").text(name);//改对话窗口标题
     $("#chatWindowName").text(name);//改对话窗口标题
     //加载对话窗口详情
     loadChatDetail();
